@@ -24,11 +24,6 @@ public final class Bedwars extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {
-        this.saveConfig();
-    }
-
-    @Override
     public @NotNull UTFConfig getConfig() {
         return config;
     }
