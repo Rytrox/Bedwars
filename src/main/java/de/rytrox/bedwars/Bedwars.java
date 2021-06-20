@@ -1,8 +1,10 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.listeners.JoinListener;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +23,14 @@ public final class Bedwars extends JavaPlugin {
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         // reload config
         reloadConfig();
+
+        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+
+        Bukkit.getServer().getScheduler().runTaskTimer(this, () -> {
+            Bukkit.getOnlinePlayers().forEach((player -> {
+
+            }));
+        }, 1L, 1L);
     }
 
     @Override
@@ -37,7 +47,7 @@ public final class Bedwars extends JavaPlugin {
     public void reloadConfig() {
         try {
             File file = new ConfigCreator(this.getDataFolder(), Paths.get(""))
-                .copyDefaultFile(Paths.get("config.yml"), Paths.get("config.yml"));
+                    .copyDefaultFile(Paths.get("config.yml"), Paths.get("config.yml"));
 
             this.config = new UTFConfig(file);
         } catch (IOException e) {
@@ -53,4 +63,5 @@ public final class Bedwars extends JavaPlugin {
             this.getLogger().log(Level.SEVERE, "&cconfig.yml konnte nicht gespeichert werden");
         }
     }
+
 }
