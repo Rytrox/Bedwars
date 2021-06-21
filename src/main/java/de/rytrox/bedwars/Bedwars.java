@@ -1,6 +1,7 @@
 package de.rytrox.bedwars;
 
 import de.rytrox.bedwars.listeners.JoinListener;
+import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
@@ -16,6 +17,7 @@ import java.util.logging.Level;
 public final class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
+    private final ScoreboardManager scoreboardManager = new ScoreboardManager();
 
     @Override
     public void onEnable() {
@@ -64,4 +66,7 @@ public final class Bedwars extends JavaPlugin {
         }
     }
 
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
+    }
 }

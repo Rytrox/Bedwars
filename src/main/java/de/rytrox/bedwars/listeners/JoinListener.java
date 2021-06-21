@@ -1,14 +1,17 @@
 package de.rytrox.bedwars.listeners;
 
-import de.rytrox.bedwars.utils.ScoreboardManager;
+import de.rytrox.bedwars.Bedwars;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class JoinListener implements Listener {
 
+    private final Bedwars main = JavaPlugin.getPlugin(Bedwars.class);
+
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) throws ReflectiveOperationException {
-        ScoreboardManager scoreboardManager = new ScoreboardManager(event.getPlayer());
+    public void onJoin(PlayerJoinEvent event) {
+        main.getScoreboardManager().updateBoard(event.getPlayer(), true, true, 0, 0);
     }
 }

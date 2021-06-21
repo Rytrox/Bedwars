@@ -1,69 +1,37 @@
 package de.rytrox.bedwars.utils;
 
-import de.rytrox.bedwars.Bedwars;
-import de.timeout.libs.reflect.Players;
-import de.timeout.libs.reflect.Reflections;
-import net.minecraft.server.v1_16_R3.*;
+import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
-import java.lang.reflect.Field;
+import java.util.*;
 
 public class ScoreboardManager {
 
-    public ScoreboardManager(Player player) throws ReflectiveOperationException {
-        Bukkit.getServer().getScheduler().runTaskLater(JavaPlugin.getPlugin(Bedwars.class), () -> {
-            try {
-                create(player);
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
-            }
-        }, 100L);
+    public void updateBoard(Player player, boolean blue, boolean red, int kills, int deaths) {
+        Scoreboard board = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();
+        Objective objective = board.registerNewObjective("Bedwars", "dummy", ChatColor.translateAlternateColorCodes('&', "&e&lBedwars"));
+
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l")).setScore(9);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&fMap: &aVoid")).setScore(8);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8")).setScore(7);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&c&lR &fRot: " + (red ? "&a[+]" : "&c[-]"))).setScore(6);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&9&lB &fBlau: " + (blue ? "&a[+]" : "&c[-]"))).setScore(5);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8&l")).setScore(4);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&fKills: &a" + kills)).setScore(3);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&fTode: &a" + deaths)).setScore(2);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8&l&8")).setScore(1);
+
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        player.setScoreboard(board);
+
+        Objective objective1 = board.registerNewObjective("Tablist", "dummy", "Tablist");
+        board.registerNewTeam("Rot").setColor(ChatColor.RED);
+        Objects.requireNonNull(board.getTeam("Rot")).addEntry(player.getName());
+        objective1.setDisplaySlot(DisplaySlot.PLAYER_LIST);
     }
 
-    public void create(Player player) throws ReflectiveOperationException {
-
-        Scoreboard board = new Scoreboard();
-        ScoreboardObjective objective = board.registerObjective("Bedwars", IScoreboardCriteria.DUMMY, (IChatBaseComponent) new ChatMessage("Bedwars"), IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
-        objective.setDisplayName((IChatBaseComponent) new ChatMessage("Bedwars"));
-
-        PacketPlayOutScoreboardObjective removepack = new PacketPlayOutScoreboardObjective(objective, 1);
-        PacketPlayOutScoreboardObjective createpack = new PacketPlayOutScoreboardObjective(objective, 0);
-        PacketPlayOutScoreboardDisplayObjective display = new PacketPlayOutScoreboardDisplayObjective(1, objective);
-
-        PacketPlayOutScoreboardScore placeholder3 = new PacketPlayOutScoreboardScore(ScoreboardServer.Action.CHANGE, "Test <-- geht", "   ", 0);
-
-        player.sendMessage("aosizgd");
-        Players.sendPacket(player, createpack);
-        Players.sendPacket(player, display);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public static void ssscoreboardManager(Player player, int schlagHand) throws ReflectiveOperationException {
-        PacketPlayOutAnimation packetPlayOutAnimation = new PacketPlayOutAnimation();
-
-        Field id = Reflections.getField(PacketPlayOutAnimation.class, "a");
-        Field hand = Reflections.getField(PacketPlayOutAnimation.class, "b");
-        Field entityPlayer = Reflections.getField(EntityPlayer.class, "id");
-
-        Reflections.setValue(id, packetPlayOutAnimation, Reflections.getValue(entityPlayer, Players.getEntityPlayer(player)));
-        Reflections.setValue(hand, packetPlayOutAnimation, schlagHand);
-
-        Players.sendPacket(player, packetPlayOutAnimation);
-    }
 }
