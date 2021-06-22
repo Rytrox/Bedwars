@@ -1,8 +1,10 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.listeners.InvClickListener;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +23,8 @@ public final class Bedwars extends JavaPlugin {
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         // reload config
         reloadConfig();
+
+        Bukkit.getPluginManager().registerEvents(new InvClickListener(), this);
     }
 
     @Override
