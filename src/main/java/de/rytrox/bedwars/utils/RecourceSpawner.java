@@ -35,17 +35,16 @@ public class RecourceSpawner {
         armorStand.setCustomNameVisible(true);
         armorStand.setCustomName("Level: " + level);
         armorStand.setVisible(false);
-        start();
-        pRecourceTeleport = pos;
-        pRecourceTeleport.add(0,1,0);
+        pos.add(0, 1, 0);
 
+        start();
     }
 
     public void start() {
         task = Bukkit.getServer().getScheduler().runTaskTimer(JavaPlugin.getPlugin(Bedwars.class), () -> {
-            Item dropItem = pos.getWorld().dropItemNaturally(pos, new ItemStack(material));
-            dropItem.setVelocity(new Vector());
-            dropItem.teleport(pRecourceTeleport);
+            Item dropItem = pos.getWorld().dropItem(pos, new ItemStack(material));
+            /*dropItem.setVelocity(new Vector());
+            dropItem.teleport(pRecourceTeleport);*/
         }, 100,20*(times[level - 1]));
 
     }
