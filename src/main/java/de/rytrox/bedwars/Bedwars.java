@@ -20,9 +20,6 @@ public final class Bedwars extends JavaPlugin {
     private UTFConfig config;
     @Override
     public void onEnable() {
-        RecourceSpawner brick = new RecourceSpawner(Material.BRICK, new Location(Bukkit.getWorld("world"),-1.5,52,0.5),10, 5, 2);
-        RecourceSpawner iron = new RecourceSpawner(Material.IRON_INGOT, new Location(Bukkit.getWorld("world"),0.5,52,2.5),15, 8, 4);
-        RecourceSpawner gold = new RecourceSpawner(Material.GOLD_INGOT, new Location(Bukkit.getWorld("world"),1.5,52,0.5),20, 11, 6);
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         // reload config
