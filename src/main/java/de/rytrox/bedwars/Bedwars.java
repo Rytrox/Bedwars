@@ -27,12 +27,6 @@ public final class Bedwars extends JavaPlugin {
         reloadConfig();
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
-
-        Bukkit.getServer().getScheduler().runTaskTimer(this, () -> {
-            Bukkit.getOnlinePlayers().forEach((player -> {
-
-            }));
-        }, 1L, 1L);
     }
 
     @Override
@@ -66,6 +60,7 @@ public final class Bedwars extends JavaPlugin {
         }
     }
 
+    @NotNull
     public ScoreboardManager getScoreboardManager() {
         return scoreboardManager;
     }
