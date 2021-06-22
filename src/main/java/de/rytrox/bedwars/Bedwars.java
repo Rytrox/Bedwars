@@ -1,8 +1,12 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.utils.RecourceSpawner;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +21,9 @@ public final class Bedwars extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        RecourceSpawner brick = new RecourceSpawner(Material.BRICK, new Location(Bukkit.getWorld("world"),-1,52,0),10, 5, 2);
+        RecourceSpawner iron = new RecourceSpawner(Material.IRON_INGOT, new Location(Bukkit.getWorld("world"),0,52,2),15, 8, 4);
+        RecourceSpawner gold = new RecourceSpawner(Material.GOLD_INGOT, new Location(Bukkit.getWorld("world"),1,52,0),20, 11, 6);
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         // reload config
