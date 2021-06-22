@@ -1,8 +1,12 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.utils.RecourceSpawner;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +18,6 @@ import java.util.logging.Level;
 public final class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
-
     @Override
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
