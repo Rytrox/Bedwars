@@ -1,6 +1,6 @@
 package de.rytrox.bedwars.listeners;
 
-import de.rytrox.bedwars.utils.ShopInventory;
+import de.rytrox.bedwars.utils.ShopUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,6 +15,6 @@ public class InvClickListener implements Listener {
 
     @EventHandler
     public void onSneak(PlayerToggleSneakEvent event) {
-        if(event.isSneaking()) ShopInventory.openRush(event.getPlayer());
+        if(event.isSneaking()) ShopUtils.openBlocks(event.getPlayer());
     }
 }
