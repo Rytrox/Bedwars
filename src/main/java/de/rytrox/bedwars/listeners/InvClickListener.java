@@ -74,17 +74,21 @@ public class InvClickListener implements Listener {
                 return;
             }
             if(buyAll) {
-                if(money % price == 0) {
-                    int amount = money / price;
-
-                }
+                int cmoney = money - (money % price);
+                int amount = cmoney / price;
+                player.getInventory().removeItem(new ItemStack(materialMaterial, price * amount));
+                ItemStack itemStack = new ItemStackBuilder(clickedItem)
+                        .setLore(null)
+                        .writeNBTString("material", "buy")
+                        .setAmount(clickedItem.getAmount() * amount)
+                        .toItemStack();
+                player.getInventory().addItem(itemStack);
             } else {
                 player.getInventory().removeItem(new ItemStack(materialMaterial, price));
-                ItemStack itemStack = clickedItem.clone();
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                assert itemMeta != null;
-                itemMeta.setLore(null);
-                itemStack.setItemMeta(itemMeta);
+                ItemStack itemStack = new ItemStackBuilder(clickedItem)
+                        .setLore(null)
+                        .writeNBTString("material", "buy")
+                        .toItemStack();
                 player.getInventory().addItem(itemStack);
             }
         }
