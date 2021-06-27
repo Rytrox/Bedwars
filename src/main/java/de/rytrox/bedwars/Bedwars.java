@@ -1,6 +1,7 @@
 package de.rytrox.bedwars;
 
 import de.rytrox.bedwars.listeners.InvClickListener;
+import de.rytrox.bedwars.listeners.VillagerClickListener;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
@@ -25,6 +26,7 @@ public final class Bedwars extends JavaPlugin {
         reloadConfig();
 
         Bukkit.getPluginManager().registerEvents(new InvClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(new VillagerClickListener(), this);
     }
 
     @Override

@@ -3,16 +3,22 @@ package de.rytrox.bedwars.utils;
 import de.timeout.libs.item.ItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Objects;
 
 public class ShopUtils {
 
     public static void openRush(Player player) {
-        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop : Rush"), 1);
+        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Rush"), 1);
         ItemStack stick = new ItemStackBuilder(Material.STICK)
                 .addEnchantment(Enchantment.KNOCKBACK, 2)
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
@@ -73,7 +79,7 @@ public class ShopUtils {
     }
 
     public static void openBlocks(Player player) {
-        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop : Blöcke"), 2);
+        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Blöcke"), 2);
         ItemStack sandstone = new ItemStackBuilder(Material.SANDSTONE)
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &32 Bronze"))
@@ -133,8 +139,130 @@ public class ShopUtils {
         player.openInventory(inventory);
     }
 
+    public static void openArmor(Player player) {
+        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Rüstung"), 3);
+        ItemStack head = new ItemStackBuilder(Material.LEATHER_HELMET)
+                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &33 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 3)
+                .toItemStack();
+        ItemStack chest = new ItemStackBuilder(Material.LEATHER_CHESTPLATE)
+                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &33 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 3)
+                .toItemStack();
+        ItemStack leggings = new ItemStackBuilder(Material.LEATHER_LEGGINGS)
+                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &33 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 3)
+                .toItemStack();
+        ItemStack boots = new ItemStackBuilder(Material.LEATHER_BOOTS)
+                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &33 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 3)
+                .toItemStack();
+        ItemStack chest1 = new ItemStackBuilder(Material.CHAINMAIL_CHESTPLATE)
+                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &340 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 40)
+                .toItemStack();
+        ItemStack chest2 = new ItemStackBuilder(Material.IRON_CHESTPLATE)
+                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &f10 Eisen"))
+                .writeNBTString("material", "iron")
+                .writeNBTInt("price", 10)
+                .toItemStack();
+        ItemStack chest3 = new ItemStackBuilder(Material.DIAMOND_CHESTPLATE)
+                .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &610 Gold"))
+                .writeNBTString("material", "gold")
+                .writeNBTInt("price", 10)
+                .toItemStack();
+        inventory.setItem(19, head);
+        inventory.setItem(20, chest);
+        inventory.setItem(21, leggings);
+        inventory.setItem(22, boots);
+        inventory.setItem(23, chest1);
+        inventory.setItem(24, chest2);
+        inventory.setItem(25, chest3);
+        player.openInventory(inventory);
+    }
+
+    public static void openSwords(Player player) {
+        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Schwerter"), 4);
+        ItemStack wood = new ItemStackBuilder(Material.WOODEN_SWORD)
+                .addEnchantment(Enchantment.DAMAGE_ALL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &33 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 3)
+                .toItemStack();
+        ItemStack stone = new ItemStackBuilder(Material.STONE_SWORD)
+                .addEnchantment(Enchantment.DAMAGE_ALL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &320 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 20)
+                .toItemStack();
+        ItemStack gold = new ItemStackBuilder(Material.GOLDEN_SWORD)
+                .addEnchantment(Enchantment.DAMAGE_ALL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &330 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 30)
+                .toItemStack();
+        ItemStack gold1 = new ItemStackBuilder(Material.GOLDEN_SWORD)
+                .addEnchantment(Enchantment.DAMAGE_ALL, 2)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &f5 Eisen"))
+                .writeNBTString("material", "iron")
+                .writeNBTInt("price", 5)
+                .toItemStack();
+        ItemStack iron = new ItemStackBuilder(Material.IRON_SWORD)
+                .addEnchantment(Enchantment.DAMAGE_ALL, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &f10 Eisen"))
+                .writeNBTString("material", "iron")
+                .writeNBTInt("price", 30)
+                .toItemStack();
+        ItemStack iron1 = new ItemStackBuilder(Material.IRON_SWORD)
+                .addEnchantment(Enchantment.DAMAGE_ALL, 2)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &f20 Eisen"))
+                .writeNBTString("material", "iron")
+                .writeNBTInt("price", 5)
+                .toItemStack();
+        ItemStack diamond = new ItemStackBuilder(Material.DIAMOND_SWORD)
+                .addEnchantment(Enchantment.DAMAGE_ALL, 2)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &610 Gold"))
+                .writeNBTString("material", "gold")
+                .writeNBTInt("price", 5)
+                .toItemStack();
+        inventory.setItem(19, wood);
+        inventory.setItem(20, stone);
+        inventory.setItem(21, gold);
+        inventory.setItem(22, gold1);
+        inventory.setItem(23, iron);
+        inventory.setItem(24, iron1);
+        inventory.setItem(25, diamond);
+        player.openInventory(inventory);
+    }
+
     /*public static void openBase(Player player) {
-        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop : Rush"), 2);
+        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Rush"), 2);
 
         inventory.setItem(19, );
         inventory.setItem(20, );
@@ -187,5 +315,12 @@ public class ShopUtils {
         inventory.setItem(7, gadgets);
         inventory.setItem(9 + tab, sellected);
         return inventory;
+    }
+
+    public static void summonShopVillager(Location location) {
+        Villager villager = (Villager) Objects.requireNonNull(location.getWorld()).spawnEntity(location, EntityType.VILLAGER);
+        villager.setCustomName(ChatColor.translateAlternateColorCodes('&', "&9&lShop"));
+        villager.setCustomNameVisible(true);
+        villager.setAI(false);
     }
 }
