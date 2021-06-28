@@ -73,24 +73,24 @@ public class InvClickListener implements Listener {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&fDir fehlen &9" + (price - money) + " " + materialMaterial + "&f!"));
                 return;
             }
-            if(buyAll) {
-                int cmoney = money - (money % price);
-                int amount = cmoney / price;
-                player.getInventory().removeItem(new ItemStack(materialMaterial, price * amount));
-                ItemStack itemStack = new ItemStackBuilder(clickedItem)
-                        .setLore(null)
-                        .writeNBTString("material", "buy")
-                        .setAmount(clickedItem.getAmount() * amount)
-                        .toItemStack();
-                player.getInventory().addItem(itemStack);
-            } else {
+            if(!buyAll || clickedItem.getMaxStackSize() == 1) {
                 player.getInventory().removeItem(new ItemStack(materialMaterial, price));
                 ItemStack itemStack = new ItemStackBuilder(clickedItem)
                         .setLore(null)
                         .writeNBTString("material", "buy")
                         .toItemStack();
                 player.getInventory().addItem(itemStack);
+                return;
             }
+            int cmoney = money - (money % price);
+            int amount = cmoney / price;
+            player.getInventory().removeItem(new ItemStack(materialMaterial, price * amount));
+            ItemStack itemStack = new ItemStackBuilder(clickedItem)
+                    .setLore(null)
+                    .writeNBTString("material", "buy")
+                    .setAmount(clickedItem.getAmount() * amount)
+                    .toItemStack();
+            player.getInventory().addItem(itemStack);
         }
     }
 

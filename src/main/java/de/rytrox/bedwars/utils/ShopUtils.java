@@ -322,5 +322,6 @@ public class ShopUtils {
         villager.setCustomName(ChatColor.translateAlternateColorCodes('&', "&9&lShop"));
         villager.setCustomNameVisible(true);
         villager.setAI(false);
+        villager.setSilent(true);
     }
 }
