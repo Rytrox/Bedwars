@@ -12,6 +12,7 @@ import java.util.Objects;
 
 public class VillagerClickListener implements Listener {
 
+    // Opens the Shop inventory if the "Shop Villager" is clicked
     @EventHandler
     public void onVillagerClick(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();

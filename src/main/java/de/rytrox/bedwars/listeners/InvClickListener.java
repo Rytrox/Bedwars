@@ -9,15 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class InvClickListener implements Listener {
 
@@ -32,13 +27,17 @@ public class InvClickListener implements Listener {
         int price;
         ItemStack[] playerItems = event.getWhoClicked().getInventory().getContents();
 
+        // Check if the inventory is one of the shop inventories
         if(inventoryName.equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&9Shop | Rush"))
         || inventoryName.equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&9Shop | Blöcke"))
         || inventoryName.equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&9Shop | Rüstung"))
         || inventoryName.equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&9Shop | Schwerter"))) {
 
-            assert clickedItem != null;
-            assert clickedItem.getItemMeta() != null;
+            // Cancels the event, so that the player can't take the item
+            event.setCancelled(true);
+
+            // Switches the inventory tab if the player clicks the right item
+            if(clickedItem == null || clickedItem.getItemMeta() == null) return;
             if(ChatColor.translateAlternateColorCodes('&', "&b&lRush").equalsIgnoreCase(clickedItem.getItemMeta().getDisplayName()))
                 ShopUtils.openRush(player);
             if(ChatColor.translateAlternateColorCodes('&', "&b&lBlöcke").equalsIgnoreCase(clickedItem.getItemMeta().getDisplayName()))
@@ -48,6 +47,8 @@ public class InvClickListener implements Listener {
             if(ChatColor.translateAlternateColorCodes('&', "&b&lSchwerter").equalsIgnoreCase(clickedItem.getItemMeta().getDisplayName()))
                 ShopUtils.openSwords(player);
 
+            // Gets if the price and the material of the item, that the player is going to buy and stores it
+            if(!ItemStacks.hasNBTValue(clickedItem, "material") || !ItemStacks.hasNBTValue(clickedItem, "price")) return;
             material = ItemStacks.getNBTStringValue(clickedItem, "material");
             price = ItemStacks.getNBTIntValue(clickedItem, "price");
             event.setCancelled(true);
@@ -64,15 +65,21 @@ public class InvClickListener implements Listener {
                 default:
                     return;
             }
+
+            // Gets the money (Number of material that is needed) from the player and stores it
             int money = Arrays.stream(playerItems)
                     .filter(Objects::nonNull)
                     .filter((itemStack) -> itemStack.getType().equals(materialMaterial))
                     .mapToInt(ItemStack::getAmount)
                     .sum();
+
+            // Checks if the Player has enough money
             if(price > money) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&fDir fehlen &9" + (price - money) + " " + materialMaterial + "&f!"));
                 return;
             }
+
+            // If the items is unstackable or the maxStackSize is 1 the Players buy the offer just once
             if(!buyAll || clickedItem.getMaxStackSize() == 1) {
                 player.getInventory().removeItem(new ItemStack(materialMaterial, price));
                 ItemStack itemStack = new ItemStackBuilder(clickedItem)
@@ -82,6 +89,8 @@ public class InvClickListener implements Listener {
                 player.getInventory().addItem(itemStack);
                 return;
             }
+
+            // The player buys the offer as often as possible
             int cmoney = money - (money % price);
             int amount = cmoney / price;
             player.getInventory().removeItem(new ItemStack(materialMaterial, price * amount));
@@ -93,9 +102,4 @@ public class InvClickListener implements Listener {
             player.getInventory().addItem(itemStack);
         }
     }
-
-    /*@EventHandler
-    public void onSneak(PlayerToggleSneakEvent event) {
-        if(event.isSneaking()) ShopUtils.summonShopVillager(event.getPlayer().getLocation());
-    }*/
 }

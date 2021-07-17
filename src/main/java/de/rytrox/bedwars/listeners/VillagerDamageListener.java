@@ -1,6 +1,5 @@
 package de.rytrox.bedwars.listeners;
 
-import de.rytrox.bedwars.utils.ShopUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -12,6 +11,7 @@ import java.util.Objects;
 
 public class VillagerDamageListener implements Listener {
 
+    // Protects the "Shop Villager" from dying
     @EventHandler
     public void onVillagerDamage(EntityDamageByEntityEvent event) {
         if(event.getDamager() instanceof Player) {

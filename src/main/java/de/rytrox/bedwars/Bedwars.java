@@ -25,7 +25,7 @@ public final class Bedwars extends JavaPlugin {
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         // reload config
         reloadConfig();
-
+        // register Listeners
         Bukkit.getPluginManager().registerEvents(new InvClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new VillagerClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new VillagerDamageListener(), this);
