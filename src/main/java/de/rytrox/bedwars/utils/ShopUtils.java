@@ -1,5 +1,6 @@
 package de.rytrox.bedwars.utils;
 
+import de.rytrox.bedwars.Bedwars;
 import de.timeout.libs.item.ItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,11 +12,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ShopUtils {
+
+    private static final Bedwars main = JavaPlugin.getPlugin(Bedwars.class);
+
+    private ShopUtils() {}
 
     // opens the "Rush" inventory
     public static void openRush(Player player) {
@@ -265,22 +270,6 @@ public class ShopUtils {
         player.openInventory(inventory);
     }
 
-    /*
-    - Basic structure for an inventory tab
-
-    public static void openBase(Player player) {
-        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Rush"), 2);
-
-        inventory.setItem(19, );
-        inventory.setItem(20, );
-        inventory.setItem(21, );
-        inventory.setItem(22, );
-        inventory.setItem(23, );
-        inventory.setItem(24, );
-        inventory.setItem(25, );
-        player.openInventory(inventory);
-    }*/
-
     // Basic structure of the inventory
     private static Inventory createBaseInventory(String name, int tab) {
         // 1 = Rush, 2 = Blöcke, 3 = Rüstung, 4 = Schwerter, 5 = Werkzeuge, 6 = Tränke, 7 = Gadgets
@@ -328,7 +317,7 @@ public class ShopUtils {
     // summons the Shop Villager
     public static void summonShopVillager(Location location) {
         Villager villager = (Villager) Objects.requireNonNull(location.getWorld()).spawnEntity(location, EntityType.VILLAGER);
-        villager.setCustomName(ChatColor.translateAlternateColorCodes('&', "&9&lShop"));
+        villager.setCustomName(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("villagerName"))));
         villager.setCustomNameVisible(true);
         villager.setAI(false);
         villager.setSilent(true);
@@ -338,8 +327,8 @@ public class ShopUtils {
     public static void killShopVillagers(Location location, int radius) {
         Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, radius, radius, radius)
                 .stream()
-                .filter((entity) -> entity instanceof Villager)
-                .filter((entity) -> Objects.requireNonNull(entity.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', "&9&lShop")))
-                .forEach((entity) -> ((Villager) entity).setHealth(0.0));
+                .filter(Villager.class::isInstance)
+                .filter(entity -> Objects.requireNonNull(entity.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("villagerName")))))
+                .forEach(entity -> ((Villager) entity).setHealth(0.0));
     }
 }
