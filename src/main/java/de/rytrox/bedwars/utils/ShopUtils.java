@@ -22,7 +22,10 @@ public class ShopUtils {
 
     private ShopUtils() {}
 
-    // opens the "Rush" inventory
+    /**
+     * opens the "Rush" inventory
+     * @param player The player who opens the inventory
+     */
     public static void openRush(Player player) {
         Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Rush"), 1);
         ItemStack stick = new ItemStackBuilder(Material.STICK)
@@ -84,7 +87,10 @@ public class ShopUtils {
         player.openInventory(inventory);
     }
 
-    // opens the "Blocks" inventory
+    /**
+     * opens the "Blocks" inventory
+     * @param player The player who opens the inventory
+     */
     public static void openBlocks(Player player) {
         Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Blöcke"), 2);
         ItemStack sandstone = new ItemStackBuilder(Material.SANDSTONE)
@@ -146,7 +152,10 @@ public class ShopUtils {
         player.openInventory(inventory);
     }
 
-    // opens the "Armor" inventory
+    /**
+     * opens the "Armor" inventory
+     * @param player The player who opens the inventory
+     */
     public static void openArmor(Player player) {
         Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Rüstung"), 3);
         ItemStack head = new ItemStackBuilder(Material.LEATHER_HELMET)
@@ -208,7 +217,10 @@ public class ShopUtils {
         player.openInventory(inventory);
     }
 
-    // opens the "Swords" inventory
+    /**
+     * opens the "Swords" inventory
+     * @param player The player who opens the inventory
+     */
     public static void openSwords(Player player) {
         Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Schwerter"), 4);
         ItemStack wood = new ItemStackBuilder(Material.WOODEN_SWORD)
@@ -270,7 +282,12 @@ public class ShopUtils {
         player.openInventory(inventory);
     }
 
-    // Basic structure of the inventory
+    /**
+     * Basic structure of the inventory
+     * @param name Name of the inventory
+     * @param tab Tab number of the inventory
+     * @return Returns the basic structure of the inventory
+     */
     private static Inventory createBaseInventory(String name, int tab) {
         // 1 = Rush, 2 = Blöcke, 3 = Rüstung, 4 = Schwerter, 5 = Werkzeuge, 6 = Tränke, 7 = Gadgets
         if(tab > 7 || tab < 1) return Bukkit.createInventory(null, 9*3);
@@ -314,7 +331,10 @@ public class ShopUtils {
         return inventory;
     }
 
-    // summons the Shop Villager
+    /**
+     * Summons the Shop Villager
+     * @param location The location the Villager should appear
+     */
     public static void summonShopVillager(Location location) {
         Villager villager = (Villager) Objects.requireNonNull(location.getWorld()).spawnEntity(location, EntityType.VILLAGER);
         villager.setCustomName(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("villagerName"))));
@@ -323,7 +343,11 @@ public class ShopUtils {
         villager.setSilent(true);
     }
 
-    // kills all "Shop Villagers" in a custom radius
+    /**
+     * Kills all "Shop Villagers" in a custom radius
+     * @param location The location from where the "Shop Villagers" should get killed
+     * @param radius The radius, in which the "Shop Villagers" should get killed
+     */
     public static void killShopVillagers(Location location, int radius) {
         Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, radius, radius, radius)
                 .stream()
