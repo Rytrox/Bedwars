@@ -42,7 +42,7 @@ public class ShopListener implements Listener {
 
             // Switches the inventory tab if the player clicks the right item
             if(clickedItem == null || clickedItem.getItemMeta() == null) return;
-            switchIntevoryTab(player, clickedItem.getItemMeta().getDisplayName());
+            switchInventoryTab(player, clickedItem.getItemMeta().getDisplayName());
 
             // Gets if the price and the material of the item, that the player is going to buy and stores it
             if(!ItemStacks.hasNBTValue(clickedItem, "material") || !ItemStacks.hasNBTValue(clickedItem, "price")) return;
@@ -66,25 +66,14 @@ public class ShopListener implements Listener {
 
             // If the items is unstackable or the maxStackSize is 1 the Players buy the offer just once
             if(!buyAll || clickedItem.getMaxStackSize() == 1) {
-                player.getInventory().removeItem(new ItemStack(materialMaterial, price));
-                ItemStack itemStack = new ItemStackBuilder(clickedItem)
-                        .setLore(null)
-                        .writeNBTString("material", "buy")
-                        .toItemStack();
-                player.getInventory().addItem(itemStack);
+                buy(player, clickedItem, materialMaterial, price, 1);
                 return;
             }
 
             // The player buys the offer as often as possible
             int cmoney = money - (money % price);
             int amount = cmoney / price;
-            player.getInventory().removeItem(new ItemStack(materialMaterial, price * amount));
-            ItemStack itemStack = new ItemStackBuilder(clickedItem)
-                    .setLore(null)
-                    .writeNBTString("material", "buy")
-                    .setAmount(clickedItem.getAmount() * amount)
-                    .toItemStack();
-            player.getInventory().addItem(itemStack);
+            buy(player, clickedItem, materialMaterial, price, amount);
         }
     }
 
@@ -113,7 +102,8 @@ public class ShopListener implements Listener {
         }
     }
 
-    private void switchIntevoryTab(Player player, String displayName) {
+    // Switches between the inventory Tabs of the Shop
+    private void switchInventoryTab(Player player, String displayName) {
         if(ChatColor.translateAlternateColorCodes('&', "&b&lRush").equalsIgnoreCase(displayName))
             ShopUtils.openRush(player);
         if(ChatColor.translateAlternateColorCodes('&', "&b&lBlöcke").equalsIgnoreCase(displayName))
@@ -124,6 +114,7 @@ public class ShopListener implements Listener {
             ShopUtils.openSwords(player);
     }
 
+    // Converts the Material from the NBT-String to a Material
     private Material storeMaterial(String material) {
         switch (material) {
             case "bronze":
@@ -135,5 +126,16 @@ public class ShopListener implements Listener {
             default:
                 return null;
         }
+    }
+
+    // Removes the Money from the Inventory of the Player and adds the Items, which the Player bought
+    private void buy(Player player, ItemStack item, Material material, int price, int amount) {
+        player.getInventory().removeItem(new ItemStack(material, price * amount));
+        ItemStack itemStack = new ItemStackBuilder(item)
+                .setLore(null)
+                .writeNBTString("material", "buy")
+                .setAmount(item.getAmount() * amount)
+                .toItemStack();
+        player.getInventory().addItem(itemStack);
     }
 }
