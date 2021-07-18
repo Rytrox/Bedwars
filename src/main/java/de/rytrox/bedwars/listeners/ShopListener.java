@@ -48,7 +48,6 @@ public class ShopListener implements Listener {
             if(!ItemStacks.hasNBTValue(clickedItem, "material") || !ItemStacks.hasNBTValue(clickedItem, "price")) return;
             material = ItemStacks.getNBTStringValue(clickedItem, "material");
             price = ItemStacks.getNBTIntValue(clickedItem, "price");
-            event.setCancelled(true);
             if((materialMaterial = storeMaterial(material)) == null) return;
 
             // Gets the money (Number of material that is needed) from the player and stores it
@@ -66,14 +65,14 @@ public class ShopListener implements Listener {
 
             // If the items is unstackable or the maxStackSize is 1 the Players buy the offer just once
             if(!buyAll || clickedItem.getMaxStackSize() == 1) {
-                buy(player, clickedItem, materialMaterial, price, 1);
+                transferItems(player, clickedItem, materialMaterial, price, 1);
                 return;
             }
 
             // The player buys the offer as often as possible
             int cmoney = money - (money % price);
             int amount = cmoney / price;
-            buy(player, clickedItem, materialMaterial, price, amount);
+            transferItems(player, clickedItem, materialMaterial, price, amount);
         }
     }
 
@@ -129,7 +128,7 @@ public class ShopListener implements Listener {
     }
 
     // Removes the Money from the Inventory of the Player and adds the Items, which the Player bought
-    private void buy(Player player, ItemStack item, Material material, int price, int amount) {
+    private void transferItems(Player player, ItemStack item, Material material, int price, int amount) {
         player.getInventory().removeItem(new ItemStack(material, price * amount));
         ItemStack itemStack = new ItemStackBuilder(item)
                 .setLore(null)
