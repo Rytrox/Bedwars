@@ -2,38 +2,31 @@ package de.rytrox.bedwars.listeners;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import be.seeseemelk.mockbukkit.MockBukkit;
+import be.seeseemelk.mockbukkit.ServerMock;
+import de.rytrox.bedwars.Bedwars;
 import de.timeout.libs.item.ItemStackBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ShopListenerTest {
 
-    /*
-
-
-
-    Das Problem liegt darin, dass der Test sofort abstürzt, wenn folgende Zeile Code ausgeführt wird.
-    ShopListener Z.24 -> " private final Bedwars main = JavaPlugin.getPlugin(Bedwars.class); "
-
-
-
-     */
-
-    /*private ShopListener shopListener;
+    private ServerMock server;
+    private Bedwars plugin;
+    private ShopListener shopListener;
     private ItemStack exampleItem1;
     private ItemStack exampleItem2;
     private ItemStack exampleItem3;
 
-    public ShopListenerTest() {
-    }
-
     @BeforeEach
     public void setUp() {
+        server = MockBukkit.mock();
+        plugin = MockBukkit.load(Bedwars.class);
         shopListener = new ShopListener();
         exampleItem1 = new ItemStackBuilder(Material.STICK)
                 .addEnchantment(Enchantment.KNOCKBACK, 2)
@@ -58,39 +51,23 @@ class ShopListenerTest {
                 .toItemStack();
     }
 
+    @AfterEach
+    public void tearDown()
+    {
+        MockBukkit.unmock();
+    }
+
     @Test
-    @DisplayName("testGetCurrency1 -> exampleItem1 (stick)")
-    void testGetCurrency1() {
+    void testGetCurrency() {
         assertEquals(Material.BRICK, shopListener.getCurrency(exampleItem1));
-    }
-
-    @Test
-    @DisplayName("testGetCurrency2 -> exampleItem2 (wood)")
-    void testGetCurrency2() {
         assertEquals(Material.IRON_INGOT, shopListener.getCurrency(exampleItem2));
-    }
-
-    @Test
-    @DisplayName("testGetCurrency3 -> exampleItem3 (chest3)")
-    void testGetCurrency3() {
         assertEquals(Material.GOLD_INGOT, shopListener.getCurrency(exampleItem3));
     }
 
     @Test
-    @DisplayName("testGetPrice1 -> exampleItem1 (stick)")
-    void testGetPrice1() {
+    void testGetPrice() {
         assertEquals(8, shopListener.getPrice(exampleItem1));
-    }
-
-    @Test
-    @DisplayName("testGetPrice2 -> exampleItem2 (wood)")
-    void testGetPrice2() {
         assertEquals(4, shopListener.getPrice(exampleItem2));
-    }
-
-    @Test
-    @DisplayName("testGetPrice3 -> exampleItem3 (chest3)")
-    void testGetPrice3() {
         assertEquals(10, shopListener.getPrice(exampleItem3));
-    }*/
+    }
 }
