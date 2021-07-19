@@ -1,9 +1,13 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.listeners.ShopListener;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -15,12 +19,24 @@ public final class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
 
+    public Bedwars()
+    {
+        super();
+    }
+
+    protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file)
+    {
+        super(loader, description, dataFolder, file);
+    }
+
     @Override
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         // reload config
         reloadConfig();
+        // register Listeners
+        Bukkit.getPluginManager().registerEvents(new ShopListener(), this);
     }
 
     @Override
