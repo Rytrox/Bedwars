@@ -1,7 +1,5 @@
 package de.rytrox.bedwars.listeners;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
 import de.rytrox.bedwars.Bedwars;
 import de.timeout.libs.item.ItemStacks;
 import org.bukkit.Material;
@@ -22,9 +20,9 @@ import static org.junit.Assert.assertEquals;
 @SuppressStaticInitializationFor({ "de.timeout.libs.item.ItemStacks" })
 public class ShopListenerTest {
 
-    private ServerMock server;
-
     private ShopListener shopListener;
+
+    @Mock
     private Bedwars main;
 
     @Mock
@@ -32,14 +30,7 @@ public class ShopListenerTest {
 
     @Before
     public void setUp() {
-        server = MockBukkit.mock();
-        main = MockBukkit.load(Bedwars.class);
         shopListener = new ShopListener(main);
-    }
-
-    @After
-    public void tearDown() {
-        MockBukkit.unmock();
     }
 
     @Test
