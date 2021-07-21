@@ -14,14 +14,17 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 import java.util.Objects;
 
 public class ShopListener implements Listener {
 
-    private final Bedwars main = JavaPlugin.getPlugin(Bedwars.class);
+    private final Bedwars main;
+
+    public ShopListener(Bedwars main) {
+        this.main = main;
+    }
 
     /**
      * Check if the inventory is one of the shop inventories
