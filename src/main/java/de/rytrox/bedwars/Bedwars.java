@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 
-public final class Bedwars extends JavaPlugin {
+public class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
     private final ScoreboardManager scoreboardManager = new ScoreboardManager();
@@ -32,8 +32,7 @@ public final class Bedwars extends JavaPlugin {
         super();
     }
 
-    protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file)
-    {
+    protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
     }
 
@@ -44,7 +43,7 @@ public final class Bedwars extends JavaPlugin {
         // reload config
         reloadConfig();
         // register Listeners
-        Bukkit.getPluginManager().registerEvents(new ShopListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
 
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
     }
