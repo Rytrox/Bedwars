@@ -1,11 +1,13 @@
 package de.rytrox.bedwars.utils;
 
+import de.timeout.libs.sql.QueryBuilder;
 import de.timeout.libs.sql.SQL;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class Statistics {
 
@@ -29,49 +31,16 @@ public class Statistics {
     }
 
     /**
-     * Checks if the Stats DataTable contains the players uuid as a primary key
-     * @param player The player to check
-     * @return "true" if the player is registered and "false" if not
-     * @throws SQLException if something went wrong
-     */
-    private boolean containsPlayer(Player player) throws SQLException {
-        AtomicBoolean isThere = new AtomicBoolean(false);
-        db.prepare("SELECT FROM Stats WHERE uuid = ?", player.getUniqueId().toString())
-                .query(resultSet -> {
-                    while (resultSet.next()) isThere.set(true);
-                });
-        return isThere.get();
-    }
-
-    /**
-     * Registers a Player to the DataTable with all values "0"
-     * Please only execute this methode if the Player isn't registered yet
-     * @param player The Player to register
-     * @throws SQLException if something went wrong
-     */
-    private void registerPlayer(Player player) throws SQLException {
-        db.prepare("INSERT INTO Stats (uuid, games, wins, kills, deaths) VALUES (?, ?, ?, ?, ?)",
-                player.getUniqueId().toString(), 0, 0, 0, 0)
-                .update();
-    }
-
-    /**
      * Get a value from a player from the Stats datatable
      * @param player The player to get from
      * @param key The key to the value to get
      * @return the value to the key or "-1" if the key is wrong
      * @throws SQLException if something went wrong
      */
-    public int getValue(Player player, String key) throws SQLException {
+    public QueryBuilder getValue(Player player, String key) throws SQLException {
         if(!"games".equalsIgnoreCase(key) && !"wins".equalsIgnoreCase(key)
-                && !"kills".equalsIgnoreCase(key) && !"deaths".equalsIgnoreCase(key)) return -1;
-        if(!containsPlayer(player)) registerPlayer(player);
-        AtomicInteger value = new AtomicInteger(-1);
-        db.prepare("SELECT FROM Stats WHERE uuid = ?", player.getUniqueId().toString())
-                .query(resultSet -> {
-                    while (resultSet.next()) value.set(resultSet.getInt(key));
-                });
-        return value.get();
+                && !"kills".equalsIgnoreCase(key) && !"deaths".equalsIgnoreCase(key)) return null;
+        return db.prepare("SELECT " + key + " FROM Stats WHERE uuid = ?", player.getUniqueId().toString());
     }
 
     /**
@@ -85,8 +54,7 @@ public class Statistics {
     public boolean setValue(Player player, String key, int value) throws SQLException {
         if(!"games".equalsIgnoreCase(key) && !"wins".equalsIgnoreCase(key)
                 && !"kills".equalsIgnoreCase(key) && !"deaths".equalsIgnoreCase(key)) return false;
-        if(!containsPlayer(player)) registerPlayer(player);
-        db.prepare("UPDATE Stats SET " + key + " = ? WHERE uuid = ?", value, player.getUniqueId().toString())
+        db.prepare("INSERT INTO Stats(uuid, " + key + ") VALUES (?, ?) ON DUPLICATE KEY UPDATE " + key + " = ?", player.getUniqueId().toString(), value, value)
                 .update();
         return true;
     }

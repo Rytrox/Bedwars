@@ -1,53 +1,64 @@
 package de.rytrox.bedwars.utils;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
+import de.timeout.libs.sql.QueryBuilder;
 import de.timeout.libs.sql.SQLite;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-class StatisticsTest {
+@RunWith(MockitoJUnitRunner.class)
+public class StatisticsTest {
 
-    private final Player player = Bukkit.getPlayer("121a9207cd9a4717ba06bb96667492f1");
-    private final Path path = Paths.get("src", "test", "resources", "database.db");
-    private final SQLite sqLite = new SQLite(path.toFile());
-    private final Statistics statistics = new Statistics(sqLite);
+    @Mock
+    private Player player;
 
-    @BeforeEach
+    @Mock
+    private SQLite db;
+
+    @Mock
+    private QueryBuilder query;
+
+    private Statistics statistics;
+
+    @Before
     public void mock() {
-        MockBukkit.mock();
+        statistics = new Statistics(db);
     }
 
     @Test
-    void testGetValue() throws SQLException {
-        assertEquals(0, statistics.getValue(player, "games"));
-        assertEquals(0, statistics.getValue(player, "wins"));
-        assertEquals(0, statistics.getValue(player, "kills"));
-        assertEquals(0, statistics.getValue(player, "deaths"));
+    public void shouldReturnInvalid() throws SQLException {
+        assertNull(statistics.getValue(player, "29438765"));
     }
 
     @Test
-    void testSetValue() throws SQLException {
-        statistics.setValue(player, "games", 1);
-        statistics.setValue(player, "wins", 2);
-        statistics.setValue(player, "kills", 3);
-        statistics.setValue(player, "deaths", 4);
-        assertEquals(1, statistics.getValue(player, "games"));
-        assertEquals(2, statistics.getValue(player, "wins"));
-        assertEquals(3, statistics.getValue(player, "kills"));
-        assertEquals(4, statistics.getValue(player, "deaths"));
+    public void shouldReturnDefaultValue() throws SQLException {
+        Mockito.when(player.getUniqueId()).thenAnswer(invocationOnMock -> UUID.fromString("121a9207-cd9a-4717-ba06-bb96667492f1"));
+        Mockito.when(db.prepare(Mockito.eq("SELECT games FROM Stats WHERE uuid = ?"), Mockito.eq("121a9207-cd9a-4717-ba06-bb96667492f1")))
+                .thenReturn(query);
+
+        assertEquals(query, statistics.getValue(player, "games"));
     }
 
-    @AfterEach
-    public void tearDown() {
-        MockBukkit.unmock();
+    @Test
+    public void testSetValue() throws SQLException {
+        Mockito.when(player.getUniqueId()).thenAnswer(invocationOnMock -> UUID.fromString("121a9207-cd9a-4717-ba06-bb96667492f1"));
+        Mockito.when(db.prepare(Mockito.eq("INSERT INTO Stats(uuid, games) VALUES (?, ?) ON DUPLICATE KEY UPDATE games = ?"),
+                Mockito.eq("121a9207-cd9a-4717-ba06-bb96667492f1"), Mockito.eq(90), Mockito.eq(90))).thenReturn(query);
+        Mockito.doNothing().when(query).update();
+
+        statistics.setValue(player, "games", 90);
+
+        Mockito.verify(db).prepare(Mockito.eq("INSERT INTO Stats(uuid, games) VALUES (?, ?) ON DUPLICATE KEY UPDATE games = ?"),
+                Mockito.eq("121a9207-cd9a-4717-ba06-bb96667492f1"), Mockito.eq(90), Mockito.eq(90));
     }
 }
