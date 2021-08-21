@@ -1,8 +1,11 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.Listeners.PlayerInteractsListener;
+import de.rytrox.bedwars.Listeners.PlayerJoinListener;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +22,8 @@ public final class Bedwars extends JavaPlugin {
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerInteractsListener(), this);
         // reload config
         reloadConfig();
     }
