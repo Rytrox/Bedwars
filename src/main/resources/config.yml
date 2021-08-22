@@ -1,2 +1,11 @@
-# Das ist einfach nur eine Testeinstellung für ä, ö, ü, ß
+# Shop
 villagerName: '&9&lShop'
+
+# Database
+mysql:
+  enabled: false
+  host: 'localhost'
+  port: 3306
+  database: 'database'
+  username: 'username'
+  password: 'password'
