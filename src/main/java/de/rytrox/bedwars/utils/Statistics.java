@@ -39,7 +39,7 @@ public class Statistics {
      */
     public QueryBuilder getValue(Player player, String key) throws SQLException {
         if(checkKey(key)) return null;
-        return db.prepare("SELECT " + key + " FROM Stats WHERE uuid = ?", player.getUniqueId().toString());
+        return db.prepare(String.format("SELECT %s FROM Stats WHERE uuid = ?", key), player.getUniqueId().toString());
     }
 
     /**
