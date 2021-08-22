@@ -52,10 +52,10 @@ public class Statistics {
     public void setValue(Player player, String key, int value) throws SQLException {
         if(checkKey(key)) return;
         getValue(player, key).query(resultSet -> {
-            if (!resultSet.next()) {
+            if (!resultSet.next())
                  db.prepare(String.format("INSERT INTO Stats(uuid, %s) VALUES (?, ?)", key), player.getUniqueId().toString(), value)
                  .execute();
-            else db.prepare("UPDATE Stats SET " + key + " = ? WHERE uuid = ?", value, player.getUniqueId().toString()).execute();
+            else db.prepare(String.format("UPDATE Stats SET %s = ? WHERE uuid = ?", key), value, player.getUniqueId().toString()).execute();
         });
     }
 
@@ -69,8 +69,8 @@ public class Statistics {
     public void addValue(Player player, String key, int value) throws SQLException {
         if(checkKey(key)) return;
         getValue(player, key).query(resultSet -> {
-            if (!resultSet.next()) db.prepare("INSERT INTO Stats(uuid " + key + ") VALUES (?, ?)", player.getUniqueId().toString(), value).execute();
-            else db.prepare("UPDATE Stats SET " + key + " = ? WHERE uuid = ?", resultSet.getInt(key) + value, player.getUniqueId().toString()).execute();
+            if (!resultSet.next()) db.prepare(String.format("INSERT INTO Stats(uuid, %s) VALUES (?, ?)", key), player.getUniqueId().toString(), value).execute();
+            else db.prepare(String.format("UPDATE Stats SET %s = ? WHERE uuid = ?", key), resultSet.getInt(key) + value, player.getUniqueId().toString()).execute();
         });
     }
 
@@ -84,7 +84,7 @@ public class Statistics {
     public void removeValue(Player player, String key, int value) throws SQLException {
         if(checkKey(key)) return;
         getValue(player, key).query(resultSet -> {
-            if (resultSet.next()) db.prepare("UPDATE Stats SET " + key + " = ? WHERE uuid = ?", resultSet.getInt(key) - value, player.getUniqueId().toString()).execute();
+            if (resultSet.next()) db.prepare(String.format("UPDATE Stats SET %s = ? WHERE uuid = ?", key), resultSet.getInt(key) - value, player.getUniqueId().toString()).execute();
         });
     }
 
