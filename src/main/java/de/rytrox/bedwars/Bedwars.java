@@ -112,7 +112,7 @@ public class Bedwars extends JavaPlugin {
             return;
         }
 
-        File file = new File(this.getDataFolder() + "/database.db");
+        File file = new File(this.getDataFolder(), "database.db");
         if(!file.exists()) {
             try {
                 Files.createFile(file.toPath());
