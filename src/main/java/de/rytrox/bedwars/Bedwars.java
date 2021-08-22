@@ -2,6 +2,7 @@ package de.rytrox.bedwars;
 
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.rytrox.bedwars.listeners.ShopListener;
+import de.rytrox.bedwars.utils.Statistics;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 
@@ -23,7 +25,8 @@ public class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
     private final ScoreboardManager scoreboardManager = new ScoreboardManager();
-    private SQL database;
+    private SQL db;
+    private Statistics statistics;
 
     public Bedwars()
     {
@@ -44,6 +47,9 @@ public class Bedwars extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
         // loads the database type and the database from the configs
         loadDatabase();
+        statistics = new Statistics(db);
+        // updates the Statistics Datatable
+        statistics.updateTable();
     }
 
     @Override
@@ -82,31 +88,38 @@ public class Bedwars extends JavaPlugin {
         return scoreboardManager;
     }
 
+    @NotNull
+    public SQL getDatabase() {
+        return db;
+    }
+
+    @NotNull
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    /**
+     * Loads the database from the information of the config.yml
+     */
     private void loadDatabase() {
-        if(config.contains("mysql.enabled")) {
-            if(config.getBoolean("mysql.enabled")) {
-                String host;
-                int port;
-                String database;
-                String username;
-                String password;
-                if(config.contains("mysql.host")) host = config.getString("mysql.host"); else host = "localhost";
-                if(config.contains("mysql.port")) port = config.getInt("mysql.port"); else port = 3306;
-                if(config.contains("mysql.database")) database = config.getString("mysql.database"); else database = "database";
-                if(config.contains("mysql.username")) username = config.getString("mysql.username"); else username = "username";
-                if(config.contains("mysql.password")) password = config.getString("mysql.password"); else password = "password";
-                this.database = new MySQL(host, port, database, username, password);
-            }
+        if(config.getBoolean("mysql.enabled", false)) {
+            int port = config.getInt("mysql.port", 3306);
+            String host = config.getString("mysql.host", "localhost");
+            String database = config.getString("mysql.database", "database");
+            String username = config.getString("mysql.username", "username");
+            String password = config.getString("mysql.password", "password");
+            db = new MySQL(host, port, database, username, password);
+            return;
         }
 
         File file = new File(this.getDataFolder() + "/database.db");
         if(!file.exists()) {
             try {
-                file.createNewFile();
+                Files.createFile(file.toPath());
             } catch (IOException e) {
-                e.printStackTrace();
+                this.getLogger().log(Level.SEVERE, "&4SQLiteDB konnte nicht erstellt werden!", e);
             }
         }
-        this.database = new SQLite(file);
+        db = new SQLite(file);
     }
 }

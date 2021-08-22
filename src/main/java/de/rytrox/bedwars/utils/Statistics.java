@@ -5,9 +5,6 @@ import de.timeout.libs.sql.SQL;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 public class Statistics {
 
@@ -19,15 +16,18 @@ public class Statistics {
 
     /**
      * Creates the statistics table if it not exists
-     * @throws SQLException if something went wrong
      */
-    public void updateTable() throws SQLException {
-        db.prepare("CREATE TABLE IF NOT EXIST Stats (uuid VARCHAR(32) NOT NULL, " +
-                "games INT(10) NOT NULL DEFAULT '0', " +
-                "wins INT(10) NOT NULL DEFAULT '0', " +
-                "kills INT(10) NOT NULL DEFAULT '0', " +
-                "deaths INT(10) NOT NULL DEFAULT '0', " +
-                "PRIMARY KEY (uuid))").execute();
+    public void updateTable() {
+        try {
+            db.prepare("CREATE TABLE IF NOT EXISTS Stats (uuid VARCHAR(32) NOT NULL, " +
+                    "games INT(10) NOT NULL DEFAULT '0', " +
+                    "wins INT(10) NOT NULL DEFAULT '0', " +
+                    "kills INT(10) NOT NULL DEFAULT '0', " +
+                    "deaths INT(10) NOT NULL DEFAULT '0', " +
+                    "PRIMARY KEY (uuid))").execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -38,8 +38,7 @@ public class Statistics {
      * @throws SQLException if something went wrong
      */
     public QueryBuilder getValue(Player player, String key) throws SQLException {
-        if(!"games".equalsIgnoreCase(key) && !"wins".equalsIgnoreCase(key)
-                && !"kills".equalsIgnoreCase(key) && !"deaths".equalsIgnoreCase(key)) return null;
+        if(checkKey(key)) return null;
         return db.prepare("SELECT " + key + " FROM Stats WHERE uuid = ?", player.getUniqueId().toString());
     }
 
@@ -48,14 +47,53 @@ public class Statistics {
      * @param player The player to set to
      * @param key The key to the value to set
      * @param value The value to set
-     * @return true if everything is ok
      * @throws SQLException if something went wrong
      */
-    public boolean setValue(Player player, String key, int value) throws SQLException {
+    public void setValue(Player player, String key, int value) throws SQLException {
+        if(checkKey(key)) return;
+        getValue(player, key).query(resultSet -> {
+            if (!resultSet.next()) db.prepare("INSERT INTO Stats(uuid, " + key + ") VALUES (?, ?)", player.getUniqueId().toString(), value).execute();
+            else db.prepare("UPDATE Stats SET " + key + " = ? WHERE uuid = ?", value, player.getUniqueId().toString()).execute();
+        });
+    }
+
+    /**
+     * Add a value to a players score from the Stats datatable
+     * @param player The player to set to
+     * @param key The key to the value to set
+     * @param value The value to set
+     * @throws SQLException if something went wrong
+     */
+    public void addValue(Player player, String key, int value) throws SQLException {
+        if(checkKey(key)) return;
+        getValue(player, key).query(resultSet -> {
+            if (!resultSet.next()) db.prepare("INSERT INTO Stats(uuid " + key + ") VALUES (?, ?)", player.getUniqueId().toString(), value).execute();
+            else db.prepare("UPDATE Stats SET " + key + " = ? WHERE uuid = ?", resultSet.getInt(key) + value, player.getUniqueId().toString()).execute();
+        });
+    }
+
+    /**
+     * Remove a value to a players score from the Stats datatable
+     * @param player The player to set to
+     * @param key The key to the value to set
+     * @param value The value to set
+     * @throws SQLException if something went wrong
+     */
+    public void removeValue(Player player, String key, int value) throws SQLException {
+        if(checkKey(key)) return;
+        getValue(player, key).query(resultSet -> {
+            if (resultSet.next()) db.prepare("UPDATE Stats SET " + key + " = ? WHERE uuid = ?", resultSet.getInt(key) - value, player.getUniqueId().toString()).execute();
+        });
+    }
+
+    /**
+     * Checks if the key is Valid
+     * @param key The key to check
+     * @return Returns "true" if the Key is wrong and "false" if the key is right
+     */
+    private boolean checkKey(String key) {
         if(!"games".equalsIgnoreCase(key) && !"wins".equalsIgnoreCase(key)
-                && !"kills".equalsIgnoreCase(key) && !"deaths".equalsIgnoreCase(key)) return false;
-        db.prepare("INSERT INTO Stats(uuid, " + key + ") VALUES (?, ?) ON DUPLICATE KEY UPDATE " + key + " = ?", player.getUniqueId().toString(), value, value)
-                .update();
-        return true;
+                && !"kills".equalsIgnoreCase(key) && !"deaths".equalsIgnoreCase(key)) return true;
+        return false;
     }
 }

@@ -13,8 +13,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -198,5 +200,14 @@ public class ShopListener implements Listener {
                 .setAmount(item.getAmount() * amount)
                 .toItemStack();
         player.getInventory().addItem(itemStack);
+    }
+
+    @EventHandler
+    public void onSneak(PlayerToggleSneakEvent event) throws SQLException {
+        if (event.isSneaking()) {
+            event.getPlayer().sendMessage("test 1");
+            main.getStatistics().addValue(event.getPlayer(), "kills", 100);
+            main.getStatistics().addValue(event.getPlayer(), "games", 100);
+        }
     }
 }
