@@ -48,17 +48,4 @@ public class StatisticsTest {
 
         assertEquals(query, statistics.getValue(player, "games"));
     }
-
-    @Test
-    public void testSetValue() throws SQLException {
-        Mockito.when(player.getUniqueId()).thenAnswer(invocationOnMock -> UUID.fromString("121a9207-cd9a-4717-ba06-bb96667492f1"));
-        Mockito.when(db.prepare(Mockito.eq("INSERT INTO Stats(uuid, games) VALUES (?, ?) ON DUPLICATE KEY UPDATE games = ?"),
-                Mockito.eq("121a9207-cd9a-4717-ba06-bb96667492f1"), Mockito.eq(90), Mockito.eq(90))).thenReturn(query);
-        Mockito.doNothing().when(query).update();
-
-        statistics.setValue(player, "games", 90);
-
-        Mockito.verify(db).prepare(Mockito.eq("INSERT INTO Stats(uuid, games) VALUES (?, ?) ON DUPLICATE KEY UPDATE games = ?"),
-                Mockito.eq("121a9207-cd9a-4717-ba06-bb96667492f1"), Mockito.eq(90), Mockito.eq(90));
-    }
 }
