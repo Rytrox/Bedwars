@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,6 +26,9 @@ public class MapUtilsTest {
 
     Location location;
 
+    List<String> stringList = Arrays.asList("test1", "test2", "test3");
+    String string = "{test1_test2_test3}";
+
     @Before
     public void mock() {
         mapUtils = new MapUtils(new SQLite(new File("")));
@@ -33,7 +38,7 @@ public class MapUtilsTest {
     @Test
     public void testConvertLocationToString() {
         Mockito.when(world.getName()).thenAnswer(invocationOnMock -> "World");
-        assertEquals("World - 0,100000 - 0,100000 - 0,100000 - 0,500000 - 0,500000", mapUtils.convertLocationToString(location));
+        assertEquals("World ! 0,100000 ! 0,100000 ! 0,100000 ! 0,500000 ! 0,500000", mapUtils.convertLocationToString(location));
     }
 
     /*@Test
@@ -48,4 +53,14 @@ public class MapUtilsTest {
         assertEquals(0.5F, newLocation.getYaw());
         assertEquals(0.5F, newLocation.getPitch());
     }*/
+
+    @Test
+    public void testConvertListToString() {
+        assertEquals(string, mapUtils.convertListToString(stringList));
+    }
+
+    @Test
+    public void testConvertStringToList() {
+        assertEquals(stringList, mapUtils.convertStringToList(string));
+    }
 }

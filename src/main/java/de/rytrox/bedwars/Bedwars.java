@@ -1,5 +1,6 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.utils.MapUtils;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.utils.Statistics;
@@ -27,6 +28,7 @@ public class Bedwars extends JavaPlugin {
     private final ScoreboardManager scoreboardManager = new ScoreboardManager();
     private SQL db;
     private Statistics statistics;
+    private MapUtils mapUtils;
 
     public Bedwars()
     {
@@ -47,9 +49,12 @@ public class Bedwars extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
         // loads the database type and the database from the configs
         loadDatabase();
+        // creates a Statistics instance
         statistics = new Statistics(db);
         // updates the Statistics Datatable
         statistics.updateTable();
+        // creates a MapUtils instance
+        mapUtils = new MapUtils(db);
     }
 
     @Override
@@ -96,6 +101,11 @@ public class Bedwars extends JavaPlugin {
     @NotNull
     public Statistics getStatistics() {
         return statistics;
+    }
+
+    @NotNull
+    public MapUtils getMapUtils() {
+        return mapUtils;
     }
 
     /**
