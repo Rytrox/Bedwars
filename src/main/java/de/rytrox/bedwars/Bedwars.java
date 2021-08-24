@@ -55,6 +55,8 @@ public class Bedwars extends JavaPlugin {
         statistics.updateTable();
         // creates a MapUtils instance
         mapUtils = new MapUtils(db);
+        // updates the MapUtils Datatables
+        mapUtils.updateTables();
     }
 
     @Override
