@@ -1,4 +1,4 @@
-package de.rytrox.bedwars.utils;
+package de.rytrox.bedwars.utils.map;
 
 import de.timeout.libs.sql.SQL;
 
