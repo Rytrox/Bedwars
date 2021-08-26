@@ -3,24 +3,44 @@ package de.rytrox.bedwars;
 import de.rytrox.bedwars.Listeners.PlayerInteractsListener;
 import de.rytrox.bedwars.Listeners.PlayerJoinListener;
 import de.rytrox.bedwars.utils.TeamChoosingManeger;
+import de.rytrox.bedwars.utils.ScoreboardManager;
+import de.rytrox.bedwars.listeners.ShopListener;
+import de.rytrox.bedwars.utils.Statistics;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
+import de.timeout.libs.sql.MySQL;
+import de.timeout.libs.sql.SQL;
+import de.timeout.libs.sql.SQLite;
 import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 
-public final class Bedwars extends JavaPlugin {
+public class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
+    private final ScoreboardManager scoreboardManager = new ScoreboardManager();
+    private SQL db;
+    private Statistics statistics;
 
     private static TeamChoosingManeger team;
+
+    public Bedwars()
+    {
+        super();
+    }
+
+    protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
+    }
 
     @Override
     public void onEnable() {
@@ -32,6 +52,13 @@ public final class Bedwars extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(team, this);
         // reload config
         reloadConfig();
+        // register Listeners
+        Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
+        // loads the database type and the database from the configs
+        loadDatabase();
+        statistics = new Statistics(db);
+        // updates the Statistics Datatable
+        statistics.updateTable();
     }
 
     public static Inventory getInventory() {
@@ -53,7 +80,7 @@ public final class Bedwars extends JavaPlugin {
     public void reloadConfig() {
         try {
             File file = new ConfigCreator(this.getDataFolder(), Paths.get(""))
-                .copyDefaultFile(Paths.get("config.yml"), Paths.get("config.yml"));
+                    .copyDefaultFile(Paths.get("config.yml"), Paths.get("config.yml"));
 
             this.config = new UTFConfig(file);
         } catch (IOException e) {
@@ -68,5 +95,45 @@ public final class Bedwars extends JavaPlugin {
         } catch (IOException e) {
             this.getLogger().log(Level.SEVERE, "&cconfig.yml konnte nicht gespeichert werden");
         }
+    }
+
+    @NotNull
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
+    }
+
+    @NotNull
+    public SQL getDatabase() {
+        return db;
+    }
+
+    @NotNull
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    /**
+     * Loads the database from the information of the config.yml
+     */
+    private void loadDatabase() {
+        if(config.getBoolean("mysql.enabled", false)) {
+            int port = config.getInt("mysql.port", 3306);
+            String host = config.getString("mysql.host", "localhost");
+            String database = config.getString("mysql.database", "database");
+            String username = config.getString("mysql.username", "username");
+            String password = config.getString("mysql.password", "password");
+            db = new MySQL(host, port, database, username, password);
+            return;
+        }
+
+        File file = new File(this.getDataFolder(), "database.db");
+        if(!file.exists()) {
+            try {
+                Files.createFile(file.toPath());
+            } catch (IOException e) {
+                this.getLogger().log(Level.SEVERE, "&4SQLiteDB konnte nicht erstellt werden!", e);
+            }
+        }
+        db = new SQLite(file);
     }
 }
