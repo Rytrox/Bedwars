@@ -2,10 +2,12 @@ package de.rytrox.bedwars;
 
 import de.rytrox.bedwars.Listeners.PlayerInteractsListener;
 import de.rytrox.bedwars.Listeners.PlayerJoinListener;
+import de.rytrox.bedwars.utils.TeamChoosingManeger;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,14 +20,23 @@ public final class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
 
+    private static TeamChoosingManeger team;
+
     @Override
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractsListener(), this);
+        team = new TeamChoosingManeger();
+        Bukkit.getPluginManager().registerEvents(team, this);
         // reload config
         reloadConfig();
+    }
+
+    public static Inventory getInventory() {
+
+        return team.getInventory();
     }
 
     @Override
