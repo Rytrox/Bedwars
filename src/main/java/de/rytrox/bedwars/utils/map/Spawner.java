@@ -1,8 +1,9 @@
 package de.rytrox.bedwars.utils.map;
 
+import de.rytrox.bedwars.utils.Completable;
 import org.bukkit.Location;
 
-public class Spawner {
+public class Spawner implements Completable {
 
     private Location location;
     private SpawnerMaterial material;
@@ -28,6 +29,7 @@ public class Spawner {
         this.material = material;
     }
 
+    @Override
     public boolean checkComplete() {
         return location != null && material != null;
     }

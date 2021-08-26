@@ -1,17 +1,18 @@
 package de.rytrox.bedwars.utils.map;
 
+import de.rytrox.bedwars.utils.Completable;
 import org.bukkit.Location;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
-public class Map {
+public class Map implements Completable {
 
     private String name;
     private Location pos1;
     private Location pos2;
-    private int teamsize = 1;
+    private int maxTeamSize = 1;
     private final List<Team> teams = new LinkedList<>();
     private final List<Spawner> spawners = new LinkedList<>();
 
@@ -43,12 +44,12 @@ public class Map {
         this.pos2 = pos2;
     }
 
-    public int getTeamsize() {
-        return teamsize;
+    public int getMaxTeamSize() {
+        return maxTeamSize;
     }
 
-    public void setTeamsize(int teamsize) {
-        this.teamsize = teamsize;
+    public void setMaxTeamSize(int maxTeamSize) {
+        this.maxTeamSize = maxTeamSize;
     }
 
     public List<Team> getTeams() {
@@ -59,13 +60,14 @@ public class Map {
         return spawners;
     }
 
+    @Override
     public boolean checkComplete() {
-        AtomicBoolean teamCheck = new AtomicBoolean(true);
-        AtomicBoolean spawnerCheck = new AtomicBoolean(true);
-        if (teams.size() > 1) return false;
+        if (teams.size() <= 1) return false;
         if (spawners.isEmpty()) return false;
-        teams.forEach(team -> teamCheck.set(team.checkComplete()));
-        spawners.forEach(spawner -> teamCheck.set(spawner.checkComplete()));
-        return name != null && pos1 != null && pos2 != null && teamCheck.get() && spawnerCheck.get();
+
+        boolean check = Stream.concat(teams.stream(), spawners.stream())
+                .anyMatch(team -> !team.checkComplete());
+
+        return name != null && pos1 != null && pos2 != null && check;
     }
 }

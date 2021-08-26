@@ -1,9 +1,10 @@
 package de.rytrox.bedwars.utils.map;
 
+import de.rytrox.bedwars.utils.Completable;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
-public class Team {
+public class Team implements Completable {
 
     private Location villager;
     private ChatColor color;
@@ -42,6 +43,7 @@ public class Team {
         this.bed = bed;
     }
 
+    @Override
     public boolean checkComplete() {
         return villager != null && color != null && spawn != null && bed != null;
     }
