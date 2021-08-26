@@ -6,8 +6,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerAnimationType;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -46,6 +48,22 @@ public class TeamChoosingManeger implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         removeFromAllTeams(event.getPlayer());
+    }
+
+    @EventHandler
+    public void OnRightClickListener(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals(new TeamChoosingItem().getItemMeta().getDisplayName())) {
+            if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+
+                player.openInventory(this.inventory);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPLayerJoin(PlayerJoinEvent event) {
+        event.getPlayer().getInventory().addItem(new TeamChoosingItem());
     }
 
     public Inventory getInventory() {
