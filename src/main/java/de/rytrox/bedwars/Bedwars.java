@@ -1,5 +1,6 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.utils.Statistics;
@@ -27,6 +28,7 @@ public class Bedwars extends JavaPlugin {
     private final ScoreboardManager scoreboardManager = new ScoreboardManager();
     private SQL db;
     private Statistics statistics;
+    private PhaseManager phaseManager;
 
     public Bedwars()
     {
@@ -43,11 +45,10 @@ public class Bedwars extends JavaPlugin {
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         // reload config
         reloadConfig();
-        // register Listeners
-        Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
         // loads the database type and the database from the configs
         loadDatabase();
         statistics = new Statistics(db);
+        this.phaseManager = new PhaseManager(this);
         // updates the Statistics Datatable
         statistics.updateTable();
     }
