@@ -99,6 +99,11 @@ public class Bedwars extends JavaPlugin {
         return statistics;
     }
 
+    @NotNull
+    public PhaseManager getPhaseManager() {
+        return phaseManager;
+    }
+
     /**
      * Loads the database from the information of the config.yml
      */
