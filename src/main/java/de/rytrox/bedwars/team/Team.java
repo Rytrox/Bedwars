@@ -8,9 +8,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Team {
+
     private Set<Player> members;
     private String teamName;
     private Material teamItem;
+
     public Team(String teamName, Material teamItem, int maxTeamSize) {
         this.teamName = teamName;
         this.teamItem = teamItem;
@@ -23,7 +25,6 @@ public class Team {
 
     public boolean addMember(Player member) {
         return members.add(member);
-
     }
 
     public boolean removeMember(Player member) {

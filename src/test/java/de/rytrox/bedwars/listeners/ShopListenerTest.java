@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 @SuppressStaticInitializationFor({ "de.timeout.libs.item.ItemStacks" })
 public class ShopListenerTest {
 
-    private ShopListener shopListener;
+    private de.rytrox.bedwars.listeners.ShopListener shopListener;
 
     @Mock
     private Bedwars main;
@@ -30,7 +30,7 @@ public class ShopListenerTest {
 
     @Before
     public void setUp() {
-        shopListener = new ShopListener(main);
+        shopListener = new de.rytrox.bedwars.listeners.ShopListener(main);
     }
 
     @Test
