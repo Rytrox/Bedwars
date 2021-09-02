@@ -1,5 +1,6 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.utils.TeamChoosingManeger;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.utils.Statistics;
@@ -28,6 +29,8 @@ public class Bedwars extends JavaPlugin {
     private SQL db;
     private Statistics statistics;
 
+    private static TeamChoosingManeger team;
+
     public Bedwars()
     {
         super();
@@ -41,6 +44,8 @@ public class Bedwars extends JavaPlugin {
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
+        team = new TeamChoosingManeger();
+        Bukkit.getPluginManager().registerEvents(team, this);
         // reload config
         reloadConfig();
         // register Listeners
