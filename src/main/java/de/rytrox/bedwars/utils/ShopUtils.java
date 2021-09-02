@@ -13,6 +13,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -335,7 +336,7 @@ public class ShopUtils {
      * Summons the Shop Villager
      * @param location The location the Villager should appear
      */
-    public static void summonShopVillager(Location location) {
+    public static void summonShopVillager(@NotNull Location location) {
         Villager villager = (Villager) Objects.requireNonNull(location.getWorld()).spawnEntity(location, EntityType.VILLAGER);
         villager.setCustomName(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("villagerName"))));
         villager.setCustomNameVisible(true);
@@ -348,7 +349,7 @@ public class ShopUtils {
      * @param location The location from where the "Shop Villagers" should get killed
      * @param radius The radius, in which the "Shop Villagers" should get killed
      */
-    public static void killShopVillagers(Location location, int radius) {
+    public static void killShopVillagers(@NotNull Location location, int radius) {
         Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, radius, radius, radius)
                 .stream()
                 .filter(Villager.class::isInstance)

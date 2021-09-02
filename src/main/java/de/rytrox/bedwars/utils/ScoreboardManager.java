@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -11,7 +12,7 @@ public class ScoreboardManager {
 
     private final Map<Player, Scoreboard> activeBoards = new HashMap<>();
 
-    public void addBoard(Player player, boolean blue, boolean red, int kills, int deaths) {
+    public void addBoard(@NotNull Player player, boolean blue, boolean red, int kills, int deaths) {
         Scoreboard board = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();
         fillSidebar(board, blue, red, kills, deaths);
 
@@ -49,7 +50,7 @@ public class ScoreboardManager {
         activeBoards.replace(player, board);
     }
 
-    private void fillSidebar(Scoreboard board, boolean blue, boolean red, int kills, int deaths) {
+    private void fillSidebar(@NotNull Scoreboard board, boolean blue, boolean red, int kills, int deaths) {
         Objective objective = board.registerNewObjective("Bedwars", "dummy", ChatColor.translateAlternateColorCodes('&', "&e&lBedwars"));
 
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l")).setScore(9);
