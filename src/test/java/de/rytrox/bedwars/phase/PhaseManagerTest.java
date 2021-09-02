@@ -7,6 +7,7 @@ import de.rytrox.bedwars.phase.phases.GamePhase;
 import de.rytrox.bedwars.phase.phases.IngamePhase;
 import de.rytrox.bedwars.phase.phases.LobbyPhase;
 
+import de.rytrox.bedwars.team.TeamChoosingManager;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -24,7 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ PhaseManager.class })
+@PrepareForTest({ PhaseManager.class, LobbyPhase.class })
 public class PhaseManagerTest {
 
     private PhaseManager manager;
@@ -38,8 +39,14 @@ public class PhaseManagerTest {
     @Mock
     private PluginManager pluginManager;
 
+    @Mock
+    private TeamChoosingManager teamChoosingManager;
+
     @Before
-    public void setup() {
+    public void setup() throws Exception {
+        PowerMockito.whenNew(TeamChoosingManager.class).withNoArguments()
+                .thenReturn(teamChoosingManager);
+
         this.manager = new PhaseManager(main);
     }
 

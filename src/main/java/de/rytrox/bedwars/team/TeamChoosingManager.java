@@ -1,7 +1,5 @@
-package de.rytrox.bedwars.utils;
+package de.rytrox.bedwars.team;
 
-import de.rytrox.bedwars.Bedwars;
-import de.rytrox.bedwars.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,21 +9,21 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerAnimationType;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamChoosingManeger implements Listener {
+public class TeamChoosingManager implements Listener {
 
     private final Inventory inventory;
-    private List<Team> teams = new ArrayList<>();
+    private final List<Team> teams = new ArrayList<>();
 
-    public TeamChoosingManeger() {
+    public TeamChoosingManager() {
+        // Erstmal in Ordnung, muss sobald die Datenbank fertig ist von da geladen werden!
         teams.add(new Team("Red", Material.RED_WOOL, 5));
         teams.add(new Team("Blue", Material.BLUE_WOOL, 5));
         teams.add(new Team("Green", Material.GREEN_WOOL, 5));
@@ -36,7 +34,7 @@ public class TeamChoosingManeger implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
+    public void onInventoryClick(@NotNull InventoryClickEvent event) {
         if(event.getInventory().equals(inventory)) {
             Player player = (Player) event.getWhoClicked();
             removeFromAllTeams(player);
@@ -49,9 +47,9 @@ public class TeamChoosingManeger implements Listener {
     }
 
     @EventHandler
-    public void OnRightClickListener(PlayerInteractEvent event) {
+    public void OnRightClickListener(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals(new TeamChoosingItem().getItemMeta().getDisplayName())) {
+        if(player.getInventory().getItemInMainHand().equals(new TeamChoosingItem())) {
             if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
                 player.openInventory(this.getInventory());
@@ -60,12 +58,12 @@ public class TeamChoosingManeger implements Listener {
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
         removeFromAllTeams(event.getPlayer());
     }
 
     @EventHandler
-    public void onPLayerJoin(PlayerJoinEvent event) {
+    public void onPLayerJoin(@NotNull PlayerJoinEvent event) {
         event.getPlayer().getInventory().addItem(new TeamChoosingItem());
     }
 
@@ -74,9 +72,10 @@ public class TeamChoosingManeger implements Listener {
     }
 
     private Team getTeamByItem(ItemStack item) {
-        teams.stream()
-                .anyMatch((team) -> team.getTeamItem().equals(item));
-        return null;
+        return teams.stream()
+                .filter((team) -> team.getTeamItem().equals(item))
+                .findAny()
+                .orElse(null);
     }
 
     private void removeFromAllTeams(Player player) {
