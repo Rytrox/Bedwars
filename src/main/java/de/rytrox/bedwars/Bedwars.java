@@ -30,6 +30,8 @@ public class Bedwars extends JavaPlugin {
     private Statistics statistics;
     private PhaseManager phaseManager;
 
+    private TeamChoosingManeger team;
+
     public Bedwars()
     {
         super();
@@ -43,6 +45,9 @@ public class Bedwars extends JavaPlugin {
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
+        //Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        team = new TeamChoosingManeger();
+        Bukkit.getPluginManager().registerEvents(team, this);
         // reload config
         reloadConfig();
         // loads the database type and the database from the configs
