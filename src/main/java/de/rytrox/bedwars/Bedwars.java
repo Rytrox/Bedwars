@@ -3,6 +3,7 @@ package de.rytrox.bedwars;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.utils.Statistics;
+import de.rytrox.bedwars.utils.TeamChoosingManeger;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
@@ -10,6 +11,7 @@ import de.timeout.libs.sql.MySQL;
 import de.timeout.libs.sql.SQL;
 import de.timeout.libs.sql.SQLite;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -24,7 +26,7 @@ import java.util.logging.Level;
 public class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
-    private final ScoreboardManager scoreboardManager = new ScoreboardManager();
+    private ScoreboardManager scoreboardManager;
     private SQL db;
     private Statistics statistics;
 
@@ -43,8 +45,8 @@ public class Bedwars extends JavaPlugin {
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
-        //Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
-        team = new TeamChoosingManeger();
+        team = new TeamChoosingManeger(this);
+        scoreboardManager = new ScoreboardManager(team);
         Bukkit.getPluginManager().registerEvents(team, this);
         // reload config
         reloadConfig();
@@ -55,6 +57,10 @@ public class Bedwars extends JavaPlugin {
         statistics = new Statistics(db);
         // updates the Statistics Datatable
         statistics.updateTable();
+    }
+
+    public void start(Player player) {
+        scoreboardManager.addBoard(player, 2, 5);
     }
 
     @Override

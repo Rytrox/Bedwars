@@ -1,5 +1,6 @@
 package de.rytrox.bedwars.team;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,11 +13,13 @@ public class Team {
     private Set<Player> members;
     private String teamName;
     private Material teamItem;
+    private ChatColor color;
 
-    public Team(String teamName, Material teamItem, int maxTeamSize) {
+    public Team(String teamName, Material teamItem, int maxTeamSize, ChatColor color) {
         this.teamName = teamName;
         this.teamItem = teamItem;
         this.members = new HashSet<>(maxTeamSize);
+        this.color = color;
     }
 
     public Set<Player> getMembers() {
@@ -46,4 +49,8 @@ public class Team {
     public void setTeamItem(Material teamItem) {
         this.teamItem = teamItem;
     }
+
+    public void setColor(ChatColor color) { this.color = color; }
+
+    public ChatColor getColor() { return color; }
 }
