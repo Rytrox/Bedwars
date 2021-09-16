@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.List;
@@ -56,9 +57,8 @@ public class ScoreboardManager {
         activeBoards.replace(player, board);
     }
 
-    private void fillSidebar(Scoreboard board, int kills, int deaths) {
-        Objective objective = board.registerNewObjective("Bedwars", "dummy", ChatColor
-                .translateAlternateColorCodes('&', "&e&lBedwars"));
+    private void fillSidebar(Scoreboard board, boolean blue, boolean red, int kills, int deaths) {
+        Objective objective = board.registerNewObjective("Bedwars", "dummy", ChatColor.translateAlternateColorCodes('&', "&e&lBedwars"));
 
          AtomicInteger score = new AtomicInteger(teams.size() + 7);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l")).setScore(score.get());
