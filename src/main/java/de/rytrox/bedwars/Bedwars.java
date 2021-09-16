@@ -31,6 +31,13 @@ public class Bedwars extends JavaPlugin {
     private PhaseManager phaseManager;
     private TeamManager teamManager;
 
+    public Bedwars()
+    {
+        super();
+        // Nutze im Logger ColorCodes mit '&'
+        ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
+    }
+
     protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
     }
