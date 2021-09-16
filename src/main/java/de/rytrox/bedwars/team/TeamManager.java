@@ -1,6 +1,9 @@
 package de.rytrox.bedwars.team;
 
+import de.timeout.libs.item.ItemStackBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +26,10 @@ public class TeamManager implements Listener {
     private final Inventory inventory;
     private final List<Team> teams = new ArrayList<>();
 
+    private final ItemStack teamChoosingItem = new ItemStackBuilder(Material.PAPER)
+            .setDisplayName(ChatColor.translateAlternateColorCodes('&', "&4Teamauswahl"))
+            .toItemStack();
+
     public TeamManager() {
         inventory = Bukkit.createInventory(null, 3 * 9);
     }
@@ -34,8 +41,10 @@ public class TeamManager implements Listener {
             Player player = (Player) event.getWhoClicked();
             removeFromAllTeams(player);
             getTeamByItem(event.getCurrentItem()).ifPresent((team) -> {
-                player.sendMessage(String.format("DU bIsT Im TeAm %s" , team.getTeamName()));
                 event.setCancelled(true);
+
+                player.sendMessage(String.format("DU bIsT Im TeAm %s" , team.getTeamName()));
+                team.addMember(player);
                 player.closeInventory();
             });
         }
@@ -44,9 +53,8 @@ public class TeamManager implements Listener {
     @EventHandler
     public void onRightClickListener(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(player.getInventory().getItemInMainHand().equals(new TeamChoosingItem())) {
+        if(player.getInventory().getItemInMainHand().equals(teamChoosingItem)) {
             if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-
                 player.openInventory(this.getInventory());
             }
         }
@@ -59,7 +67,7 @@ public class TeamManager implements Listener {
 
     @EventHandler
     public void onPLayerJoin(@NotNull PlayerJoinEvent event) {
-        event.getPlayer().getInventory().addItem(new TeamChoosingItem());
+        event.getPlayer().getInventory().addItem(teamChoosingItem);
     }
 
     @NotNull
