@@ -1,6 +1,8 @@
 package de.rytrox.bedwars.team;
 
+import de.timeout.libs.item.ItemStackBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,45 +15,46 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class TeamChoosingManager implements Listener {
+public class TeamManager implements Listener {
 
     private final Inventory inventory;
     private final List<Team> teams = new ArrayList<>();
 
-    public TeamChoosingManager() {
-        // Erstmal in Ordnung, muss sobald die Datenbank fertig ist von da geladen werden!
-        teams.add(new Team("Red", Material.RED_WOOL, 5));
-        teams.add(new Team("Blue", Material.BLUE_WOOL, 5));
-        teams.add(new Team("Green", Material.GREEN_WOOL, 5));
+    private final ItemStack teamChoosingItem = new ItemStackBuilder(Material.PAPER)
+            .setDisplayName(ChatColor.translateAlternateColorCodes('&', "&4Teamauswahl"))
+            .toItemStack();
+
+    public TeamManager() {
         inventory = Bukkit.createInventory(null, 3 * 9);
-        inventory.setItem(10, teams.get(0).getTeamItem());
-        inventory.setItem(13, teams.get(1).getTeamItem());
-        inventory.setItem(16, teams.get(2).getTeamItem());
     }
 
     @EventHandler
     public void onInventoryClick(@NotNull InventoryClickEvent event) {
         if(event.getInventory().equals(inventory)) {
+
             Player player = (Player) event.getWhoClicked();
             removeFromAllTeams(player);
-            if(getTeamByItem(event.getCurrentItem()).addMember(player)) {
-                player.sendMessage(String.format("DU bIsT Im TeAm %s" , getTeamByItem(event.getCurrentItem()).getTeamName()));
-            }
-            event.setCancelled(true);
-            player.closeInventory();
+            getTeamByItem(event.getCurrentItem()).ifPresent((team) -> {
+                event.setCancelled(true);
+
+                player.sendMessage(String.format("DU bIsT Im TeAm %s" , team.getTeamName()));
+                team.addMember(player);
+                player.closeInventory();
+            });
         }
     }
 
     @EventHandler
-    public void OnRightClickListener(@NotNull PlayerInteractEvent event) {
+    public void onRightClickListener(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(player.getInventory().getItemInMainHand().equals(new TeamChoosingItem())) {
+        if(player.getInventory().getItemInMainHand().equals(teamChoosingItem)) {
             if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-
                 player.openInventory(this.getInventory());
             }
         }
@@ -64,24 +67,29 @@ public class TeamChoosingManager implements Listener {
 
     @EventHandler
     public void onPLayerJoin(@NotNull PlayerJoinEvent event) {
-        event.getPlayer().getInventory().addItem(new TeamChoosingItem());
+        event.getPlayer().getInventory().addItem(teamChoosingItem);
     }
 
+    @NotNull
     public Inventory getInventory() {
         return inventory;
     }
 
-    private Team getTeamByItem(ItemStack item) {
+    @NotNull
+    private Optional<Team> getTeamByItem(@Nullable ItemStack item) {
         return teams.stream()
                 .filter((team) -> team.getTeamItem().equals(item))
-                .findAny()
-                .orElse(null);
+                .findAny();
     }
 
-    private void removeFromAllTeams(Player player) {
+    private void removeFromAllTeams(@NotNull Player player) {
         teams.forEach(team -> {
             team.removeMember(player);
         });
     }
 
+    @NotNull
+    public List<Team> getTeams() {
+        return new ArrayList<>(teams);
+    }
 }

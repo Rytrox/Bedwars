@@ -1,20 +1,14 @@
 package de.rytrox.bedwars.phase.phases;
 
 import de.rytrox.bedwars.Bedwars;
-import de.rytrox.bedwars.team.TeamChoosingManager;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class LobbyPhase extends GamePhase {
 
-    private final TeamChoosingManager team;
 
     public LobbyPhase(Bedwars main) {
         super(main);
-
-        team = new TeamChoosingManager();
     }
 
     /**
@@ -23,7 +17,6 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(team, main);
     }
 
     /**
@@ -32,7 +25,6 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onDisable() {
-        HandlerList.unregisterAll(team);
     }
 
     /**
