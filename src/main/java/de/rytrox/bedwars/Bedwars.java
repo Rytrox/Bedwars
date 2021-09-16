@@ -33,6 +33,8 @@ public class Bedwars extends JavaPlugin {
     public Bedwars()
     {
         super();
+        // Nutze im Logger ColorCodes mit '&'
+        ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
     }
 
     protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
@@ -41,8 +43,7 @@ public class Bedwars extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Nutze im Logger ColorCodes mit '&'
-        ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
+
         // reload config
         reloadConfig();
         // loads the database type and the database from the configs
