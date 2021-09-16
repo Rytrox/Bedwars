@@ -1,5 +1,6 @@
 package de.rytrox.bedwars.utils;
 
+import de.rytrox.bedwars.team.TeamManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,21 +9,22 @@ import org.bukkit.scoreboard.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 public class ScoreboardManager {
 
     private final Map<Player, Scoreboard> activeBoards = new HashMap<>();
-    private TeamChoosingManeger teamChoosingManeger;
-    private List<de.rytrox.bedwars.team.Team> teams;
+    private final TeamManager teamManager;
 
-    public ScoreboardManager(TeamChoosingManeger teamChoosingManeger) {
-        teams = teamChoosingManeger.getTeams();
+    public ScoreboardManager(TeamManager teamManager) {
+        this.teamManager = teamManager;
     }
 
     public void addBoard(Player player, int kills, int deaths) {
         Scoreboard board = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();
         fillSidebar(board, kills, deaths);
-        teams.forEach(team -> board.registerNewTeam(team.getTeamName()).setColor(team.getColor()));
+        teamManager.getTeams().forEach(team ->
+                board.registerNewTeam(team.getTeamName()).setColor(team.getColor()));
         player.setScoreboard(board);
         activeBoards.put(player, board);
     }
@@ -47,7 +49,7 @@ public class ScoreboardManager {
     public void addPlayerToTeam(Player player) {
         if(!activeBoards.containsKey(player)) return;
         Scoreboard board = activeBoards.get(player);
-        teams.forEach(team -> {
+        teamManager.getTeams().forEach(team -> {
             team.getMembers().forEach( member ->  {
                 Objects.requireNonNull(board.getTeam(team.getTeamName())).addEntry(member.getName());
             });
@@ -59,14 +61,14 @@ public class ScoreboardManager {
     private void fillSidebar(Scoreboard board, int kills, int deaths) {
         Objective objective = board.registerNewObjective("Bedwars", "dummy", ChatColor.translateAlternateColorCodes('&', "&e&lBedwars"));
 
-         AtomicInteger score = new AtomicInteger(teams.size() + 7);
+         AtomicInteger score = new AtomicInteger(teamManager.getTeams().size() + 7);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l")).setScore(score.get());
         score.set(score.get() - 1);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&fMap: &aVoid")).setScore(score.get());
         score.set(score.get() - 1);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8")).setScore(score.get());
         score.set(score.get() - 1);
-        teams.forEach(team -> {
+        teamManager.getTeams().forEach(team -> {
             objective.getScore(ChatColor.translateAlternateColorCodes('&', String.format("%s&l%s &f:", team.getColor() , team.getTeamName()))).setScore(score.get());
             score.set(score.get() - 1);
         });

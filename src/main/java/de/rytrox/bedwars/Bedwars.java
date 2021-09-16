@@ -1,9 +1,9 @@
 package de.rytrox.bedwars;
 
 import de.rytrox.bedwars.phase.PhaseManager;
+import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.rytrox.bedwars.utils.Statistics;
-import de.rytrox.bedwars.utils.TeamChoosingManeger;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
@@ -29,7 +29,7 @@ public class Bedwars extends JavaPlugin {
     private SQL db;
     private Statistics statistics;
     private PhaseManager phaseManager;
-    private TeamChoosingManeger teamChoosingManeger;
+    private TeamManager teamManager;
 
     protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
@@ -39,9 +39,9 @@ public class Bedwars extends JavaPlugin {
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
-        teamChoosingManeger = new TeamChoosingManeger();
-        scoreboardManager = new ScoreboardManager(teamChoosingManeger);
-        Bukkit.getPluginManager().registerEvents(teamChoosingManeger, this);
+        teamManager = new TeamManager();
+        scoreboardManager = new ScoreboardManager(teamManager);
+        Bukkit.getPluginManager().registerEvents(teamManager, this);
         // reload config
         reloadConfig();
         // loads the database type and the database from the configs
