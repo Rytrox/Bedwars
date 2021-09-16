@@ -2,7 +2,6 @@ package de.rytrox.bedwars;
 
 import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.utils.ScoreboardManager;
-import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.utils.Statistics;
 import de.rytrox.bedwars.utils.TeamChoosingManeger;
 import de.timeout.libs.config.ConfigCreator;
@@ -12,7 +11,6 @@ import de.timeout.libs.sql.MySQL;
 import de.timeout.libs.sql.SQL;
 import de.timeout.libs.sql.SQLite;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -31,11 +29,7 @@ public class Bedwars extends JavaPlugin {
     private SQL db;
     private Statistics statistics;
     private PhaseManager phaseManager;
-
-    public Bedwars()
-    {
-        super();
-    }
+    private TeamChoosingManeger teamChoosingManeger;
 
     protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
@@ -45,9 +39,9 @@ public class Bedwars extends JavaPlugin {
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
-        team = new TeamChoosingManeger(this);
-        scoreboardManager = new ScoreboardManager(team);
-        Bukkit.getPluginManager().registerEvents(team, this);
+        teamChoosingManeger = new TeamChoosingManeger();
+        scoreboardManager = new ScoreboardManager(teamChoosingManeger);
+        Bukkit.getPluginManager().registerEvents(teamChoosingManeger, this);
         // reload config
         reloadConfig();
         // loads the database type and the database from the configs
@@ -56,10 +50,6 @@ public class Bedwars extends JavaPlugin {
         this.phaseManager = new PhaseManager(this);
         // updates the Statistics Datatable
         statistics.updateTable();
-    }
-
-    public void start(Player player) {
-        scoreboardManager.addBoard(player, 2, 5);
     }
 
     @Override

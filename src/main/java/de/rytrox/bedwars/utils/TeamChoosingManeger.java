@@ -1,11 +1,8 @@
 package de.rytrox.bedwars.utils;
 
-import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.team.Team;
 import de.timeout.libs.item.ItemStackBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,8 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerAnimationType;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -28,19 +23,9 @@ public class TeamChoosingManeger implements Listener {
 
     private final Inventory inventory;
     private List<Team> teams = new ArrayList<>();
-    private Bedwars bw;
 
-    public TeamChoosingManeger(Bedwars bw) {
-        this.bw = bw;
-        teams.add(new Team("Red", Material.RED_WOOL, 5, ChatColor.RED));
-        teams.add(new Team("Blue", Material.BLUE_WOOL, 5, ChatColor.BLUE));
-        teams.add(new Team("Green", Material.GREEN_WOOL, 5, ChatColor.GREEN));
-        teams.add(new Team("Yellow", Material.YELLOW_WOOL, 5, ChatColor.YELLOW));
+    public TeamChoosingManeger() {
         inventory = Bukkit.createInventory(null, 3 * 9);
-        inventory.setItem(10, teams.get(0).getTeamItem());
-        inventory.setItem(13, teams.get(1).getTeamItem());
-        inventory.setItem(16, teams.get(2).getTeamItem());
-        inventory.setItem(17, teams.get(3).getTeamItem());
     }
 
     @EventHandler
@@ -64,9 +49,6 @@ public class TeamChoosingManeger implements Listener {
 
                 player.openInventory(this.getInventory());
             }
-        }
-        if(player.getInventory().getItemInMainHand().getType() == Material.WOODEN_HOE) {
-            bw.start(player);
         }
     }
 
