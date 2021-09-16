@@ -22,7 +22,7 @@ import java.util.Optional;
 public class TeamChoosingManeger implements Listener {
 
     private final Inventory inventory;
-    private List<Team> teams = new ArrayList<>();
+    private final List<Team> teams = new ArrayList<>();
 
     public TeamChoosingManeger() {
         inventory = Bukkit.createInventory(null, 3 * 9);

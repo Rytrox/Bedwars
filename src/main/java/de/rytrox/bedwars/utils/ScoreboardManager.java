@@ -22,7 +22,7 @@ public class ScoreboardManager {
     public void addBoard(Player player, int kills, int deaths) {
         Scoreboard board = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();
         fillSidebar(board, kills, deaths);
-        teams.forEach(team -> { board.registerNewTeam(team.getTeamName()).setColor(team.getColor()); });
+        teams.forEach(team -> board.registerNewTeam(team.getTeamName()).setColor(team.getColor()));
         player.setScoreboard(board);
         activeBoards.put(player, board);
     }
