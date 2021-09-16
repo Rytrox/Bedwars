@@ -1,8 +1,8 @@
 package de.rytrox.bedwars;
 
 import de.rytrox.bedwars.phase.PhaseManager;
+import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.utils.ScoreboardManager;
-import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.utils.Statistics;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
@@ -25,10 +25,11 @@ import java.util.logging.Level;
 public class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
-    private final ScoreboardManager scoreboardManager = new ScoreboardManager();
+    private ScoreboardManager scoreboardManager;
     private SQL db;
     private Statistics statistics;
     private PhaseManager phaseManager;
+    private TeamManager teamManager;
 
     public Bedwars()
     {
@@ -43,7 +44,11 @@ public class Bedwars extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
+        // Nutze im Logger ColorCodes mit '&'
+        ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
+        teamManager = new TeamManager();
+        scoreboardManager = new ScoreboardManager(teamManager);
+        Bukkit.getPluginManager().registerEvents(teamManager, this);
         // reload config
         reloadConfig();
         // loads the database type and the database from the configs

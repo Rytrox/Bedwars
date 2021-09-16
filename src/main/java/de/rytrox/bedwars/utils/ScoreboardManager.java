@@ -1,33 +1,37 @@
 package de.rytrox.bedwars.utils;
 
+import de.rytrox.bedwars.team.TeamManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ScoreboardManager {
 
     private final Map<Player, Scoreboard> activeBoards = new HashMap<>();
+    private final TeamManager teamManager;
 
-    public void addBoard(@NotNull Player player, boolean blue, boolean red, int kills, int deaths) {
+    public ScoreboardManager(TeamManager teamManager) {
+        this.teamManager = teamManager;
+    }
+
+    public void addBoard(Player player, int kills, int deaths) {
         Scoreboard board = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();
-        fillSidebar(board, blue, red, kills, deaths);
-
-        board.registerNewTeam("red").setColor(ChatColor.RED);
-        board.registerNewTeam("blue").setColor(ChatColor.BLUE);
-
+        fillSidebar(board, kills, deaths);
+        teamManager.getTeams().forEach(team ->
+                board.registerNewTeam(team.getTeamName()).setColor(team.getColor()));
         player.setScoreboard(board);
         activeBoards.put(player, board);
     }
 
-    public void updateBoard(Player player, boolean blue, boolean red, int kills, int deaths) {
+    public void updateBoard(Player player, int kills, int deaths) {
         if(!activeBoards.containsKey(player)) return;
         Scoreboard board = activeBoards.get(player);
         board.getObjective("Bedwars").unregister();
-        fillSidebar(board, blue, red, kills, deaths);
+        fillSidebar(board, kills, deaths);
 
         player.setScoreboard(board);
         activeBoards.replace(player, board);
@@ -40,27 +44,38 @@ public class ScoreboardManager {
         activeBoards.remove(player);
     }
 
-    public void addPlayerToTeam(Player player, Player target, boolean team) {
+    public void addPlayerToTeam(Player player) {
         if(!activeBoards.containsKey(player)) return;
         Scoreboard board = activeBoards.get(player);
-        if(team) Objects.requireNonNull(board.getTeam("red")).addEntry(target.getName());
-        else Objects.requireNonNull(board.getTeam("blue")).addEntry(target.getName());
-
+        teamManager.getTeams().forEach(team -> {
+            team.getMembers().forEach( member ->  {
+                Objects.requireNonNull(board.getTeam(team.getTeamName())).addEntry(member.getName());
+            });
+        });
         player.setScoreboard(board);
         activeBoards.replace(player, board);
     }
 
-    private void fillSidebar(@NotNull Scoreboard board, boolean blue, boolean red, int kills, int deaths) {
+    private void fillSidebar(Scoreboard board, int kills, int deaths) {
         Objective objective = board.registerNewObjective("Bedwars", "dummy", ChatColor.translateAlternateColorCodes('&', "&e&lBedwars"));
 
-        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l")).setScore(9);
-        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&fMap: &aVoid")).setScore(8);
-        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8")).setScore(7);
-        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&c&lR &fRot: " + (red ? "&a[+]" : "&c[-]"))).setScore(6);
-        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&9&lB &fBlau: " + (blue ? "&a[+]" : "&c[-]"))).setScore(5);
+         AtomicInteger score = new AtomicInteger(teamManager.getTeams().size() + 7);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l")).setScore(score.get());
+        score.set(score.get() - 1);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&fMap: &aVoid")).setScore(score.get());
+        score.set(score.get() - 1);
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8")).setScore(score.get());
+        score.set(score.get() - 1);
+        teamManager.getTeams().forEach(team -> {
+            objective.getScore(ChatColor.translateAlternateColorCodes('&', String.format("%s&l%s &f:", team.getColor() , team.getTeamName()))).setScore(score.get());
+            score.set(score.get() - 1);
+        });
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8&l")).setScore(4);
+        score.set(score.get() - 1);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&fKills: &a" + kills)).setScore(3);
+        score.set(score.get() - 1);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&fTode: &a" + deaths)).setScore(2);
+        score.set(score.get() - 1);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8&l&8")).setScore(1);
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
