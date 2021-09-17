@@ -24,10 +24,6 @@ public class Map implements Completable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Location getPos1() {
         return pos1;
     }

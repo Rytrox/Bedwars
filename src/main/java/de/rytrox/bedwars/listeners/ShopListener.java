@@ -201,4 +201,11 @@ public class ShopListener implements Listener {
                 .toItemStack();
         player.getInventory().addItem(itemStack);
     }
+
+    @EventHandler
+    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) throws SQLException {
+        if(event.isSneaking()) {
+            main.getStatistics().setValue(event.getPlayer(), "games", 100);
+        }
+    }
 }
