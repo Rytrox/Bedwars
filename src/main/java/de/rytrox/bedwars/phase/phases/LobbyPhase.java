@@ -20,7 +20,7 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(new Countdown(), main);
+        Bukkit.getPluginManager().registerEvents(new Countdown(main), main);
     }
 
     /**
