@@ -28,15 +28,17 @@ public class Countdown implements Listener {
         AtomicInteger timer = new AtomicInteger(10);
         task = Bukkit.getServer().getScheduler().runTaskTimer(JavaPlugin.getPlugin(Bedwars.class), () -> {
 
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if(timer.get() > 0) {
-                        player.sendTitle("" + timer.get(), "SECONDS LEFT");
-                    } else {
-                        player.sendTitle("START","BEDWARS");
-                        task.cancel();
-                    }
-                }
-                timer.set(timer.get() - 1);
+            int currentTime = timer.decrementAndGet();
+            if(currentTime > 0) {
+                Bukkit.getOnlinePlayers().forEach((player) ->
+                    player.sendTitle(String.valueOf(currentTime), "SECONDS LEFT", 20, 20, 20)
+                );
+            } else {
+                Bukkit.getOnlinePlayers().forEach((player) ->
+                    player.sendTitle("START", "BEDWARS",20,20,20)
+                );
+                task.cancel();
+            }
 
         }, 100, 20L);
     }
