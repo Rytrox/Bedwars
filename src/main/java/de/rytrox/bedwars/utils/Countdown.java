@@ -13,14 +13,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Countdown implements Listener {
 
-    private final AtomicInteger myInt = new AtomicInteger(4);
     private BukkitTask task;
     private int minPlayerSize = 1;
 
     @EventHandler
     public void onPlayerJoinListener(PlayerJoinEvent event) throws InterruptedException {
         int playerOnlineSize = Bukkit.getOnlinePlayers().size();
-        if(playerOnlineSize > 1) {
+        if(playerOnlineSize > minPlayerSize) {
             this.start();
         }
     }
@@ -28,16 +27,17 @@ public class Countdown implements Listener {
     private void start() {
         AtomicInteger timer = new AtomicInteger(10);
         task = Bukkit.getServer().getScheduler().runTaskTimer(JavaPlugin.getPlugin(Bedwars.class), () -> {
-            if(timer.get() >= 0) {
+
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if(timer.get() > 0) {
                         player.sendTitle("" + timer.get(), "SECONDS LEFT");
                     } else {
                         player.sendTitle("START","BEDWARS");
+                        task.cancel();
                     }
                 }
                 timer.set(timer.get() - 1);
-            }
+
         }, 100, 20L);
     }
 
