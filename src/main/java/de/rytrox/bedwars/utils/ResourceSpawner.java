@@ -32,6 +32,7 @@ public class ResourceSpawner {
         this.material = material;
 
         armorStand = pos.add(0,-1,0).getWorld().spawn(pos, ArmorStand.class);
+        pos.add(0.5,1,0.5);
         armorStand.setCustomNameVisible(true);
         armorStand.setCustomName("Level: " + level);
         armorStand.setVisible(false);
