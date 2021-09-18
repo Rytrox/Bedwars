@@ -9,3 +9,7 @@ mysql:
   database: 'database'
   username: 'username'
   password: 'password'
+
+countdown:
+  minPlayers: 2
+  startValue: 10

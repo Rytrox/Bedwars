@@ -2,6 +2,9 @@ package de.rytrox.bedwars.phase.phases;
 
 import de.rytrox.bedwars.Bedwars;
 
+import de.rytrox.bedwars.utils.Countdown;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 public class LobbyPhase extends GamePhase {
@@ -17,6 +20,7 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onEnable() {
+        Bukkit.getPluginManager().registerEvents(new Countdown(main), main);
     }
 
     /**

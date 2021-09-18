@@ -13,6 +13,7 @@ public class PhaseManager {
 
     public PhaseManager(Bedwars main) {
         this.currentPhase = new LobbyPhase(main);
+        this.currentPhase.onEnable();
     }
 
     /**
