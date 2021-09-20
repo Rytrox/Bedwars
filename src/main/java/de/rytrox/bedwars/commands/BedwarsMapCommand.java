@@ -12,7 +12,6 @@ public class BedwarsMapCommand implements CommandExecutor {
     /*
     - (1) bwmap help
     - (1) bwmap list
-    - (1) bwmap listineditor
     - (2) bwmap create (map)
     - (2) bwmap edit (map)
     - (2) bwmap save (map)

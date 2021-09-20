@@ -17,7 +17,7 @@ public class MapUtils {
         this.db = sql;
     }
 
-    private final List<Map> mapsInEditor = new ArrayList<>();
+    private final List<Map> maps = new ArrayList<>();
 
     public void updateTables() {
         try {
@@ -64,24 +64,24 @@ public class MapUtils {
         }
     }
 
-    public List<Map> getMapsInEditor() {
-        return new ArrayList<>(mapsInEditor);
+    public List<Map> getMaps() {
+        return new ArrayList<>(maps);
     }
 
     public boolean saveMap(Map map) throws SQLException {
-        if(!mapsInEditor.contains(map)) return false;
+        if(!maps.contains(map)) return false;
         if(!map.checkComplete()) return false;
         deleteTeams(map);
         deleteSpawner(map);
-        buildLocation(map.getPos1()).insert((pos1id) -> {
-            buildLocation(map.getPos2()).insert((pos2id) -> {
+        buildLocation(map.getPos1()).insert(pos1id -> {
+            buildLocation(map.getPos2()).insert(pos2id -> {
                 db.prepare("REPLACE INTO Maps (name, teamsize, pos1, pos2) VALUES (?, ?, ?, ?)",
                         map.getName(), map.getMaxTeamSize(), pos1id, pos2id)
                         .insert();
                 for (Team team : map.getTeams()) {
-                    buildLocation(team.getVillager()).insert((villager) -> {
-                        buildLocation(team.getBed()).insert((bed) -> {
-                            buildLocation(team.getSpawn()).insert((spawn) -> {
+                    buildLocation(team.getVillager()).insert(villager -> {
+                        buildLocation(team.getBed()).insert(bed -> {
+                            buildLocation(team.getSpawn()).insert(spawn -> {
                                 db.prepare("INSERT INTO Teams (teamname, color, villager, spawn, bed, map) VALUES (?, ?, ?, ?, ?, ?)",
                                         team.getTeamname(), team.getColor().getChar(), villager, spawn, bed, map.getName())
                                         .insert();
@@ -90,13 +90,22 @@ public class MapUtils {
                     });
                 }
                 for (Spawner spawner : map.getSpawners()) {
-                    buildLocation(spawner.getLocation()).insert((buildLocation) -> {
+                    buildLocation(spawner.getLocation()).insert(buildLocation -> {
                         db.prepare("INSERT INTO Spawner (material, location, map) VALUES (?, ?, ?)",
                                 spawner.getMaterial().ordinal(), buildLocation, map.getName());
                     });
                 }
             });
         });
+        return true;
+    }
+
+    public boolean removeMap(Map map) throws SQLException {
+        if(!maps.contains(map)) return false;
+        maps.remove(map);
+        deleteTeams(map);
+        deleteSpawner(map);
+        deleteMap(map);
         return true;
     }
 
@@ -107,7 +116,7 @@ public class MapUtils {
 
     private void deleteSpawner(Map map) throws SQLException {
         db.prepare("SELECT Locations.id FROM Locations INNER JOIN Spawner ON Spawner.location = Locations.id WHERE Spawner.map = ?", map.getName())
-                .query((resultSet) -> {
+                .query(resultSet -> {
                     while (resultSet.next()) {
                         db.prepare("DELETE FROM Locations WHERE id = ?", resultSet.getInt("id")).execute();
                     }
@@ -118,11 +127,21 @@ public class MapUtils {
     private void deleteTeams(Map map) throws SQLException {
         db.prepare("SELECT Locations.id FROM Locations INNER JOIN Teams ON Teams.villager = Locations.id " +
                         "INNER JOIN Teams ON Teams.bed = Locations.id INNER JOIN Teams ON Teams.spawn = Locations.id WHERE Teams.map = ?", map.getName())
-                .query((resultSet) -> {
+                .query(resultSet -> {
                     while (resultSet.next()) {
                         db.prepare("DELETE FROM Locations WHERE id = ?", resultSet.getInt("id")).execute();
                     }
                 });
         db.prepare("DELETE * FROM Teams WHERE map = ?", map.getName()).execute();
+    }
+
+    private void deleteMap(Map map) throws SQLException {
+        db.prepare("SELECT Locations.id FROM Locations INNER JOIN Maps ON Maps.pos1 = Locations.id INNER JOIN Maps ON Maps.pos2 = Locations.id WHERE Maps.name = ?", map.getName())
+                .query(resultSet -> {
+                    while (resultSet.next()) {
+                        db.prepare("DELETE FROM Locations WHERE id = ?", resultSet.getInt("id")).execute();
+                    }
+                });
+        db.prepare("DELETE FROM Maps WHERE name = ?", map.getName()).execute();
     }
 }
