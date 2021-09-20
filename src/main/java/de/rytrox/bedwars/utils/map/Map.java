@@ -1,7 +1,9 @@
 package de.rytrox.bedwars.utils.map;
 
+import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.utils.Completable;
 import org.bukkit.Location;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,12 +11,14 @@ import java.util.stream.Stream;
 
 public class Map implements Completable {
 
-    private String name;
+    private final String name;
     private Location pos1;
     private Location pos2;
     private int maxTeamSize = 1;
     private final List<Team> teams = new LinkedList<>();
     private final List<Spawner> spawners = new LinkedList<>();
+
+    private final Bedwars main = JavaPlugin.getPlugin(Bedwars.class);
 
     public Map(String name) {
         this.name = name;

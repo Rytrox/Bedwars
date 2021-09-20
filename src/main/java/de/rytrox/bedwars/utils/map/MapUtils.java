@@ -39,6 +39,7 @@ public class MapUtils {
                             "FOREIGN KEY (pos2) REFERENCES Locations(id))")
                     .execute();
             db.prepare("CREATE TABLE IF NOT EXISTS Teams(id INTEGER NOT NULL, " +
+                            "teamname VARCHAR(100) NOT NULL, " +
                             "color CHARACTER NOT NULL, " +
                             "villager INT NOT NULL, " +
                             "spawn INT NOT NULL, " +
@@ -81,8 +82,8 @@ public class MapUtils {
                     buildLocation(team.getVillager()).insert((villager) -> {
                         buildLocation(team.getBed()).insert((bed) -> {
                             buildLocation(team.getSpawn()).insert((spawn) -> {
-                                db.prepare("INSERT INTO Teams (color, villager, spawn, bed, map) VALUES (?, ?, ?, ?, ?)",
-                                        team.getColor().getChar(), villager, spawn, bed, map.getName())
+                                db.prepare("INSERT INTO Teams (teamname, color, villager, spawn, bed, map) VALUES (?, ?, ?, ?, ?, ?)",
+                                        team.getTeamname(), team.getColor().getChar(), villager, spawn, bed, map.getName())
                                         .insert();
                             });
                         });
