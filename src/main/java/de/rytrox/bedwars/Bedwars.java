@@ -1,6 +1,6 @@
 package de.rytrox.bedwars;
 
-import de.rytrox.bedwars.utils.map.MapUtils;
+import de.rytrox.bedwars.map.MapUtils;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.utils.Statistics;

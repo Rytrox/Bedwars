@@ -1,9 +1,11 @@
-package de.rytrox.bedwars.utils.map;
+package de.rytrox.bedwars.map;
 
 import de.timeout.libs.sql.QueryBuilder;
 import de.timeout.libs.sql.SQL;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,8 @@ public class MapUtils {
         this.db = sql;
     }
 
-    private final List<Map> maps = new ArrayList<>();
+    private final List<Map> mapsInEdit = new ArrayList<>();
+    private final List<String> mapNames = new ArrayList<>();
 
     public void updateTables() {
         try {
@@ -64,12 +67,16 @@ public class MapUtils {
         }
     }
 
-    public List<Map> getMaps() {
-        return new ArrayList<>(maps);
+    public List<Map> getMapsInEdit() {
+        return new ArrayList<>(mapsInEdit);
+    }
+
+    public List<String> getMapNames() {
+        return new ArrayList<>(mapNames);
     }
 
     public boolean saveMap(Map map) throws SQLException {
-        if(!maps.contains(map)) return false;
+        if(!mapsInEdit.contains(map)) return false;
         if(!map.checkComplete()) return false;
         deleteTeams(map);
         deleteSpawner(map);
@@ -101,8 +108,8 @@ public class MapUtils {
     }
 
     public boolean removeMap(Map map) throws SQLException {
-        if(!maps.contains(map)) return false;
-        maps.remove(map);
+        if(!mapsInEdit.contains(map)) return false;
+        mapsInEdit.remove(map);
         deleteTeams(map);
         deleteSpawner(map);
         deleteMap(map);
@@ -143,5 +150,32 @@ public class MapUtils {
                     }
                 });
         db.prepare("DELETE FROM Maps WHERE name = ?", map.getName()).execute();
+    }
+
+    private void loadMapNames() throws SQLException {
+        mapNames.clear();
+        db.prepare("SELECT name FROM Maps")
+                .query(resultSet -> {
+                    while (resultSet.next()) mapNames.add(resultSet.getString("name"));
+                });
+    }
+
+    public void loadMap(String name) throws SQLException {
+        db.prepare("SELCET * FROM Maps WHERE name = ?", name)
+                .query(resultSet -> {
+                    if (!resultSet.next()) return;
+
+                    Map map = new Map(resultSet.getString("name"));
+                    map.setMaxTeamSize(resultSet.getInt("teamsize"));
+
+                    MapLoadEvent event = new MapLoadEvent(map);
+                    Bukkit.getPluginManager().callEvent(event);
+                });
+    }
+
+    private Location getLocation(ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) return null;
+        return new Location(Bukkit.getWorld(resultSet.getString("world")), resultSet.getFloat("x"), resultSet.getFloat("y"),
+                resultSet.getFloat("z"), resultSet.getFloat("yaw"), resultSet.getFloat("pitch"));
     }
 }

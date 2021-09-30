@@ -1,4 +1,4 @@
-package de.rytrox.bedwars.utils.map;
+package de.rytrox.bedwars.map;
 
 import de.rytrox.bedwars.utils.Completable;
 import org.bukkit.ChatColor;
