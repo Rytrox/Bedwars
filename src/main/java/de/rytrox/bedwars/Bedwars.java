@@ -1,5 +1,6 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.commands.BedwarsMapCommand;
 import de.rytrox.bedwars.map.MapUtils;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.rytrox.bedwars.listeners.ShopListener;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public class Bedwars extends JavaPlugin {
@@ -47,6 +49,8 @@ public class Bedwars extends JavaPlugin {
         reloadConfig();
         // register Listeners
         Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
+        // register Commands
+        Objects.requireNonNull(getCommand("bedwarsmap")).setExecutor(new BedwarsMapCommand());
         // loads the database type and the database from the configs
         loadDatabase();
         // creates a Statistics instance
