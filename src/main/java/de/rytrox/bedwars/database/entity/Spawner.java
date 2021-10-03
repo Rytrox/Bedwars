@@ -6,23 +6,23 @@ import org.jetbrains.annotations.NotNull;
 import javax.persistence.*;
 
 @Entity
-@Table (name = "´Spawner´")
+@Table (name = "`Spawner`")
 public class Spawner {
 
     @Id
-    @Column (name = "´id´", unique = true, nullable = false)
+    @Column (name = "`id`", unique = true, nullable = false)
     private Integer id;
 
     @Enumerated (EnumType.ORDINAL)
-    @Column (name = "´material´", nullable = false)
+    @Column (name = "`material`", nullable = false)
     private SpawnerMaterial material;
 
     @OneToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "´location´", nullable = false)
+    @JoinColumn (name = "`location`", nullable = false)
     private Location location;
 
     @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "´map´", nullable = false)
+    @JoinColumn (name = "`map`", nullable = false)
     private Map map;
 
     @NotNull

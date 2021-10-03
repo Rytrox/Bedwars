@@ -6,22 +6,22 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table (name = "´Maps´")
+@Table (name = "`Maps`")
 public class Map {
 
     @Id
-    @Column (name = "´name´", unique = true, nullable = false)
+    @Column (name = "`name`", unique = true, nullable = false)
     private String name;
 
-    @Column (name = "´teamsize´", nullable = false)
+    @Column (name = "`teamsize`", nullable = false)
     private Integer teamsize;
 
     @OneToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "´pos1´", nullable = false)
+    @JoinColumn (name = "`pos1`", nullable = false)
     private Location pos1;
 
     @OneToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "´pos2´", nullable = false)
+    @JoinColumn (name = "`pos2`", nullable = false)
     private Location pos2;
 
     @OneToMany (mappedBy = "map", cascade = CascadeType.ALL)

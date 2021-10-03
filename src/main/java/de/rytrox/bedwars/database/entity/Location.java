@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.persistence.*;
 
 @Entity
-@Table (name = "´Locations´",
+@Table (name = "`Locations`",
         uniqueConstraints = { @UniqueConstraint(columnNames = {"`world`", "`x`", "`y`", "`z`", "`yaw`", "`pitch`"}) })
 public class Location {
 
@@ -14,22 +14,22 @@ public class Location {
     @Column (name = "`id`", nullable = false, unique = true)
     private Integer id;
 
-    @Column (name = "´world´", nullable = false, length = 100)
+    @Column (name = "`world`", nullable = false, length = 100)
     private String world;
 
-    @Column (name = "´x´", nullable = false)
+    @Column (name = "`x`", nullable = false)
     private Double x;
 
-    @Column (name = "´y´", nullable = false)
+    @Column (name = "`y`", nullable = false)
     private Double y;
 
-    @Column (name = "´z´", nullable = false)
+    @Column (name = "`z`", nullable = false)
     private Double z;
 
-    @Column (name = "´yaw´", nullable = false)
+    @Column (name = "`yaw`", nullable = false)
     private Float yaw;
 
-    @Column (name = "´pitch´", nullable = false)
+    @Column (name = "`pitch`", nullable = false)
     private Float pitch;
 
     @NotNull

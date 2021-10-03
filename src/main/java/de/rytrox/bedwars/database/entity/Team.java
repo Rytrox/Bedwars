@@ -6,34 +6,34 @@ import org.jetbrains.annotations.NotNull;
 import javax.persistence.*;
 
 @Entity
-@Table (name = "´Teams´")
+@Table (name = "`Teams`")
 public class Team {
 
     @Id
-    @Column (name = "´id´", unique = true, nullable = false)
+    @Column (name = "`id`", unique = true, nullable = false)
     private Integer id;
 
-    @Column (name = "´name´", nullable = false)
+    @Column (name = "`name`", nullable = false)
     private String name;
 
     @Enumerated (EnumType.ORDINAL)
-    @Column (name = "´color´", nullable = false)
+    @Column (name = "`color`", nullable = false)
     private ChatColor color;
 
     @OneToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "´villager´", nullable = false)
+    @JoinColumn (name = "`villager`", nullable = false)
     private Location villager;
 
     @OneToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "´spawn´", nullable = false)
+    @JoinColumn (name = "`spawn`", nullable = false)
     private Location spawn;
 
     @OneToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "´bed´", nullable = false)
+    @JoinColumn (name = "`bed`", nullable = false)
     private Location bed;
 
     @ManyToOne (cascade = CascadeType.ALL)
-    @JoinColumn (name = "´map´", nullable = false)
+    @JoinColumn (name = "`map`", nullable = false)
     private Map map;
 
     @NotNull

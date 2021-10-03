@@ -35,6 +35,5 @@ public class MapRepository {
                 .stream()
                 .map(Map::getName)
                 .collect(Collectors.toList());
-
     }
 }
