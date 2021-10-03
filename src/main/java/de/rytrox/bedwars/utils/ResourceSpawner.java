@@ -11,31 +11,31 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
-public class RecourceSpawner {
+public class ResourceSpawner {
 
     private int level;
-    private int[] times = new int[3];
-    private Location pos;
-    private Material material;
+    private final int[] times = new int[3];
+    private final Location pos;
+    private final Material material;
     private BukkitTask task;
-    private ArmorStand armorStand;
-    private Location pRecourceTeleport;
+    private final ArmorStand armorStand;
 
-    public RecourceSpawner(Material material, Location pos, int time1, int time2, int time3) {
+    public ResourceSpawner(Material material, @NotNull Location pos, int time1, int time2, int time3) {
         times[0] = time1;
         times[1] = time2;
         times[2] = time3;
+        level = 1;
+
         this.pos = pos;
         this.material = material;
-        level = 1;
-        Location pArmorStand = pos;
-        pArmorStand.add(0,-1,0);
-        armorStand = pos.getWorld().spawn(pArmorStand, ArmorStand.class);
+
+        armorStand = pos.add(0,-1,0).getWorld().spawn(pos, ArmorStand.class);
+        pos.add(0.5,1,0.5);
         armorStand.setCustomNameVisible(true);
         armorStand.setCustomName("Level: " + level);
         armorStand.setVisible(false);
-        pos.add(0, 3, 0);
 
         start();
     }
@@ -44,8 +44,7 @@ public class RecourceSpawner {
         task = Bukkit.getServer().getScheduler().runTaskTimer(JavaPlugin.getPlugin(Bedwars.class), () -> {
             Item dropItem = pos.getWorld().dropItem(pos, new ItemStack(material));
             dropItem.setVelocity(new Vector());
-        }, 100,20*(times[level - 1]));
-
+        }, 100, 20L * times[level - 1]);
     }
 
     public void stop() {

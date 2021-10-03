@@ -4,6 +4,7 @@ import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.utils.ShopUtils;
 import de.timeout.libs.item.ItemStackBuilder;
 import de.timeout.libs.item.ItemStacks;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,10 +14,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -133,7 +135,8 @@ public class ShopListener implements Listener {
      * @param currency The NBT-String of a material
      * @return Returns the material to the NBT-String (Returns "null", if the NBT-String has no material)
      */
-    private Material storeCurrency(String currency) {
+    @Contract(pure = true)
+    private @Nullable Material storeCurrency(@NotNull String currency) {
         switch (currency) {
             case "bronze":
                 return Material.BRICK;
@@ -157,7 +160,7 @@ public class ShopListener implements Listener {
      * @param buyAll Is true if the player is going to buy as much as possible
      * @param item The item the player is going to buy
      */
-    private void buy(Player player, int price, Material currency, boolean buyAll, ItemStack item) {
+    private void buy(@NotNull Player player, int price, Material currency, boolean buyAll, ItemStack item) {
 
         // Gets the money (Number of material that is needed) from the player and stores it
         int money = Arrays.stream(player.getInventory().getContents())
@@ -168,7 +171,10 @@ public class ShopListener implements Listener {
 
         // Checks if the Player has enough money
         if(price > money) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&fDir fehlen &9" + (price - money) + " " + currency + "&f!"));
+            player.sendMessage(
+                    ChatColor.translateAlternateColorCodes('&',
+                            "&fDir fehlen &9" + (price - money) + " " + currency + "&f!")
+            );
             return;
         }
 
