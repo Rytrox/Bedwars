@@ -4,14 +4,18 @@ import de.rytrox.bedwars.Bedwars;
 
 import de.rytrox.bedwars.utils.Countdown;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class LobbyPhase extends GamePhase {
 
+    private final Countdown countdown;
 
     public LobbyPhase(Bedwars main) {
         super(main);
+
+        System.out.println("Wird getriggert!");
+        this.countdown = new Countdown(main);
     }
 
     /**
@@ -20,7 +24,7 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(new Countdown(main), main);
+        Bukkit.getPluginManager().registerEvents(this.countdown, main);
     }
 
     /**
@@ -29,6 +33,7 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onDisable() {
+        HandlerList.unregisterAll(countdown);
     }
 
     /**
