@@ -4,7 +4,9 @@ import de.rytrox.bedwars.database.entity.Map;
 import io.ebean.Database;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MapRepository {
 
@@ -20,5 +22,19 @@ public class MapRepository {
                 .where()
                 .idEq(name)
                 .findOneOrEmpty();
+    }
+
+    public List<Map> findAllMaps() {
+        return database.find(Map.class)
+                .findList();
+    }
+
+    public List<String> findAllMapsWithName() {
+        return database.find(Map.class)
+                .findList()
+                .stream()
+                .map(Map::getName)
+                .collect(Collectors.toList());
+
     }
 }

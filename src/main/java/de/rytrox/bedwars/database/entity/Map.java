@@ -27,7 +27,7 @@ public class Map {
     @OneToMany (mappedBy = "map", cascade = CascadeType.ALL)
     private List<Team> teams;
 
-    @OneToMany (mappedBy = "spawner", cascade = CascadeType.ALL)
+    @OneToMany (mappedBy = "map", cascade = CascadeType.ALL)
     private List<Spawner> spawner;
 
     public Map() {
@@ -80,5 +80,13 @@ public class Map {
 
     public void setTeams(List<Team> teams) {
         this.teams = teams;
+    }
+
+    public List<Spawner> getSpawner() {
+        return spawner;
+    }
+
+    public void setSpawner(List<Spawner> spawner) {
+        this.spawner = spawner;
     }
 }

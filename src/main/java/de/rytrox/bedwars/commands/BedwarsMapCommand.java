@@ -1,6 +1,8 @@
 package de.rytrox.bedwars.commands;
 
 import de.rytrox.bedwars.Bedwars;
+import de.rytrox.bedwars.database.entity.Map;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -55,17 +57,35 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
 
                         return true;
                     case "list":
-
+                        Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
+                            List<String> maps = main.getMapRepository().findAllMapsWithName();
+                            final String[] returnString = {"&7Maps (" + maps.size() + "): "};
+                            maps.forEach((map -> returnString[0] += "&c" + map + "&7, "));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    returnString[0].substring(0, returnString[0].length() - 2)));
+                        });
                         return true;
                     case "listineditor":
-                        
+                        List<String> maps = main.getMapUtils().getMapNames();
+                        final String[] returnString = {"&7MapsInEditor (" + maps.size() + "): "};
+                        maps.forEach((map -> returnString[0] += "&c" + map + "&7, "));
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                returnString[0].substring(0, returnString[0].length() - 2)));
                         return true;
                 }
                 break;
             case 2:
                 switch (args[0]) {
                     case "create":
-
+                        Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
+                            if(!main.getMapRepository().findAllMapsWithName().contains(args[1])
+                                    && !main.getMapUtils().getMapNames().contains(args[1])) {
+                                main.getMapUtils().getOrCreateMap(args[1]);
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&cDue hast die Map &7" + args[1] + "&c erfolgreich erstellt."));
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDie Map &7" + args[1] + "&c existiert bereits!"));
+                        });
                         return true;
                     case "edit":
 
@@ -180,13 +200,13 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
         switch (args.length) {
             case 1:
-                list.add("add");
+                list.add("create");
                 list.add("modify");
                 list.add("save");
                 list.add("remove");
                 list.add("check");
                 list.add("list");
-                list.add("listinedit");
+                list.add("listineditor");
                 break;
             case 2:
                 if ("modify".equals(args[0]) || "save".equals(args[0]) || "remove".equals(args[0]) || "check".equals(args[0])) {

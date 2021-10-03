@@ -21,7 +21,7 @@ public class Spawner {
     @JoinColumn (name = "´location´", nullable = false)
     private Location location;
 
-    @ManyToOne (cascade = CascadeType.DETACH)
+    @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn (name = "´map´", nullable = false)
     private Map map;
 

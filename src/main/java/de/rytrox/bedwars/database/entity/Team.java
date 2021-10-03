@@ -32,7 +32,7 @@ public class Team {
     @JoinColumn (name = "´bed´", nullable = false)
     private Location bed;
 
-    @ManyToOne (cascade = CascadeType.DETACH)
+    @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn (name = "´map´", nullable = false)
     private Map map;
 
