@@ -30,6 +30,14 @@ public class Map {
     @OneToMany (mappedBy = "spawner", cascade = CascadeType.ALL)
     private List<Spawner> spawner;
 
+    public Map() {
+
+    }
+
+    public Map(String name) {
+        this.name = name;
+    }
+
     @NotNull
     public String getName() {
         return name;

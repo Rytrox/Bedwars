@@ -1,181 +1,25 @@
 package de.rytrox.bedwars.map;
 
-import de.timeout.libs.sql.QueryBuilder;
-import de.timeout.libs.sql.SQL;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import de.rytrox.bedwars.database.entity.Map;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class MapUtils {
 
-    private final SQL db;
+    private final java.util.Map<String, Map> mapsInEdit = new HashMap<>();
 
-    public MapUtils(SQL sql) {
-        this.db = sql;
-    }
+    public Map getOrCreateMap(String name) {
+        if (mapsInEdit.containsKey(name))
+            return mapsInEdit.get(name);
 
-    private final List<Map> mapsInEdit = new ArrayList<>();
-    private final List<String> mapNames = new ArrayList<>();
-
-    public void updateTables() {
-        try {
-            db.prepare("CREATE TABLE IF NOT EXISTS Locations(id INTEGER NOT NULL, " +
-                            "world VARCHAR(100) NOT NULL, " +
-                            "x FLOAT NOT NULL, " +
-                            "y FLOAT NOT NULL, " +
-                            "z FLOAT NOT NULL, " +
-                            "yaw FLOAT NOT NULL, " +
-                            "pitch FLOAT NOT NULL, " +
-                            "PRIMARY KEY (id))")
-                    .execute();
-            db.prepare("CREATE TABLE IF NOT EXISTS Maps(name VARCHAR(100) NOT NULL, " +
-                            "teamsize INT(3) NOT NULL, " +
-                            "pos1 INT NOT NULL, " +
-                            "pos2 INT NOT NULL," +
-                            "PRIMARY KEY (name), " +
-                            "FOREIGN KEY (pos1) REFERENCES Locations(id), " +
-                            "FOREIGN KEY (pos2) REFERENCES Locations(id))")
-                    .execute();
-            db.prepare("CREATE TABLE IF NOT EXISTS Teams(id INTEGER NOT NULL, " +
-                            "teamname VARCHAR(100) NOT NULL, " +
-                            "color CHARACTER NOT NULL, " +
-                            "villager INT NOT NULL, " +
-                            "spawn INT NOT NULL, " +
-                            "bed INT NOT NULL, " +
-                            "map VARCHAR(100) NOT NULL, " +
-                            "PRIMARY KEY (id), " +
-                            "FOREIGN KEY (villager) REFERENCES Locations(id), " +
-                            "FOREIGN KEY (spawn) REFERENCES Locations(id), " +
-                            "FOREIGN KEY (bed) REFERENCES Locations(id), " +
-                            "FOREIGN KEY (map) REFERENCES Maps(name))")
-                    .execute();
-            db.prepare("CREATE TABLE IF NOT EXISTS Spawner(id INTEGER NOT NULL, " +
-                            "material INT(1) NOT NULL, " +
-                            "location INT NOT NULL, " +
-                            "map VARCHAR(100) NOT NULL, " +
-                            "PRIMARY KEY (id), " +
-                            "FOREIGN KEY (location) REFERENCES Locations(id), " +
-                            "FOREIGN KEY (map) REFERENCES Maps(name))")
-                    .execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<Map> getMapsInEdit() {
-        return new ArrayList<>(mapsInEdit);
+        Map map = new Map(name);
+        mapsInEdit.put(name, map);
+        return map;
     }
 
     public List<String> getMapNames() {
-        return new ArrayList<>(mapNames);
-    }
-
-    public boolean saveMap(Map map) throws SQLException {
-        if(!mapsInEdit.contains(map)) return false;
-        if(!map.checkComplete()) return false;
-        deleteTeams(map);
-        deleteSpawner(map);
-        buildLocation(map.getPos1()).insert(pos1id -> {
-            buildLocation(map.getPos2()).insert(pos2id -> {
-                db.prepare("REPLACE INTO Maps (name, teamsize, pos1, pos2) VALUES (?, ?, ?, ?)",
-                        map.getName(), map.getMaxTeamSize(), pos1id, pos2id)
-                        .insert();
-                for (Team team : map.getTeams()) {
-                    buildLocation(team.getVillager()).insert(villager -> {
-                        buildLocation(team.getBed()).insert(bed -> {
-                            buildLocation(team.getSpawn()).insert(spawn -> {
-                                db.prepare("INSERT INTO Teams (teamname, color, villager, spawn, bed, map) VALUES (?, ?, ?, ?, ?, ?)",
-                                        team.getTeamname(), team.getColor().getChar(), villager, spawn, bed, map.getName())
-                                        .insert();
-                            });
-                        });
-                    });
-                }
-                for (Spawner spawner : map.getSpawners()) {
-                    buildLocation(spawner.getLocation()).insert(buildLocation -> {
-                        db.prepare("INSERT INTO Spawner (material, location, map) VALUES (?, ?, ?)",
-                                spawner.getMaterial().ordinal(), buildLocation, map.getName());
-                    });
-                }
-            });
-        });
-        return true;
-    }
-
-    public boolean removeMap(Map map) throws SQLException {
-        if(!mapsInEdit.contains(map)) return false;
-        mapsInEdit.remove(map);
-        deleteTeams(map);
-        deleteSpawner(map);
-        deleteMap(map);
-        return true;
-    }
-
-    private QueryBuilder buildLocation(Location location) throws SQLException {
-        return db.prepare("INSERT INTO Locations (world, x, y, z, yaw, pitch) VALUES (?, ?, ?, ?, ?, ?)",
-                Objects.requireNonNull(location.getWorld()).getName(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-    }
-
-    private void deleteSpawner(Map map) throws SQLException {
-        db.prepare("SELECT Locations.id FROM Locations INNER JOIN Spawner ON Spawner.location = Locations.id WHERE Spawner.map = ?", map.getName())
-                .query(resultSet -> {
-                    while (resultSet.next()) {
-                        db.prepare("DELETE FROM Locations WHERE id = ?", resultSet.getInt("id")).execute();
-                    }
-                });
-        db.prepare("DELETE FROM Spawner WHERE map = ?", map.getName()).execute();
-    }
-
-    private void deleteTeams(Map map) throws SQLException {
-        db.prepare("SELECT Locations.id FROM Locations INNER JOIN Teams ON Teams.villager = Locations.id " +
-                        "INNER JOIN Teams ON Teams.bed = Locations.id INNER JOIN Teams ON Teams.spawn = Locations.id WHERE Teams.map = ?", map.getName())
-                .query(resultSet -> {
-                    while (resultSet.next()) {
-                        db.prepare("DELETE FROM Locations WHERE id = ?", resultSet.getInt("id")).execute();
-                    }
-                });
-        db.prepare("DELETE * FROM Teams WHERE map = ?", map.getName()).execute();
-    }
-
-    private void deleteMap(Map map) throws SQLException {
-        db.prepare("SELECT Locations.id FROM Locations INNER JOIN Maps ON Maps.pos1 = Locations.id INNER JOIN Maps ON Maps.pos2 = Locations.id WHERE Maps.name = ?", map.getName())
-                .query(resultSet -> {
-                    while (resultSet.next()) {
-                        db.prepare("DELETE FROM Locations WHERE id = ?", resultSet.getInt("id")).execute();
-                    }
-                });
-        db.prepare("DELETE FROM Maps WHERE name = ?", map.getName()).execute();
-    }
-
-    private void loadMapNames() throws SQLException {
-        mapNames.clear();
-        db.prepare("SELECT name FROM Maps")
-                .query(resultSet -> {
-                    while (resultSet.next()) mapNames.add(resultSet.getString("name"));
-                });
-    }
-
-    public void loadMap(String name) throws SQLException {
-        db.prepare("SELCET * FROM Maps WHERE name = ?", name)
-                .query(resultSet -> {
-                    if (!resultSet.next()) return;
-
-                    Map map = new Map(resultSet.getString("name"));
-                    map.setMaxTeamSize(resultSet.getInt("teamsize"));
-
-                    MapLoadEvent event = new MapLoadEvent(map);
-                    Bukkit.getPluginManager().callEvent(event);
-                });
-    }
-
-    private Location getLocation(ResultSet resultSet) throws SQLException {
-        if (!resultSet.next()) return null;
-        return new Location(Bukkit.getWorld(resultSet.getString("world")), resultSet.getFloat("x"), resultSet.getFloat("y"),
-                resultSet.getFloat("z"), resultSet.getFloat("yaw"), resultSet.getFloat("pitch"));
+        return new ArrayList<>(mapsInEdit.keySet());
     }
 }

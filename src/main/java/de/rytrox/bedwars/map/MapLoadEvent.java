@@ -1,5 +1,6 @@
 package de.rytrox.bedwars.map;
 
+import de.rytrox.bedwars.database.entity.Map;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;

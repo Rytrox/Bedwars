@@ -3,13 +3,11 @@ package de.rytrox.bedwars.database.entity;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table (name = "´Locations´")
+@Table (name = "´Locations´",
+        uniqueConstraints = { @UniqueConstraint(columnNames = {"`world`", "`x`", "`y`", "`z`", "`yaw`", "`pitch`"}) })
 public class Location {
 
     @Id
