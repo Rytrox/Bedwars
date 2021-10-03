@@ -1,4 +1,4 @@
-package de.rytrox.bedwars.map;
+package de.rytrox.bedwars.database.enums;
 
 public enum SpawnerMaterial {
     BRONZE, IRON, GOLD

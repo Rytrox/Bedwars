@@ -1,5 +1,6 @@
 package de.rytrox.bedwars.map;
 
+import de.rytrox.bedwars.database.enums.SpawnerMaterial;
 import de.rytrox.bedwars.utils.Completable;
 import org.bukkit.Location;
 
