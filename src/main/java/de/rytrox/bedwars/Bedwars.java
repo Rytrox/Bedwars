@@ -1,35 +1,46 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.database.entity.PlayerStatistic;
+import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
 import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.utils.ScoreboardManager;
-import de.rytrox.bedwars.utils.Statistics;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
-import de.timeout.libs.sql.MySQL;
-import de.timeout.libs.sql.SQL;
-import de.timeout.libs.sql.SQLite;
+
+import io.ebean.Database;
+import io.ebean.DatabaseFactory;
+import io.ebean.config.DatabaseConfig;
+import io.ebean.config.dbplatform.h2.H2Platform;
+import io.ebean.config.dbplatform.mysql.MySqlPlatform;
+import io.ebean.datasource.DataSourceConfig;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
+import org.h2.Driver;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 public class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
     private ScoreboardManager scoreboardManager;
-    private SQL db;
-    private Statistics statistics;
+    private Database database;
     private PhaseManager phaseManager;
     private TeamManager teamManager;
+
+    private PlayerStatisticsRepository statisticsRepository;
 
     public Bedwars()
     {
@@ -53,15 +64,15 @@ public class Bedwars extends JavaPlugin {
         reloadConfig();
         // loads the database type and the database from the configs
         loadDatabase();
-        statistics = new Statistics(db);
+        this.statisticsRepository = new PlayerStatisticsRepository(database);
+
         this.phaseManager = new PhaseManager(this);
-        // updates the Statistics Datatable
-        statistics.updateTable();
     }
 
     @Override
     public void onDisable() {
         this.saveConfig();
+        DatabaseFactory.shutdown();
     }
 
     @Override
@@ -96,13 +107,13 @@ public class Bedwars extends JavaPlugin {
     }
 
     @NotNull
-    public SQL getDatabase() {
-        return db;
+    public Database getDatabase() {
+        return database;
     }
 
     @NotNull
-    public Statistics getStatistics() {
-        return statistics;
+    public PlayerStatisticsRepository getStatistics() {
+        return statisticsRepository;
     }
 
     @NotNull
@@ -114,24 +125,67 @@ public class Bedwars extends JavaPlugin {
      * Loads the database from the information of the config.yml
      */
     private void loadDatabase() {
+        ClassLoader originalContextClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+
+        DatabaseConfig databaseConfig = new DatabaseConfig();
+        databaseConfig.setRegister(true);
+        databaseConfig.setDdlCreateOnly(true);
+        databaseConfig.setDefaultServer(true);
+        databaseConfig.setDdlRun(true);
+        databaseConfig.setDdlGenerate(true);
+        databaseConfig.setClasses(getDatabaseClasses());
+        databaseConfig.setAutoPersistUpdates(true);
+
+        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+
         if(config.getBoolean("mysql.enabled", false)) {
-            int port = config.getInt("mysql.port", 3306);
-            String host = config.getString("mysql.host", "localhost");
-            String database = config.getString("mysql.database", "database");
-            String username = config.getString("mysql.username", "username");
-            String password = config.getString("mysql.password", "password");
-            db = new MySQL(host, port, database, username, password);
-            return;
+            databaseConfig.setDatabasePlatform(new MySqlPlatform());
+
+            dataSourceConfig.setDriver("com.mysql.jdbc.Driver");
+            dataSourceConfig.setUsername(config.getString("mysql.username", "username"));
+            dataSourceConfig.setPassword(config.getString("mysql.password", "password"));
+            dataSourceConfig.setUrl(String.format("jdbc:mysql://%s:%d/%s",
+                    config.getString("mysql.host", "localhost"),
+                    config.getInt("mysql.port", 3306),
+                    config.getString("mysql.database", "database")));
+        } else {
+            try {
+                DriverManager.registerDriver(new Driver());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            databaseConfig.setDatabasePlatform(new H2Platform());
+
+            dataSourceConfig.setDriver("org.h2.Driver");
+            dataSourceConfig.setUsername("sa");
+            dataSourceConfig.setPassword("sa");
+            dataSourceConfig.setUrl(String.format("jdbc:h2:%s;MV_STORE=false", new File(getDataFolder(), "Bedwars").getAbsolutePath()));
         }
 
-        File file = new File(this.getDataFolder(), "database.db");
-        if(!file.exists()) {
-            try {
-                Files.createFile(file.toPath());
-            } catch (IOException e) {
-                this.getLogger().log(Level.SEVERE, "&4SQLiteDB konnte nicht erstellt werden!", e);
-            }
+        databaseConfig.setDataSourceConfig(dataSourceConfig);
+
+        // create database
+        try {
+            database = DatabaseFactory.create(databaseConfig);
+        } catch (Exception e) {
+            databaseConfig.setDdlRun(false);
+            database = DatabaseFactory.create(databaseConfig);
         }
-        db = new SQLite(file);
+
+        Thread.currentThread().setContextClassLoader(originalContextClassLoader);
+    }
+
+    /**
+     * Hier schreiben wir die Entitys rein
+     *
+     * @return eine ArrayList aller zu benutzenden Entities
+     */
+    @NotNull
+    public List<Class<?>> getDatabaseClasses() {
+        return Arrays.asList(
+                PlayerStatistic.class
+        );
     }
 }
