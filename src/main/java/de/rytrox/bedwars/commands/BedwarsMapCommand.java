@@ -11,6 +11,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -236,7 +237,10 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
             case 7:
                 if ("modify".equals(args[0]) && main.getMapUtils().getMapNames().contains(args[1]) && "teams".equals(args[2]) && "modify".equals(args[3])
                         && true /* Check if args[4] is a valid teamname */ && "color".equals(args[5])) {
-                    Arrays.stream(ChatColor.class.getEnumConstants()).forEach((chatColor -> list.add(chatColor.toString())));
+                    Arrays.stream(ChatColor.values())
+                            .map(ChatColor::getChar)
+                            .map(String::valueOf)
+                            .forEach(list::add);
                 }
                 break;
         }
