@@ -36,4 +36,12 @@ public class MapRepository {
                 .map(Map::getName)
                 .collect(Collectors.toList());
     }
+
+    public void saveMap(Map map) {
+        if (map.checkComplete()) database.save(map);
+    }
+
+    public void deleteMap(Map map) {
+        database.delete(map);
+    }
 }

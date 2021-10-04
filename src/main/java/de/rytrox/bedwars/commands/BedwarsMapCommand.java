@@ -80,7 +80,7 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                 switch (args[0]) {
                     case "create":
                         Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
-                            if(!main.getMapRepository().findAllMapsWithName().contains(args[1])
+                            if (!main.getMapRepository().findAllMapsWithName().contains(args[1])
                                     && !main.getMapUtils().getMapNames().contains(args[1])) {
                                 main.getMapUtils().getOrCreateMap(args[1]);
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -91,10 +91,12 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                         return true;
                     case "edit":
                         Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
-                            if(main.getMapRepository().findByName(args[1]).isPresent()) {
-                                if(!main.getMapUtils().getMapNames().contains(args[1])) {
+                            if (main.getMapRepository().findByName(args[1]).isPresent()) {
+                                if (!main.getMapUtils().getMapNames().contains(args[1])) {
                                     Map map = main.getMapRepository().findByName(args[1]).get();
                                     main.getMapUtils().getMapsInEdit().put(map.getName(), map);
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                            "&cDie Map &7" + args[1] + "&c nun im EditMode!"));
                                 } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                         "&cDie Map &7" + args[1] + "&c ist bereits im EditMode!"));
                             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -102,15 +104,35 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                         });
                         return true;
                     case "save":
-                        if(!isInEditMode(args[1], player)) return true;
-
-                        break;
+                        if (main.getMapUtils().getMapNames().contains(args[1])) {
+                            if (main.getMapUtils().getMapsInEdit().get(args[1]).checkComplete()) {
+                                main.getMapRepository().saveMap(main.getMapUtils().getMapsInEdit().get(args[1]));
+                                main.getMapUtils().deleteMap(args[1]);
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDer Map &7" + args[1] + "&c fehlen noch wichtige Objekte!"));
+                        } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
+                        return true;
                     case "check":
-                        if(!isInEditMode(args[1], player)) return true;
-
-                        break;
+                        if (main.getMapUtils().getMapNames().contains(args[1])) {
+                            if (main.getMapUtils().getMapsInEdit().get(args[1]).checkComplete())
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&cDie Map &7" + args[1] + "&c ist vollständig!"));
+                            else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDer Map &7" + args[1] + "&c fehlen noch wichtige Objekte!"));
+                        } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
+                        return true;
                     case "remove":
-
+                        Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
+                            if (main.getMapRepository().findByName(args[1]).isPresent() || main.getMapUtils().getMapNames().contains(args[1])) {
+                                main.getMapRepository().findByName(args[1]).ifPresent(map -> main.getMapRepository().deleteMap(map));
+                                if (main.getMapUtils().getMapNames().contains(args[1])) main.getMapUtils().deleteMap(args[1]);
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&cDu hast die Map &7" + args[1] + "&c entfernt!"));
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDie Map &7" + args[1] + "&c existiert nicht!"));
+                        });
                         return true;
                 }
                 break;
@@ -118,14 +140,18 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                 if ("modify".equals(args[0])) {
                     switch (args[2]) {
                         case "pos1":
-                            if(main.getMapUtils().getMapNames().contains(args[1])) {
+                            if (main.getMapUtils().getMapNames().contains(args[1])) {
                                 main.getMapUtils().getMapsInEdit().get(args[1]).setPos1(new Location(player.getLocation()));
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&cPos1 für &7" + args[1] + "&c erfolgreich geändert!"));
                             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                             return true;
                         case "pos2":
-                            if(main.getMapUtils().getMapNames().contains(args[1])) {
+                            if (main.getMapUtils().getMapNames().contains(args[1])) {
                                 main.getMapUtils().getMapsInEdit().get(args[1]).setPos2(new Location(player.getLocation()));
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&cPos2 für &7" + args[1] + "&c erfolgreich geändert!"));
                             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                             return true;
@@ -138,13 +164,17 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                         case "teamsize":
                             if(main.getMapUtils().getMapNames().contains(args[1])) {
                                 main.getMapUtils().getMapsInEdit().get(args[1]).setTeamsize(Integer.parseInt(args[3]));
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&cDie Teamgröße für &7" + args[1] + "&c ist nun &7" + Integer.parseInt(args[3]) + "&c!"));
                             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                             return true;
                         case "spawner":
                             if("remove".equals(args[3])) {
-                                if(!isInEditMode(args[1], player)) return true;
+                                if(main.getMapUtils().getMapNames().contains(args[1])) {
 
+                                } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                                 return true;
                             }
                             break;
@@ -156,20 +186,26 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                     switch (args[2]) {
                         case "spawner":
                             if("add".equals(args[3])) {
-                                if(!isInEditMode(args[1], player)) return true;
+                                if(main.getMapUtils().getMapNames().contains(args[1])) {
 
+                                } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                                 return true;
                             }
                             break;
                         case "teams":
                             switch (args[3]) {
                                 case "add":
-                                    if(!isInEditMode(args[1], player)) return true;
+                                    if(main.getMapUtils().getMapNames().contains(args[1])) {
 
+                                    } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                            "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                                     return true;
                                 case "remove":
-                                    if(!isInEditMode(args[1], player)) return true;
+                                    if(main.getMapUtils().getMapNames().contains(args[1])) {
 
+                                    } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                            "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                                     return true;
                             }
                             break;
@@ -180,16 +216,22 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                 if ("modify".equals(args[0]) && "teams".equals(args[2]) && "modify".equals(args[3])) {
                     switch (args[5]) {
                         case "villager":
-                            if(!isInEditMode(args[1], player)) return true;
+                            if(main.getMapUtils().getMapNames().contains(args[1])) {
 
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                             return true;
                         case "bed":
-                            if(!isInEditMode(args[1], player)) return true;
+                            if(main.getMapUtils().getMapNames().contains(args[1])) {
 
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                             return true;
                         case "spawn":
-                            if(!isInEditMode(args[1], player)) return true;
+                            if(main.getMapUtils().getMapNames().contains(args[1])) {
 
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                             return true;
                     }
                 }
@@ -197,8 +239,11 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                 return true;
             case 7:
                 if ("modify".equals(args[0]) && "teams".equals(args[2]) && "modify".equals(args[3]) && "color".equals(args[5])) {
-                    if(!isInEditMode(args[1], player)) return true;
+                    if(main.getMapUtils().getMapNames().contains(args[1])) {
 
+                    } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
+                    return true;
                 }
                 break;
         }
@@ -278,15 +323,5 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                 break;
         }
         return list;
-    }
-
-    private boolean isInEditMode(String name, Player player) {
-        boolean statement = true;
-        if(statement) {
-            return true;
-        } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cDie Map &7" + name + "&c ist nicht im Editor!"));
-            return false;
-        }
     }
 }

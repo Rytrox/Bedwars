@@ -26,4 +26,8 @@ public class MapUtils {
     public java.util.Map<String, Map> getMapsInEdit() {
         return mapsInEdit;
     }
+
+    public void deleteMap(String name) {
+        mapsInEdit.remove(name);
+    }
 }

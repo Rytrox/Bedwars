@@ -1,5 +1,6 @@
 package de.rytrox.bedwars.database.entity;
 
+import de.rytrox.bedwars.utils.Completable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table (name = "`Maps`")
-public class Map {
+public class Map implements Completable {
 
     @Id
     @Column (name = "`name`", unique = true, nullable = false)
@@ -88,5 +89,15 @@ public class Map {
 
     public void setSpawner(List<Spawner> spawner) {
         this.spawner = spawner;
+    }
+
+    @Override
+    public boolean checkComplete() {
+        if (teams.stream()
+                .anyMatch(team -> !team.checkComplete())) return false;
+        if (spawner.stream()
+                .anyMatch(team -> !team.checkComplete())) return false;
+        if (teams.size() < 2 || spawner.isEmpty()) return false;
+        return name != null && teamsize != null;
     }
 }

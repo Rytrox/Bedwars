@@ -1,5 +1,6 @@
 package de.rytrox.bedwars.database.entity;
 
+import de.rytrox.bedwars.utils.Completable;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -7,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table (name = "`Teams`")
-public class Team {
+public class Team implements Completable {
 
     @Id
     @Column (name = "`id`", unique = true, nullable = false)
@@ -97,5 +98,11 @@ public class Team {
 
     public void setMap(@NotNull Map map) {
         this.map = map;
+    }
+
+
+    @Override
+    public boolean checkComplete() {
+        return name != null && color != null && villager != null && spawn != null && bed != null;
     }
 }

@@ -1,13 +1,14 @@
 package de.rytrox.bedwars.database.entity;
 
 import de.rytrox.bedwars.database.enums.SpawnerMaterial;
+import de.rytrox.bedwars.utils.Completable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 
 @Entity
 @Table (name = "`Spawner`")
-public class Spawner {
+public class Spawner implements Completable {
 
     @Id
     @Column (name = "`id`", unique = true, nullable = false)
@@ -59,5 +60,10 @@ public class Spawner {
 
     public void setMap(@NotNull Map map) {
         this.map = map;
+    }
+
+    @Override
+    public boolean checkComplete() {
+        return material != null && location != null;
     }
 }

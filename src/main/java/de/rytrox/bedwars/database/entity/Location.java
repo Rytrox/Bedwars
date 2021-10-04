@@ -1,5 +1,6 @@
 package de.rytrox.bedwars.database.entity;
 
+import de.rytrox.bedwars.utils.Completable;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +10,7 @@ import java.util.Objects;
 @Entity
 @Table (name = "`Locations`",
         uniqueConstraints = { @UniqueConstraint(columnNames = {"`world`", "`x`", "`y`", "`z`", "`yaw`", "`pitch`"}) })
-public class Location {
+public class Location implements Completable {
 
     public Location() {
     }
@@ -120,5 +121,10 @@ public class Location {
         setZ(location.getX());
         setYaw(location.getYaw());
         setPitch(location.getPitch());
+    }
+
+    @Override
+    public boolean checkComplete() {
+        return world != null && x != null && y != null && z != null && yaw != null && pitch != null;
     }
 }
