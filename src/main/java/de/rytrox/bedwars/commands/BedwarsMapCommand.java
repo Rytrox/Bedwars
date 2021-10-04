@@ -1,6 +1,7 @@
 package de.rytrox.bedwars.commands;
 
 import de.rytrox.bedwars.Bedwars;
+import de.rytrox.bedwars.database.entity.Location;
 import de.rytrox.bedwars.database.entity.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
 
@@ -88,7 +90,16 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                         });
                         return true;
                     case "edit":
-
+                        Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
+                            if(main.getMapRepository().findByName(args[1]).isPresent()) {
+                                if(!main.getMapUtils().getMapNames().contains(args[1])) {
+                                    Map map = main.getMapRepository().findByName(args[1]).get();
+                                    main.getMapUtils().getMapsInEdit().put(map.getName(), map);
+                                } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&cDie Map &7" + args[1] + "&c ist bereits im EditMode!"));
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDie Map &7" + args[1] + "&c existiert nicht!"));
+                        });
                         return true;
                     case "save":
                         if(!isInEditMode(args[1], player)) return true;
@@ -107,12 +118,16 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                 if ("modify".equals(args[0])) {
                     switch (args[2]) {
                         case "pos1":
-                            if(!isInEditMode(args[1], player)) return true;
-
+                            if(main.getMapUtils().getMapNames().contains(args[1])) {
+                                main.getMapUtils().getMapsInEdit().get(args[1]).setPos1(new Location(player.getLocation()));
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                             return true;
                         case "pos2":
-                            if(!isInEditMode(args[1], player)) return true;
-
+                            if(main.getMapUtils().getMapNames().contains(args[1])) {
+                                main.getMapUtils().getMapsInEdit().get(args[1]).setPos2(new Location(player.getLocation()));
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                             return true;
                     }
                 }
@@ -121,8 +136,10 @@ public class BedwarsMapCommand implements CommandExecutor, TabCompleter {
                 if ("modify".equals(args[0])) {
                     switch (args[2]) {
                         case "teamsize":
-                            if(!isInEditMode(args[1], player)) return true;
-
+                            if(main.getMapUtils().getMapNames().contains(args[1])) {
+                                main.getMapUtils().getMapsInEdit().get(args[1]).setTeamsize(Integer.parseInt(args[3]));
+                            } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                             return true;
                         case "spawner":
                             if("remove".equals(args[3])) {

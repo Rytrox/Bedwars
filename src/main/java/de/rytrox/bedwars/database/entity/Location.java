@@ -4,11 +4,24 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table (name = "`Locations`",
         uniqueConstraints = { @UniqueConstraint(columnNames = {"`world`", "`x`", "`y`", "`z`", "`yaw`", "`pitch`"}) })
 public class Location {
+
+    public Location() {
+    }
+
+    public Location(@NotNull org.bukkit.Location location) {
+        setWorld(Objects.requireNonNull(location.getWorld()).getName());
+        setX(location.getX());
+        setY(location.getX());
+        setZ(location.getX());
+        setYaw(location.getYaw());
+        setPitch(location.getPitch());
+    }
 
     @Id
     @Column (name = "`id`", nullable = false, unique = true)
@@ -98,5 +111,14 @@ public class Location {
     @NotNull
     public org.bukkit.Location toBukkitLocation() {
         return new org.bukkit.Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+    }
+
+    public void fromBukkitLocation(@NotNull org.bukkit.Location location) {
+        setWorld(Objects.requireNonNull(location.getWorld()).getName());
+        setX(location.getX());
+        setY(location.getX());
+        setZ(location.getX());
+        setYaw(location.getYaw());
+        setPitch(location.getPitch());
     }
 }

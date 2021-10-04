@@ -22,4 +22,8 @@ public class MapUtils {
     public List<String> getMapNames() {
         return new ArrayList<>(mapsInEdit.keySet());
     }
+
+    public java.util.Map<String, Map> getMapsInEdit() {
+        return mapsInEdit;
+    }
 }
