@@ -35,7 +35,7 @@ public class Countdown implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if(Bukkit.getOnlinePlayers().size() < minPlayerSize) {
+        if(Bukkit.getOnlinePlayers().size() < minPlayerSize && task != null) {
 
             task.cancel();
         }
