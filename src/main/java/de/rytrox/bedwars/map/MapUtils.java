@@ -15,10 +15,7 @@ public class MapUtils {
     public Map getOrCreateMap(String name) {
         if (mapsInEdit.containsKey(name))
             return mapsInEdit.get(name);
-
-        Map map = new Map(name);
-        mapsInEdit.put(name, map);
-        return map;
+        return mapsInEdit.put(name, new Map(name));
     }
 
     public List<String> getMapNames() {
