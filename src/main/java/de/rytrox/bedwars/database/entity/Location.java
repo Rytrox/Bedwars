@@ -8,24 +8,12 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table (name = "`Locations`",
-        uniqueConstraints = { @UniqueConstraint(columnNames = {"`world`", "`x`", "`y`", "`z`", "`yaw`", "`pitch`"}) })
+@Table (name = "`Locations`")
 public class Location implements Completable {
 
-    public Location() {
-    }
-
-    public Location(@NotNull org.bukkit.Location location) {
-        setWorld(Objects.requireNonNull(location.getWorld()).getName());
-        setX(location.getX());
-        setY(location.getX());
-        setZ(location.getX());
-        setYaw(location.getYaw());
-        setPitch(location.getPitch());
-    }
-
     @Id
-    @Column (name = "`id`", nullable = false, unique = true)
+    @Column (name = "id", nullable = false)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column (name = "`world`", nullable = false, length = 100)
@@ -46,12 +34,23 @@ public class Location implements Completable {
     @Column (name = "`pitch`", nullable = false)
     private Float pitch;
 
-    @NotNull
+    public Location() {
+    }
+
+    public Location(@NotNull org.bukkit.Location location) {
+        setWorld(Objects.requireNonNull(location.getWorld()).getName());
+        setX(location.getX());
+        setY(location.getX());
+        setZ(location.getX());
+        setYaw(location.getYaw());
+        setPitch(location.getPitch());
+    }
+
     public Integer getId() {
         return id;
     }
 
-    public void setId(@NotNull Integer id) {
+    public void setId( Integer id) {
         this.id = id;
     }
 

@@ -38,7 +38,9 @@ public class MapRepository {
     }
 
     public void saveMap(Map map) {
-        if (map.checkComplete()) database.save(map);
+        if (!map.checkComplete()) return;
+        if (this.findByName(map.getName()).isEmpty()) database.save(map);
+        else database.update(map);
     }
 
     public void deleteMap(Map map) {

@@ -83,12 +83,44 @@ public class Map implements Completable {
         this.teams = teams;
     }
 
+    public void addTeam(Team team) {
+        if (team == null) return;
+        team.setMap(this);
+        this.teams.add(team);
+    }
+
+    public void removeTeam(Team team) {
+        if (team == null) return;
+        if (!this.teams.contains(team)) return;
+        this.teams.remove(team);
+    }
+
     public List<Spawner> getSpawner() {
         return spawner;
     }
 
     public void setSpawner(List<Spawner> spawner) {
         this.spawner = spawner;
+    }
+
+    public void addSpwner(Spawner spawner) {
+        if (spawner == null) return;
+        spawner.setMap(this);
+        this.spawner.add(spawner);
+    }
+
+    public void removeSpawner(org.bukkit.Location location, double radius) {
+        this.spawner.stream()
+                .map(Spawner::getLocation)
+                .map(Location::toBukkitLocation)
+                .forEach(spawnerLocation -> {
+                    if (spawnerLocation.distanceSquared(location) <= Math.sqrt(radius)) {
+                        this.spawner.stream()
+                                .filter(streamSpawner -> streamSpawner.getLocation().toBukkitLocation() == spawnerLocation)
+                                .findFirst()
+                                .ifPresent(streamSpawner -> this.spawner.remove(streamSpawner));
+                    }
+                });
     }
 
     @Override

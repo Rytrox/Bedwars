@@ -11,7 +11,8 @@ import javax.persistence.*;
 public class Team implements Completable {
 
     @Id
-    @Column (name = "`id`", unique = true, nullable = false)
+    @Column (name = "id", nullable = false)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column (name = "`name`", nullable = false)
@@ -37,12 +38,18 @@ public class Team implements Completable {
     @JoinColumn (name = "`map`", nullable = false)
     private Map map;
 
-    @NotNull
+    public Team() {
+    }
+
+    public Team(String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }
 
-    public void setId(@NotNull Integer id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -62,6 +69,10 @@ public class Team implements Completable {
 
     public void setColor(@NotNull ChatColor color) {
         this.color = color;
+    }
+
+    public void setColor(@NotNull Character color) {
+        this.color = ChatColor.getByChar(color);
     }
 
     @NotNull

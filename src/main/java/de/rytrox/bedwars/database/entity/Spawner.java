@@ -11,7 +11,8 @@ import javax.persistence.*;
 public class Spawner implements Completable {
 
     @Id
-    @Column (name = "`id`", unique = true, nullable = false)
+    @Column (name = "id", nullable = false)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Enumerated (EnumType.ORDINAL)
@@ -26,12 +27,19 @@ public class Spawner implements Completable {
     @JoinColumn (name = "`map`", nullable = false)
     private Map map;
 
-    @NotNull
+    public Spawner() {
+    }
+
+    public Spawner(SpawnerMaterial material, Location location) {
+        this.material = material;
+        this.location = location;
+    }
+
     public Integer getId() {
         return id;
     }
 
-    public void setId(@NotNull Integer id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
