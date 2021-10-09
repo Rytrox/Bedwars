@@ -1,8 +1,6 @@
 package de.rytrox.bedwars.map;
 
-import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.database.entity.Map;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
