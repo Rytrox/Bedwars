@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class MapRepository {
 
@@ -31,10 +30,7 @@ public class MapRepository {
 
     public List<String> findAllMapsWithName() {
         return database.find(Map.class)
-                .findList()
-                .stream()
-                .map(Map::getName)
-                .collect(Collectors.toList());
+                .findIds();
     }
 
     public void saveMap(Map map) {
