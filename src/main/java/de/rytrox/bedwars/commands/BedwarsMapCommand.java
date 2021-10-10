@@ -232,20 +232,16 @@ public class BedwarsMapCommand implements TabExecutor {
                                     return true;
                                 case "remove":
                                     if(main.getMapUtils().getMapNames().contains(args[1])) {
-                                        if (main.getMapUtils().getMapsInEdit().get(args[1]).getTeams()
+                                        main.getMapUtils().getMapsInEdit().get(args[1]).getTeams()
                                                 .stream()
-                                                .map(Team::getName)
-                                                .collect(Collectors.toList())
-                                                .contains(args[4])) {
-                                            main.getMapUtils().getMapsInEdit().get(args[1]).getTeams()
-                                                    .stream()
-                                                    .filter(team -> team.getName().equals(args[4]))
-                                                    .findFirst()
-                                                    .ifPresent(team -> main.getMapUtils().getMapsInEdit().get(args[1]).removeTeam(team));
-                                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                                    "&cDas Team &7" + args[4] + "&c wurde gelöscht!"));
-                                        } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                                "&cDas Team &7" + args[4] + "&c existiert nicht!"));
+                                                .filter(team -> team.getName().equals(args[4]))
+                                                .findFirst()
+                                                .ifPresentOrElse(team -> {
+                                                    team.setVillager(new Location(player.getLocation()));
+                                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                                            "&cDas Team &7" + args[4] + "&c wurde gelöscht!"));
+                                                },() -> player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                                        "&cDas Team &7" + args[4] + "&c existiert nicht!")));
                                     } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                             "&cDie Map &7" + args[1] + "&c ist nicht im EditMode!"));
                                     return true;
