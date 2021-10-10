@@ -4,3 +4,10 @@ main: de.rytrox.bedwars.Bedwars
 api-version: 1.16
 authors: [ kaigoe, Asedem ]
 description: Ein Bedwarssystem zum Rumprobieren für Kaigoe und Asedem
+
+commands:
+  bedwarsmap:
+    description: a command, wich witch you can create, edit and delete maps
+    usage: /bedwarsmap [create, add, modify, remove, save, list, listinedit]
+    aliases:
+      - bwmap

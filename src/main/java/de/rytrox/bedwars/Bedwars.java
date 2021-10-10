@@ -1,9 +1,13 @@
 package de.rytrox.bedwars;
 
-import de.rytrox.bedwars.database.entity.PlayerStatistic;
+import de.rytrox.bedwars.database.entity.*;
+import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
+import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.team.TeamManager;
+import de.rytrox.bedwars.commands.BedwarsMapCommand;
+import de.rytrox.bedwars.map.MapUtils;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
@@ -26,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -39,8 +44,10 @@ public class Bedwars extends JavaPlugin {
     private Database database;
     private PhaseManager phaseManager;
     private TeamManager teamManager;
+    private MapUtils mapUtils;
 
     private PlayerStatisticsRepository statisticsRepository;
+    private MapRepository mapRepository;
 
     public Bedwars()
     {
@@ -57,15 +64,23 @@ public class Bedwars extends JavaPlugin {
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
-        teamManager = new TeamManager();
-        scoreboardManager = new ScoreboardManager(teamManager);
+        this.teamManager = new TeamManager();
+        this.scoreboardManager = new ScoreboardManager(teamManager);
         Bukkit.getPluginManager().registerEvents(teamManager, this);
         // reload config
         reloadConfig();
+        // register Listeners
+        Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
+        // register Commands
+        Objects.requireNonNull(getCommand("bedwarsmap")).setExecutor(new BedwarsMapCommand());
         // loads the database type and the database from the configs
         loadDatabase();
-        this.statisticsRepository = new PlayerStatisticsRepository(database);
 
+        this.mapUtils = new MapUtils();
+
+        this.mapRepository = new MapRepository(database);
+
+        this.statisticsRepository = new PlayerStatisticsRepository(database);
         this.phaseManager = new PhaseManager(this);
     }
 
@@ -112,6 +127,11 @@ public class Bedwars extends JavaPlugin {
     }
 
     @NotNull
+    public MapRepository getMapRepository() {
+        return  mapRepository;
+    }
+
+    @NotNull
     public PlayerStatisticsRepository getStatistics() {
         return statisticsRepository;
     }
@@ -119,6 +139,11 @@ public class Bedwars extends JavaPlugin {
     @NotNull
     public PhaseManager getPhaseManager() {
         return phaseManager;
+    }
+
+    @NotNull
+    public MapUtils getMapUtils() {
+        return mapUtils;
     }
 
     /**
@@ -185,7 +210,11 @@ public class Bedwars extends JavaPlugin {
     @NotNull
     public List<Class<?>> getDatabaseClasses() {
         return Arrays.asList(
-                PlayerStatistic.class
+                PlayerStatistic.class,
+                Location.class,
+                Map.class,
+                Team.class,
+                Spawner.class
         );
     }
 }
