@@ -11,8 +11,7 @@ public class MapUtils {
     private final java.util.Map<String, Map> mapsInEdit = new HashMap<>();
 
     public Map getOrCreateMap(String name) {
-        mapsInEdit.computeIfAbsent(name, Map::new);
-        return mapsInEdit.get(name);
+        return mapsInEdit.computeIfAbsent(name, Map::new);
     }
 
     public List<String> getMapNames() {
