@@ -48,7 +48,7 @@ public class BedwarsMapCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cDiser Command kann nur von einem Spieler ausgeführt werden!"));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getMessages().getMapCommandConsoleOutput()));
             return true;
         }
         Player player = (Player) sender;
@@ -60,10 +60,11 @@ public class BedwarsMapCommand implements TabExecutor {
                         return true;
                     case "list":
                         Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () ->
-                                this.printListToPlayer(player, main.getMapRepository().findAllMapsWithName(), "Maps"));
+                                this.printMapListToPlayer(player, main.getMapRepository().findAllMapsWithName()));
                         return true;
                     case "listineditor":
-                        this.printListToPlayer(player, main.getMapUtils().getMapNames(), "MapsInEditor");
+                        this.printMapInEditListToPlayer(player, main.getMapUtils().getMapNames());
+                        return true;
                 }
                 break;
             case 2:
@@ -151,7 +152,7 @@ public class BedwarsMapCommand implements TabExecutor {
                 }
                 break;
         }
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cBitte benutze &7/help&c!"));
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getMessages().getMapCommandCommandError()));
         return true;
     }
 
@@ -160,7 +161,7 @@ public class BedwarsMapCommand implements TabExecutor {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         final List<String> list = new LinkedList<>();
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cDiser Command kann nur von einem Spieler ausgeführt werden!"));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getMessages().getMapCommandConsoleOutput()));
             return list;
         }
         switch (args.length) {
@@ -181,10 +182,8 @@ public class BedwarsMapCommand implements TabExecutor {
                 break;
             case 4:
                 if ("modify".equals(args[0]) && main.getMapUtils().getMapNames().contains(args[1])) {
-                    if ("spawner".equals(args[2]) || "teams".equals(args[2])) {
-                        list.add("add");
-                        list.add("remove");
-                    }
+                    if ("spawner".equals(args[2]) || "teams".equals(args[2]))
+                        list.addAll(Arrays.asList("add", "remove"));
                     if ("teams".equals(args[2])) list.add("modify");
                 }
                 break;
@@ -230,14 +229,25 @@ public class BedwarsMapCommand implements TabExecutor {
     }
 
     /**
-     * Prints a list of Maps or something else to a Player
+     * Prints the map list to a Player
      * @param player the player that runs the command
      * @param maps the list to print
-     * @param listName the name of the list to print
      */
-    private void printListToPlayer(@NotNull Player player, List<String> maps, String listName) {
-        final String[] returnString = {"&7" + listName + " (" + maps.size() + "): "};
-        maps.forEach((map -> returnString[0] += "&c" + map + "&7, "));
+    private void printMapListToPlayer(@NotNull Player player, List<String> maps) {
+        final String[] returnString = {main.getMessages().getMapCommandList(maps.size(), "")[0]};
+        maps.forEach((map -> returnString[0] += main.getMessages().getMapCommandList(maps.size(), map)[1]));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                returnString[0].substring(0, returnString[0].length() - 2)));
+    }
+
+    /**
+     * Prints the mapInEdit list to a Player
+     * @param player the player that runs the command
+     * @param maps the list to print
+     */
+    private void printMapInEditListToPlayer(@NotNull Player player, List<String> maps) {
+        final String[] returnString = {main.getMessages().getMapCommandInEditList(maps.size(), "")[0]};
+        maps.forEach((map -> returnString[0] += main.getMessages().getMapCommandInEditList(maps.size(), map)[1]));
         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                 returnString[0].substring(0, returnString[0].length() - 2)));
     }
@@ -253,9 +263,9 @@ public class BedwarsMapCommand implements TabExecutor {
                     && !main.getMapUtils().getMapNames().contains(mapName)) {
                 main.getMapUtils().getOrCreateMap(mapName);
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDu hast die Map &7" + mapName + "&c erfolgreich erstellt."));
+                        main.getMessages().getMapCommandMapCreated(mapName)));
             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&cDie Map &7" + mapName + "&c existiert bereits!"));
+                    main.getMessages().getMapCommandMapAllreadyExists(mapName)));
         });
     }
 
@@ -271,11 +281,11 @@ public class BedwarsMapCommand implements TabExecutor {
                     Map map = main.getMapRepository().findByName(mapName).get();
                     main.getMapUtils().getMapsInEdit().put(map.getName(), map);
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&cDie Map &7" + mapName + "&c nun im EditMode!"));
+                            main.getMessages().getMapCommandMapIsNowImEditMode(mapName)));
                 } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDie Map &7" + mapName + "&c ist bereits im EditMode!"));
+                        main.getMessages().getMapCommandMapIsAllreadyImEditMode(mapName)));
             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&cDie Map &7" + mapName + "&c existiert nicht!"));
+                    main.getMessages().getMapCommandMapDosentExists(mapName)));
         });
     }
 
@@ -291,12 +301,12 @@ public class BedwarsMapCommand implements TabExecutor {
                     main.getMapRepository().saveMap(main.getMapUtils().getMapsInEdit().get(mapName));
                     main.getMapUtils().getMapsInEdit().remove(mapName);
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&cDie Map &7" + mapName + "&c wurde gespeichert!"));
+                            main.getMessages().getMapCommandMapSaved(mapName)));
                 });
             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&cDer Map &7" + mapName + "&c fehlen noch wichtige Objekte!"));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -312,7 +322,7 @@ public class BedwarsMapCommand implements TabExecutor {
             else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&cDer Map &7" + mapName + "&c fehlen noch wichtige Objekte!"));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -326,9 +336,9 @@ public class BedwarsMapCommand implements TabExecutor {
                 main.getMapRepository().findByName(mapName).ifPresent(map -> main.getMapRepository().deleteMap(map));
                 if (main.getMapUtils().getMapNames().contains(mapName)) main.getMapUtils().deleteMap(mapName);
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDu hast die Map &7" + mapName + "&c entfernt!"));
+                        main.getMessages().getMapCommandMapRemoved(mapName)));
             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&cDie Map &7" + mapName + "&c existiert nicht!"));
+                    main.getMessages().getMapCommandMapDosentExists(mapName)));
         });
     }
 
@@ -341,9 +351,9 @@ public class BedwarsMapCommand implements TabExecutor {
         if (main.getMapUtils().getMapNames().contains(mapName)) {
             main.getMapUtils().getMapsInEdit().get(mapName).setPos1(new Location(player.getLocation()));
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&cPos1 für &7" + mapName + "&c erfolgreich geändert!"));
+                    main.getMessages().getMapCommandChangedPos1(mapName)));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -355,9 +365,9 @@ public class BedwarsMapCommand implements TabExecutor {
         if (main.getMapUtils().getMapNames().contains(mapName)) {
             main.getMapUtils().getMapsInEdit().get(mapName).setPos2(new Location(player.getLocation()));
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&cPos2 für &7" + mapName + "&c erfolgreich geändert!"));
+                    main.getMessages().getMapCommandChangedPos1(mapName)));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -371,13 +381,13 @@ public class BedwarsMapCommand implements TabExecutor {
             try {
                 main.getMapUtils().getMapsInEdit().get(mapName).setTeamsize(Integer.parseInt(maxTeamSize));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDie Teamgröße für &7" + mapName + "&c ist nun &7" + Integer.parseInt(maxTeamSize) + "&c!"));
+                        main.getMessages().getMapCommandTeamSizeChanged(mapName, Integer.parseInt(maxTeamSize))));
             } catch (NumberFormatException exception) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDie Zahl &7" + maxTeamSize + "&c ist nicht gültig!"));
+                        main.getMessages().getMapCommandNotANumber(maxTeamSize)));
             }
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -395,11 +405,11 @@ public class BedwarsMapCommand implements TabExecutor {
                 main.getMapUtils().getMapsInEdit().get(mapName)
                         .addSpwner(new Spawner(SpawnerMaterial.valueOf(material), new Location(player.getLocation())));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDu hast einen Spawner zur Map &7" + mapName + "&c hinzugefügt!"));
+                        main.getMessages().getMapCommandSpawnerAdded(mapName)));
             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&cDas Material &7" + material + "&c existiert nicht!"));
+                    main.getMessages().getMapCommandNotAMaterial(material)));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -413,13 +423,13 @@ public class BedwarsMapCommand implements TabExecutor {
             try {
                 main.getMapUtils().getMapsInEdit().get(mapName).removeSpawner(player.getLocation(), Double.parseDouble(distance));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDu hast alle spawner im Umkreis von &7" + Integer.parseInt(distance) + "&c gelöscht!"));
+                        main.getMessages().getMapCommandAllSpawnersDeletes(Double.parseDouble(distance))));
             } catch (NumberFormatException exception) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDie Zahl &7" + distance + "&c ist nicht gültig!"));
+                        main.getMessages().getMapCommandNotANumber(distance)));
             }
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -437,11 +447,11 @@ public class BedwarsMapCommand implements TabExecutor {
                     .contains(teamName)) {
                 main.getMapUtils().getMapsInEdit().get(mapName).addTeam(new Team(teamName));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDas Team &7" + teamName + "&c wurde zur Map &7" + mapName + "&c hinzugefügt!"));
+                        main.getMessages().getMapCommandTeamAdded(mapName, teamName)));
             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&cDas Team &7" + teamName + "&c existiert bereits!"));
+                    main.getMessages().getMapCommandTeamAllreadyExists(teamName)));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -459,11 +469,11 @@ public class BedwarsMapCommand implements TabExecutor {
                     .ifPresentOrElse(team -> {
                         team.setVillager(new Location(player.getLocation()));
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                "&cDas Team &7" + teamName + "&c wurde gelöscht!"));
+                                main.getMessages().getMapCommandTeamRemoved(teamName)));
                     },() -> player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&cDas Team &7" + teamName + "&c existiert nicht!")));
+                            main.getMessages().getMapCommandTeamDosentExists(teamName))));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -481,11 +491,11 @@ public class BedwarsMapCommand implements TabExecutor {
                     .ifPresentOrElse(team -> {
                         team.setVillager(new Location(player.getLocation()));
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                "&cDie Villager Position für &7" + teamName + "&c wurde gesetzt!"));
+                                main.getMessages().getMapCommandTeamVillagerSet(mapName)));
                     },() -> player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&cDas Team &7" + teamName + "&c existiert nicht!")));
+                            main.getMessages().getMapCommandTeamDosentExists(teamName))));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -503,11 +513,11 @@ public class BedwarsMapCommand implements TabExecutor {
                     .ifPresentOrElse(team -> {
                         team.setBed(new Location(player.getLocation()));
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                "&cDie Bett Position für &7" + teamName + "&c wurde gesetzt!"));
+                                main.getMessages().getMapCommandTeamBedSet(mapName)));
                     },() -> player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&cDas Team &7" + teamName + "&c existiert nicht!")));
+                            main.getMessages().getMapCommandTeamDosentExists(teamName))));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -525,11 +535,11 @@ public class BedwarsMapCommand implements TabExecutor {
                     .ifPresentOrElse(team -> {
                         team.setSpawn(new Location(player.getLocation()));
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                "&cDie Spawn Position für &7" + teamName + "&c wurde gesetzt!"));
+                                main.getMessages().getMapCommandTeamSpawnSet(mapName)));
                     },() -> player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&cDas Team &7" + teamName + "&c existiert nicht!")));
+                            main.getMessages().getMapCommandTeamDosentExists(teamName))));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 
     /**
@@ -548,10 +558,10 @@ public class BedwarsMapCommand implements TabExecutor {
                     .ifPresentOrElse(team -> {
                         team.setColor(color.toCharArray()[0]);
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                "&cDie Teamfarbe für &7" + teamName + "&c wurde gesetzt!"));
+                                main.getMessages().getMapCommandTeamColorSet(mapName)));
                     },() -> player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            "&cDas Team &7" + teamName + "&c existiert nicht!")));
+                            main.getMessages().getMapCommandTeamDosentExists(teamName))));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&cDie Map &7" + mapName + "&c ist nicht im EditMode!"));
+                main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
 }

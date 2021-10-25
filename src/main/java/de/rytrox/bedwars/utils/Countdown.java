@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,12 +48,12 @@ public class Countdown implements Listener {
 
             int currentTime = timer.decrementAndGet();
             if(currentTime > 0) {
-                Bukkit.getOnlinePlayers().forEach((player) ->
-                    player.sendTitle(String.valueOf(currentTime), "SECONDS LEFT", 20, 20, 20)
-                );
+                Bukkit.getOnlinePlayers().forEach(player ->
+                    player.sendTitle(main.getMessages().getTimerRunning(String.valueOf(currentTime))[0],
+                            main.getMessages().getTimerRunning(String.valueOf(currentTime))[1], 20, 20, 20));
             } else {
-                Bukkit.getOnlinePlayers().forEach((player) ->
-                    player.sendTitle("START", "BEDWARS",20,20,20)
+                Bukkit.getOnlinePlayers().forEach(player ->
+                    player.sendTitle(main.getMessages().getTimerEnd()[0], main.getMessages().getTimerEnd()[1],20,20,20)
                 );
                 task.cancel();
             }

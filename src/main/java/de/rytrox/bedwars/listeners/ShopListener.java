@@ -171,10 +171,8 @@ public class ShopListener implements Listener {
 
         // Checks if the Player has enough money
         if(price > money) {
-            player.sendMessage(
-                    ChatColor.translateAlternateColorCodes('&',
-                            "&fDir fehlen &9" + (price - money) + " " + currency + "&f!")
-            );
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    main.getMessages().getNotEnoughMoney((price - money), currency.toString())));
             return;
         }
 
