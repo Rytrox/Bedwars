@@ -104,6 +104,16 @@ public class Messages {
                 .replace("%mapname%", mapname);
     }
 
+    public String getMapCommandMapDosentComplete(String mapname) {
+        return configuration.getString("mapCommandMapDosentComplete", "&dDer Map &5" + mapname + " &dfehlen noch wichte Objekte!")
+                .replace("%mapname%", mapname);
+    }
+
+    public String getMapCommandMapIsComplete(String mapname) {
+        return configuration.getString("mapCommandMapIsComplete", "&9Die Map &b" + mapname + " &9ist vollständig!")
+                .replace("%mapname%", mapname);
+    }
+
     public String getMapCommandMapSaved(String mapname) {
         return configuration.getString("mapCommandMapSaved", "&9Die Map &b" + mapname + " &9wurde gespeichert!")
                 .replace("%mapname%", mapname);

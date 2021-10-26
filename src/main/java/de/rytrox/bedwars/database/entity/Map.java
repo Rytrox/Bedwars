@@ -129,6 +129,7 @@ public class Map implements Completable {
                 .anyMatch(team -> !team.checkComplete())) return false;
         if (spawner.stream()
                 .anyMatch(team -> !team.checkComplete())) return false;
+        if (pos1 == null || !pos1.checkComplete() || pos2 == null || !pos2.checkComplete()) return false;
         if (teams.size() < 2 || spawner.isEmpty()) return false;
         return name != null && teamsize != null;
     }

@@ -114,6 +114,7 @@ public class Team implements Completable {
 
     @Override
     public boolean checkComplete() {
+        if (!villager.checkComplete() || !bed.checkComplete() || !spawn.checkComplete()) return false;
         return name != null && color != null && villager != null && spawn != null && bed != null;
     }
 }

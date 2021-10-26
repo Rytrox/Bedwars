@@ -304,7 +304,7 @@ public class BedwarsMapCommand implements TabExecutor {
                             main.getMessages().getMapCommandMapSaved(mapName)));
                 });
             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&cDer Map &7" + mapName + "&c fehlen noch wichtige Objekte!"));
+                    main.getMessages().getMapCommandMapDosentComplete(mapName)));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                 main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
@@ -318,9 +318,9 @@ public class BedwarsMapCommand implements TabExecutor {
         if (main.getMapUtils().getMapNames().contains(mapName)) {
             if (main.getMapUtils().getMapsInEdit().get(mapName).checkComplete())
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&cDie Map &7" + mapName + "&c ist vollständig!"));
+                        main.getMessages().getMapCommandMapIsComplete(mapName)));
             else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&cDer Map &7" + mapName + "&c fehlen noch wichtige Objekte!"));
+                    main.getMessages().getMapCommandMapDosentComplete(mapName)));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                 main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }

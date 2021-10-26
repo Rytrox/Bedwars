@@ -31,6 +31,8 @@ mapCommandMapIsNowImEditMode: '&9Die Map &b%mapname% &9ist nun im EditMode!' # (
 mapCommandMapIsAllreadyImEditMode: '&9Die Map &b%mapname% &9ist bereits im EditMode!' # (mapname: %mapname%)
 mapCommandMapDosentExists: '&9Die Map &b%mapname% &9existiert nicht!' # (mapname: %mapname%)
 mapCommandMapSaved: '&9Die Map &b%mapname% &9wurde gespeichert!' # (mapname: %mapname%)
+mapCommandMapDosentComplete: '&dDer Map &5%mapname% &dfehlen noch wichte Objekte!' # (mapname: %mapname%)
+mapCommandMapIsComplete: '&9Die Map &b%mapname% &9ist vollständig!' # (mapname: %mapname%)
 mapCommandMapIsNotInEditMode: '&9Die Map &b%mapname% &9ist nicht im EditMode!' # (mapname: %mapname%)
 mapCommandMapRemoved: '&9Du hast die Map &b%mapname% &9entfernt!' # (mapname: %mapname%)
 mapCommandChangedPos1: '&9Pos1 für die Map &b%mapname% &9erfolgreich geändert!' # (mapname: %mapname%)
