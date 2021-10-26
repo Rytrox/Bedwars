@@ -25,6 +25,12 @@ public class Countdown implements Listener {
         this.startValue = main.getConfig().getInt("countdown.startValue", 10);
     }
 
+    /**
+     * Startet den Countdown, wenn ein Spieler den Server betritt und somit die
+     * minimale Spieleranzahl zum Start überschreitet
+     *
+     * @param event The PlayerJoinEvent, that is used
+     */
     @EventHandler
     public void onPlayerJoinListener(PlayerJoinEvent event) {
         int playerOnlineSize = Bukkit.getOnlinePlayers().size();
@@ -34,6 +40,12 @@ public class Countdown implements Listener {
         }
     }
 
+    /**
+     * Beendet den SpielTimer, wenn ein Spieler den server verlässt und somit die
+     * minimal erlaubte Spieleranzahl nicht mehr erfüllt ist
+     *
+     * @param event The PlayerQuitEvent, that is used
+     */
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         if(Bukkit.getOnlinePlayers().size() < minPlayerSize && task != null) {
@@ -42,6 +54,9 @@ public class Countdown implements Listener {
         }
     }
 
+    /**
+     * Startet den Timer, der bis zum Start des Spieles runterzählt
+     */
     private void start() {
         AtomicInteger timer = new AtomicInteger(startValue);
         task = Bukkit.getServer().getScheduler().runTaskTimer(main, () -> {
@@ -61,10 +76,20 @@ public class Countdown implements Listener {
         }, 100, 20L);
     }
 
+    /**
+     * Gibt die Minimal benötigte Spieleranzahl zum Spart eines Spieles zurück
+     *
+     * @return die Minimal benötigte Spieleranzahl
+     */
     public int getMinPlayerSize() {
         return minPlayerSize;
     }
 
+    /**
+     * Setzt die Minimal benötigte Spieleranzahl zum Spart eines Spieles
+     *
+     * @param minPlayerSize die neue Minimal benötigte Spieleranzahl zum Spart eines Spieles
+     */
     public void setMinPlayerSize(int minPlayerSize) {
         this.minPlayerSize = minPlayerSize;
     }

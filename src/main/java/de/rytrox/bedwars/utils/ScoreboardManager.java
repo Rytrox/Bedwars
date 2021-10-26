@@ -22,6 +22,13 @@ public class ScoreboardManager {
         this.teamManager = teamManager;
     }
 
+    /**
+     * Zeigt einem Spieler das SpielScoreboard an
+     *
+     * @param player Der Spieler dem das Board angezeigt werden soll
+     * @param kills Die kills des Spielers
+     * @param deaths Die Tode ses Spielers
+     */
     public void addBoard(Player player, int kills, int deaths) {
         Scoreboard board = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();
         fillSidebar(board, kills, deaths);
@@ -31,6 +38,13 @@ public class ScoreboardManager {
         activeBoards.put(player, board);
     }
 
+    /**
+     * Erneuert die Werte auf dem SpielScoreboard eines Spielers
+     *
+     * @param player Der Spieler, dem die neuen Werte angezeigt werden sollen
+     * @param kills Die Kills des Spielers
+     * @param deaths Die Tode des Spielers
+     */
     public void updateBoard(Player player, int kills, int deaths) {
         if(!activeBoards.containsKey(player)) return;
         Scoreboard board = activeBoards.get(player);
@@ -41,6 +55,11 @@ public class ScoreboardManager {
         activeBoards.replace(player, board);
     }
 
+    /**
+     * Entfernt das SpielScoreboard für einen Spieler
+     *
+     * @param player Der Spieler zum Entfernen des Scoreboard
+     */
     public void removeBoard(Player player) {
         if(!activeBoards.containsKey(player)) return;
         player.getScoreboard().getObjectives().forEach(Objective::unregister);
@@ -48,6 +67,11 @@ public class ScoreboardManager {
         activeBoards.remove(player);
     }
 
+    /**
+     * Fügt den Spieler zu einem Team auf dem Scoreboard hinzu
+     *
+     * @param player Der Spieler zum joinen eines Teams
+     */
     public void addPlayerToTeam(Player player) {
         if(!activeBoards.containsKey(player)) return;
         Scoreboard board = activeBoards.get(player);
@@ -58,6 +82,13 @@ public class ScoreboardManager {
         activeBoards.replace(player, board);
     }
 
+    /**
+     * Befüllt das Scoreboard mit Werden
+     *
+     * @param board das Scoreboard zum befüllen
+     * @param kills die Kills des Spielers
+     * @param deaths die Tode des Spielers
+     */
     private void fillSidebar(Scoreboard board, int kills, int deaths) {
         Objective objective = board.registerNewObjective("Bedwars", "dummy", ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardTitle()));
 

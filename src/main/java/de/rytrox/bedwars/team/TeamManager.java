@@ -38,13 +38,19 @@ public class TeamManager implements Listener {
         inventory = Bukkit.createInventory(null, 3 * 9);
     }
 
+    /**
+     * Prüft, ob ein Spieler im TeamSelect Inventar ein Team ausgewählt hat
+     * und fügt den Spieler diesem Team hinzu
+     *
+     * @param event The InventoryClickEvent, that is used
+     */
     @EventHandler
     public void onInventoryClick(@NotNull InventoryClickEvent event) {
         if (event.getInventory().equals(inventory)) {
 
             Player player = (Player) event.getWhoClicked();
             removeFromAllTeams(player);
-            getTeamByItem(event.getCurrentItem()).ifPresent((team) -> {
+            getTeamByItem(event.getCurrentItem()).ifPresent(team -> {
                 event.setCancelled(true);
 
                 player.sendMessage(main.getMessages().getTeamSelected(team.getTeamName()));
@@ -54,6 +60,12 @@ public class TeamManager implements Listener {
         }
     }
 
+    /**
+     * Prüft, ob ein Spieler mit dem TeamSelectorItem Rechts klickt und
+     * öffnet diesem Spieler das TeamSelector Inventar
+     *
+     * @param event The PlayerInteractEvent, that is used
+     */
     @EventHandler
     public void onRightClickListener(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -63,21 +75,42 @@ public class TeamManager implements Listener {
         }
     }
 
+    /**
+     * Prüft, ob ein Spieler das Spiel verlässt und entfernt ihn aus seinem Team
+     *
+     * @param event The PlayerQuitEvent, that is used
+     */
     @EventHandler
     public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
         removeFromAllTeams(event.getPlayer());
     }
 
+    /**
+     * Prüft, ob ein Spieler das Spiel betritt und gibt ihm das TeamSelectorItem
+     *
+     * @param event The PlayerJoinEvent, that is used
+     */
     @EventHandler
     public void onPLayerJoin(@NotNull PlayerJoinEvent event) {
         event.getPlayer().getInventory().addItem(teamChoosingItem);
     }
 
+    /**
+     * Gibt das TeamSelector Inventar zurück
+     *
+     * @return das TeamSelector Inventar
+     */
     @NotNull
     public Inventory getInventory() {
         return inventory;
     }
 
+    /**
+     * Sucht ein Team anhand dessen TeamItems zurück
+     *
+     * @param item das TeamItem
+     * @return das Team
+     */
     @NotNull
     private Optional<Team> getTeamByItem(@Nullable ItemStack item) {
         return teams.stream()
@@ -85,10 +118,20 @@ public class TeamManager implements Listener {
                 .findAny();
     }
 
+    /**
+     * Entfernt einen Spieler aus allen Teams
+     *
+     * @param player den zu entfernenden Spieler
+     */
     private void removeFromAllTeams(@NotNull Player player) {
         teams.forEach(team -> team.removeMember(player));
     }
 
+    /**
+     * Gibt eine Liste aller Teams zurück
+     *
+     * @return die Liste aller Teams
+     */
     @NotNull
     public List<Team> getTeams() {
         return new ArrayList<>(teams);
