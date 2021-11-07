@@ -67,16 +67,8 @@ public class Messages {
         return configuration.getString("mapCommandCommandError", "&dBitte benutze &5/help&d!");
     }
 
-    public String[] getMapCommandList(int listSize, String mapname) {
-        return new String[]{configuration.getString("mapCommandMapListHead",
-                "&9Alls Maps (" + listSize + "): ").replace("%listsize%", "" + listSize),
-                configuration.getString("mapCommandMapListItem", "&b" + mapname + "&9, ").replace("%mapname%", mapname)};
-    }
-
-    public String[] getMapCommandInEditList(int listSize, String mapname) {
-        return new String[]{configuration.getString("mapCommandMapInEditListHead",
-                "&9Alle Maps im Editor (" + listSize + "): ").replace("%listsize%", "" + listSize),
-                configuration.getString("mapCommandMapInEditListItem", "&b" + mapname + "&9, ").replace("%mapname%", mapname)};
+    public String getMapCommandList(int listSize) {
+        return configuration.getString("mapCommandMapList", "&9Alls Maps (" + listSize + "): &b").replace("%listsize%", "" + listSize);
     }
 
     public String getMapCommandMapCreated(String mapname) {

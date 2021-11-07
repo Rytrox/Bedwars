@@ -60,10 +60,10 @@ public class BedwarsMapCommand implements TabExecutor {
                         return true;
                     case "list":
                         Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () ->
-                                this.printMapListToPlayer(player, main.getMapRepository().findAllMapsWithName()));
+                                this.printListToPlayer(player, main.getMapRepository().findAllMapsWithName()));
                         return true;
                     case "listineditor":
-                        this.printMapInEditListToPlayer(player, main.getMapUtils().getMapNames());
+                        this.printListToPlayer(player, main.getMapUtils().getMapNames());
                         return true;
                 }
                 break;
@@ -229,27 +229,13 @@ public class BedwarsMapCommand implements TabExecutor {
     }
 
     /**
-     * Prints the map list to a Player
-     * @param player the player that runs the command
+     * Prints a list to a player
+     * @param player the player to print the list to
      * @param maps the list to print
      */
-    private void printMapListToPlayer(@NotNull Player player, List<String> maps) {
-        final String[] returnString = {main.getMessages().getMapCommandList(maps.size(), "")[0]};
-        maps.forEach((map -> returnString[0] += main.getMessages().getMapCommandList(maps.size(), map)[1]));
+    private void printListToPlayer(Player player, List<String> maps) {
         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                returnString[0].substring(0, returnString[0].length() - 2)));
-    }
-
-    /**
-     * Prints the mapInEdit list to a Player
-     * @param player the player that runs the command
-     * @param maps the list to print
-     */
-    private void printMapInEditListToPlayer(@NotNull Player player, List<String> maps) {
-        final String[] returnString = {main.getMessages().getMapCommandInEditList(maps.size(), "")[0]};
-        maps.forEach((map -> returnString[0] += main.getMessages().getMapCommandInEditList(maps.size(), map)[1]));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                returnString[0].substring(0, returnString[0].length() - 2)));
+                main.getMessages().getMapCommandList(maps.size()) + String.join(", ", maps)));
     }
 
     /**

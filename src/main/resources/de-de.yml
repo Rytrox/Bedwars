@@ -21,10 +21,7 @@ teamSelected: '&9Du bist nun in Team: &b%teamname%' # (teamname: %teamname%)
 # MapCommand
 mapCommandConsoleOutput: '&dDieser Command kann nur von einem Spieler ausgeführt werden!'
 mapCommandCommandError: '&dBitte benutze &5/help&d!'
-mapCommandMapListHead: '&9Alle Maps &1(%listsize%): ' # (listsize: %listsize%)
-mapCommandMapListItem: '&b%mapname%&9, ' # (mapname: %mapname%)
-mapCommandMapInEditListHead: '&9Alle Maps im Editor &1(%listsize%): ' # (listzize: %listsize%)
-mapCommandMapInEditListItem: '&b%mapname%&9, ' # (mapname: %mapname%)
+mapCommandMapList: '&9Alle Maps &1(%listsize%): &b' # (listsize: %listsize%)
 mapCommandMapCreated: '&9Du hast die Map &b%mapname% &9erfolgreich erstellt!' # (mapname: %mapname%)
 mapCommandMapAllreadyExists: '&9Die Map &b%mapname% &9existiert bereits!' # (mapname: %mapname%)
 mapCommandMapIsNowImEditMode: '&9Die Map &b%mapname% &9ist nun im EditMode!' # (mapname: %mapname%)
