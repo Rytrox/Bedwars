@@ -1,11 +1,14 @@
 package de.rytrox.bedwars.database.repository;
 
+import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.database.entity.PlayerStatistic;
 import io.ebean.Database;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class PlayerStatisticsRepository {
 
@@ -30,5 +33,25 @@ public class PlayerStatisticsRepository {
                 .where()
                 .idEq(uuid.toString())
                 .findOneOrEmpty();
+    }
+
+    public int getStatisticSize() {
+        return database.find(PlayerStatistic.class)
+                .where()
+                .findCount();
+    }
+
+    public PlayerStatistic getTopPlayer(int position) {
+        return database.find(PlayerStatistic.class)
+                .where()
+                .orderBy("wins")
+                .setMaxRows(position)
+                .findList()
+                .get(position - 1);
+    }
+
+    public void savePlayerStatistic(PlayerStatistic playerStatistic) {
+        if (this.findByUUID(playerStatistic.getUniqueID()).isEmpty()) database.save(playerStatistic);
+        else database.update(playerStatistic);
     }
 }
