@@ -92,11 +92,12 @@ public class MapUtils implements Listener {
         inventory.addItem(pos2);
 
         if (map.getTeams() != null) map.getTeams().forEach(team -> {
+            System.out.println("Team: " + team);
             ItemStack teamItem = new ItemStackBuilder(Material.RED_BED)
                     .setAmount(1)
                     .setDisplayName(ChatColor.translateAlternateColorCodes('&', "&bTeam: " + team.getName()))
-                    .setLore(Arrays.asList("Color: " + team.getColor().getChar(), "Villager: " + team.getVillager(),
-                            "Spawn: " + team.getSpawn(), "Bed: " + team.getBed()))
+                    .setLore(Arrays.asList("Color: " + (team.getColor() == null ? "null" : team.getColor().getChar()),
+                            "Villager: " + team.getVillager(), "Spawn: " + team.getSpawn(), "Bed: " + team.getBed()))
                     .toItemStack();
             inventory.addItem(teamItem);
         });

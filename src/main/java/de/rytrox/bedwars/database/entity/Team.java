@@ -108,10 +108,9 @@ public class Team implements Completable {
         this.map = map;
     }
 
-
     @Override
     public boolean checkComplete() {
-        return Stream.of(spawn, bed, map)
+        return Stream.of(spawn, bed)
                 .allMatch(object -> object != null && object.checkComplete());
     }
 }

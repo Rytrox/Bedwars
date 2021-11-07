@@ -87,6 +87,8 @@ public class Bedwars extends JavaPlugin {
 
         this.statisticsRepository = new PlayerStatisticsRepository(database);
         this.phaseManager = new PhaseManager(this);
+
+        Bukkit.getPluginManager().registerEvents(mapUtils, this);
     }
 
     @Override
