@@ -5,6 +5,8 @@ import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Entity
 @Table (name = "`Teams`")
@@ -62,7 +64,6 @@ public class Team implements Completable {
         this.name = name;
     }
 
-    @NotNull
     public ChatColor getColor() {
         return color;
     }
@@ -75,7 +76,6 @@ public class Team implements Completable {
         this.color = ChatColor.getByChar(color);
     }
 
-    @NotNull
     public Location getVillager() {
         return villager;
     }
@@ -84,7 +84,6 @@ public class Team implements Completable {
         this.villager = villager;
     }
 
-    @NotNull
     public Location getSpawn() {
         return spawn;
     }
@@ -93,7 +92,6 @@ public class Team implements Completable {
         this.spawn = spawn;
     }
 
-    @NotNull
     public Location getBed() {
         return bed;
     }
@@ -102,7 +100,6 @@ public class Team implements Completable {
         this.bed = bed;
     }
 
-    @NotNull
     public Map getMap() {
         return map;
     }
@@ -114,7 +111,7 @@ public class Team implements Completable {
 
     @Override
     public boolean checkComplete() {
-        if (!villager.checkComplete() || !bed.checkComplete() || !spawn.checkComplete()) return false;
-        return name != null && color != null && villager != null && spawn != null && bed != null;
+        return Stream.of(spawn, bed, map)
+                .allMatch(object -> object != null && object.checkComplete());
     }
 }

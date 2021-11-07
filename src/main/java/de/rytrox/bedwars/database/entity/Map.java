@@ -4,7 +4,9 @@ import de.rytrox.bedwars.utils.Completable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Entity
 @Table (name = "`Maps`")
@@ -39,7 +41,6 @@ public class Map implements Completable {
         this.name = name;
     }
 
-    @NotNull
     public String getName() {
         return name;
     }
@@ -48,7 +49,6 @@ public class Map implements Completable {
         this.name = name;
     }
 
-    @NotNull
     public Integer getTeamsize() {
         return teamsize;
     }
@@ -57,7 +57,6 @@ public class Map implements Completable {
         this.teamsize = teamsize;
     }
 
-    @NotNull
     public Location getPos1() {
         return pos1;
     }
@@ -66,7 +65,6 @@ public class Map implements Completable {
         this.pos1 = pos1;
     }
 
-    @NotNull
     public Location getPos2() {
         return pos2;
     }
@@ -109,28 +107,24 @@ public class Map implements Completable {
         this.spawner.add(spawner);
     }
 
+    private double distance(org.bukkit.Location loc1, org.bukkit.Location loc2) {
+        return Math.sqrt( (loc1.getX() - loc2.getX()) * (loc1.getX() - loc2.getX())
+                + (loc1.getY() - loc2.getY()) * (loc1.getY() - loc2.getY())
+                + (loc1.getZ() - loc2.getZ()) * (loc1.getZ() - loc2.getZ()) );
+    }
+
     public void removeSpawner(org.bukkit.Location location, double radius) {
-        this.spawner.stream()
-                .map(Spawner::getLocation)
-                .map(Location::toBukkitLocation)
-                .forEach(spawnerLocation -> {
-                    if (spawnerLocation.distanceSquared(location) <= Math.sqrt(radius)) {
-                        this.spawner.stream()
-                                .filter(streamSpawner -> streamSpawner.getLocation().toBukkitLocation() == spawnerLocation)
-                                .findFirst()
-                                .ifPresent(streamSpawner -> this.spawner.remove(streamSpawner));
-                    }
-                });
+        new ArrayList<>(spawner).forEach(streamSpawner -> {
+            if (streamSpawner.getLocation().toBukkitLocation().distanceSquared(location) <= radius * radius)
+                this.spawner.remove(streamSpawner);
+        });
     }
 
     @Override
     public boolean checkComplete() {
-        if (teams.stream()
-                .anyMatch(team -> !team.checkComplete())) return false;
-        if (spawner.stream()
-                .anyMatch(team -> !team.checkComplete())) return false;
-        if (pos1 == null || !pos1.checkComplete() || pos2 == null || !pos2.checkComplete()) return false;
-        if (teams.size() < 2 || spawner.isEmpty()) return false;
-        return name != null && teamsize != null;
+        if (teams == null || spawner == null || teams.size() < 2 || spawner.isEmpty()) return false;
+        return name != null && teamsize != null &&
+                Stream.concat(Stream.concat(teams.stream(), Stream.of(pos1, pos2)), spawner.stream())
+                .allMatch(object -> object != null && object.checkComplete());
     }
 }

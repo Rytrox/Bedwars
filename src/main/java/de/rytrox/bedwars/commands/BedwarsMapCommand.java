@@ -316,6 +316,7 @@ public class BedwarsMapCommand implements TabExecutor {
      */
     private void checkMap(@NotNull Player player, @NotNull String mapName) {
         if (main.getMapUtils().getMapNames().contains(mapName)) {
+            main.getMapUtils().showCheckInventory(player, main.getMapUtils().getMapsInEdit().get(mapName));
             if (main.getMapUtils().getMapsInEdit().get(mapName).checkComplete())
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         main.getMessages().getMapCommandMapIsComplete(mapName)));
