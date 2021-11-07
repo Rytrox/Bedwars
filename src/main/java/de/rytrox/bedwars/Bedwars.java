@@ -8,6 +8,7 @@ import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.commands.BedwarsMapCommand;
 import de.rytrox.bedwars.map.MapUtils;
+import de.rytrox.bedwars.utils.Messages;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
@@ -40,6 +41,8 @@ import java.util.logging.Level;
 public class Bedwars extends JavaPlugin {
 
     private UTFConfig config;
+    private UTFConfig language;
+    private Messages messages;
     private ScoreboardManager scoreboardManager;
     private Database database;
     private PhaseManager phaseManager;
@@ -76,12 +79,16 @@ public class Bedwars extends JavaPlugin {
         // loads the database type and the database from the configs
         loadDatabase();
 
+        this.messages = new Messages();
+
         this.mapUtils = new MapUtils();
 
         this.mapRepository = new MapRepository(database);
 
         this.statisticsRepository = new PlayerStatisticsRepository(database);
         this.phaseManager = new PhaseManager(this);
+
+        Bukkit.getPluginManager().registerEvents(mapUtils, this);
     }
 
     @Override
@@ -95,6 +102,10 @@ public class Bedwars extends JavaPlugin {
         return config;
     }
 
+    public UTFConfig getLanguage() {
+        return language;
+    }
+
     @Override
     public void reloadConfig() {
         try {
@@ -102,6 +113,12 @@ public class Bedwars extends JavaPlugin {
                     .copyDefaultFile(Paths.get("config.yml"), Paths.get("config.yml"));
 
             this.config = new UTFConfig(file);
+
+            file = new ConfigCreator(this.getDataFolder(), Paths.get(""))
+                    .copyDefaultFile(Paths.get(config.getString("language", "de-de") + ".yml"),
+                            Paths.get(config.getString("language", "de-de") + ".yml"));
+
+            this.language = new UTFConfig(file);
         } catch (IOException e) {
             this.getLogger().log(Level.SEVERE, "&cconfig.yml konnte nicht geladen werden!", e);
         }
@@ -111,9 +128,16 @@ public class Bedwars extends JavaPlugin {
     public void saveConfig() {
         try {
             this.config.save(new File(getDataFolder(), "config.yml"));
+            this.language.save(new File(getDataFolder() + "languages/",
+                    config.getString("languages", "de-de") + ".yml"));
         } catch (IOException e) {
             this.getLogger().log(Level.SEVERE, "&cconfig.yml konnte nicht gespeichert werden");
         }
+    }
+
+    @NotNull
+    public Messages getMessages() {
+        return messages;
     }
 
     @NotNull

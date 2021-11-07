@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.text.NumberFormat;
 import java.util.Objects;
 
 @Entity
@@ -40,8 +41,8 @@ public class Location implements Completable {
     public Location(@NotNull org.bukkit.Location location) {
         setWorld(Objects.requireNonNull(location.getWorld()).getName());
         setX(location.getX());
-        setY(location.getX());
-        setZ(location.getX());
+        setY(location.getY());
+        setZ(location.getZ());
         setYaw(location.getYaw());
         setPitch(location.getPitch());
     }
@@ -120,6 +121,18 @@ public class Location implements Completable {
         setZ(location.getX());
         setYaw(location.getYaw());
         setPitch(location.getPitch());
+    }
+
+    private String format(double value) {
+        NumberFormat formatter = NumberFormat.getInstance();
+        formatter.setMaximumFractionDigits(2);
+        return formatter.format(value).replace(',', '.');
+    }
+
+    @Override
+    public String toString() {
+        return String.format("world: %s, x: %s, y: %s, z: %s, yaw: %s, pitch: %s", world, this.format(x),
+                this.format(y), this.format(z), this.format(yaw), this.format(pitch));
     }
 
     @Override

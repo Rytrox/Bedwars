@@ -26,10 +26,20 @@ public class MapLoadEvent extends Event {
         return HANDLER_LIST;
     }
 
+    /**
+     * Gibt die geladene Map zurück
+     *
+     * @return die angeforderte Map
+     */
     public Map getMap() {
         return map;
     }
 
+    /**
+     * Ersetzt die geladene Map mit einer neuen
+     *
+     * @param map die neue Map
+     */
     public void setMap(Map map) {
         this.map = map;
     }

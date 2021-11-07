@@ -338,7 +338,7 @@ public class ShopUtils {
      */
     public static void summonShopVillager(@NotNull Location location) {
         Villager villager = (Villager) Objects.requireNonNull(location.getWorld()).spawnEntity(location, EntityType.VILLAGER);
-        villager.setCustomName(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("villagerName"))));
+        villager.setCustomName(ChatColor.translateAlternateColorCodes('&', main.getMessages().getVillagerName()));
         villager.setCustomNameVisible(true);
         villager.setAI(false);
         villager.setSilent(true);
@@ -353,7 +353,7 @@ public class ShopUtils {
         Objects.requireNonNull(location.getWorld()).getNearbyEntities(location, radius, radius, radius)
                 .stream()
                 .filter(Villager.class::isInstance)
-                .filter(entity -> Objects.requireNonNull(entity.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("villagerName")))))
+                .filter(entity -> Objects.requireNonNull(entity.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', main.getMessages().getVillagerName())))
                 .forEach(entity -> ((Villager) entity).setHealth(0.0));
     }
 }

@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,6 +39,9 @@ public class ResourceSpawner {
         start();
     }
 
+    /**
+     * Startet den ResourceSpawner
+     */
     public void start() {
         task = Bukkit.getServer().getScheduler().runTaskTimer(JavaPlugin.getPlugin(Bedwars.class), () -> {
             Item dropItem = pos.getWorld().dropItem(pos, new ItemStack(material));
@@ -47,18 +49,34 @@ public class ResourceSpawner {
         }, 100, 20L * times[level - 1]);
     }
 
+    /**
+     * Beendet den ResourceSpawner
+     */
     public void stop() {
         task.cancel();
     }
 
+    /**
+     * Gibt zurück, ob der Spawner gestartet sind
+     *
+     * @return sind die Spawner gestartet
+     */
     public boolean isStarted() {
         return !task.isCancelled();
     }
 
+    /**
+     * Gibt das Level des Spawner zurück
+     *
+     * @return spawnerLevel
+     */
     public int getLevel() {
         return level;
     }
 
+    /**
+     * Erhöht das Level und die SpawnRate des Spawners
+     */
     public void levelUp() {
         if(level < 3) {
             armorStand.setCustomName("Level: " + level);
