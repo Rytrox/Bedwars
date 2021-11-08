@@ -3,7 +3,7 @@ package de.rytrox.bedwars.utils;
 import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.database.entity.Location;
 import de.rytrox.bedwars.database.entity.PlayerStatistic;
-import de.rytrox.bedwars.database.entity.TopTenSigns;
+import de.rytrox.bedwars.database.entity.TopTenSign;
 import de.rytrox.bedwars.database.repository.TopTenSignsRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,10 +38,10 @@ public class TopTenBoardHandler implements Listener {
             Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
                 if (Integer.parseInt(Objects.requireNonNull(event.getLine(2))) <= main.getStatistics().getStatisticSize()
                         && Integer.parseInt(Objects.requireNonNull(event.getLine(2))) > 0) {
-                    TopTenSigns topTenSigns = new TopTenSigns();
+                    TopTenSign topTenSigns = new TopTenSign();
                     topTenSigns.setLocation(new Location(event.getBlock().getLocation()));
                     topTenSigns.setPosition(Integer.parseInt(Objects.requireNonNull(event.getLine(2))));
-                    topTenSignsRepository.saveTopTenSigns(topTenSigns);
+                    topTenSignsRepository.saveTopTenSign(topTenSigns);
                     PlayerStatistic playerStatistic = main.getStatistics().getTopPlayer(Integer.parseInt(Objects.requireNonNull(event.getLine(2))));
                     updateSign(event.getBlock(), playerStatistic, Integer.parseInt(Objects.requireNonNull(event.getLine(2))));
                 }
@@ -53,7 +53,7 @@ public class TopTenBoardHandler implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         if (!event.isCancelled()) {
             Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
-                topTenSignsRepository.findByLocation(event.getBlock().getLocation()).ifPresent(topTenSignsRepository::deleteTopTenSigns);
+                topTenSignsRepository.findByLocation(event.getBlock().getLocation()).ifPresent(topTenSignsRepository::deleteTopTenSign);
             });
         }
     }

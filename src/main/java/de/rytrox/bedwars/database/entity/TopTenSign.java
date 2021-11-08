@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table (name = "`TopTenSigns`")
-public class TopTenSigns {
+public class TopTenSign {
 
     @Id
     @Column (name = "id", nullable = false)

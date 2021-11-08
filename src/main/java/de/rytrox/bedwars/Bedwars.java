@@ -3,7 +3,6 @@ package de.rytrox.bedwars;
 import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
-import de.rytrox.bedwars.database.repository.TopTenSignsRepository;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.team.TeamManager;
@@ -11,7 +10,6 @@ import de.rytrox.bedwars.commands.BedwarsMapCommand;
 import de.rytrox.bedwars.map.MapUtils;
 import de.rytrox.bedwars.utils.Messages;
 import de.rytrox.bedwars.utils.ScoreboardManager;
-import de.rytrox.bedwars.utils.TopTenBoardHandler;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
@@ -241,7 +239,7 @@ public class Bedwars extends JavaPlugin {
                 Map.class,
                 Team.class,
                 Spawner.class,
-                TopTenSigns.class
+                TopTenSign.class
         );
     }
 }

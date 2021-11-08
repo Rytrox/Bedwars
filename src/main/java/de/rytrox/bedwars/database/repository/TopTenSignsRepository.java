@@ -1,6 +1,6 @@
 package de.rytrox.bedwars.database.repository;
 
-import de.rytrox.bedwars.database.entity.TopTenSigns;
+import de.rytrox.bedwars.database.entity.TopTenSign;
 import io.ebean.Database;
 import org.bukkit.Location;
 
@@ -16,15 +16,15 @@ public class TopTenSignsRepository {
         this.database = database;
     }
 
-    public Optional<TopTenSigns> findById(Integer id) {
-        return database.find(TopTenSigns.class)
+    public Optional<TopTenSign> findById(Integer id) {
+        return database.find(TopTenSign.class)
                 .where()
                 .idEq(id)
                 .findOneOrEmpty();
     }
 
-    public Optional<TopTenSigns> findByLocation(Location location) {
-        return database.find(TopTenSigns.class)
+    public Optional<TopTenSign> findByLocation(Location location) {
+        return database.find(TopTenSign.class)
                 .fetch("location")
                 .where()
                 .eq("location.world", Objects.requireNonNull(location.getWorld()).getName())
@@ -34,17 +34,17 @@ public class TopTenSignsRepository {
                 .findOneOrEmpty();
     }
 
-    public List<TopTenSigns> findAllSigns() {
-        return database.find(TopTenSigns.class)
+    public List<TopTenSign> findAllSigns() {
+        return database.find(TopTenSign.class)
                 .where()
                 .findList();
     }
 
-    public void saveTopTenSigns(TopTenSigns topTenSigns) {
+    public void saveTopTenSign(TopTenSign topTenSigns) {
         database.save(topTenSigns);
     }
 
-    public void deleteTopTenSigns(TopTenSigns topTenSigns) {
+    public void deleteTopTenSign(TopTenSign topTenSigns) {
         database.delete(topTenSigns);
     }
 }

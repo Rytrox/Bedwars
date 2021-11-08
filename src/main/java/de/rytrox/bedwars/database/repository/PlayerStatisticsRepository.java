@@ -1,14 +1,11 @@
 package de.rytrox.bedwars.database.repository;
 
-import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.database.entity.PlayerStatistic;
 import io.ebean.Database;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class PlayerStatisticsRepository {
 
