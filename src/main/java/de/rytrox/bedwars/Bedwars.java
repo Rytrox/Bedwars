@@ -69,6 +69,7 @@ public class Bedwars extends JavaPlugin {
         this.scoreboardManager = new ScoreboardManager(teamManager);
         Bukkit.getPluginManager().registerEvents(teamManager, this);
         Bukkit.getPluginManager().registerEvents(new Rettungsplatform(this), this);
+
         // reload config
         reloadConfig();
         // register Listeners
