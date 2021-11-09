@@ -2,6 +2,7 @@ package de.rytrox.bedwars.database.repository;
 
 import de.rytrox.bedwars.database.entity.PlayerStatistic;
 import io.ebean.Database;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -39,12 +40,24 @@ public class PlayerStatisticsRepository {
     }
 
     public PlayerStatistic getTopPlayer(int position) {
-        return database.find(PlayerStatistic.class)
-                .where()
-                .orderBy("wins")
-                .setMaxRows(position)
-                .findList()
-                .get(position - 1);
+//        if (getStatisticSize() < position) {
+        try {
+            return database.find(PlayerStatistic.class)
+                    .where()
+                    .orderBy("wins")
+                    .setMaxRows(position)
+                    .findList()
+                    .get(position - 1);
+        } catch (IndexOutOfBoundsException exception) {
+            PlayerStatistic playerStatistic = new PlayerStatistic();
+            playerStatistic.setUuid(Bukkit.getOfflinePlayer("Empty").getUniqueId().toString());
+            return playerStatistic;
+        }
+//        } else {
+//            PlayerStatistic playerStatistic = new PlayerStatistic();
+//            playerStatistic.setUuid("cfe9aa917bde46b385404f177ffbbb36");
+//            return playerStatistic;
+//        }
     }
 
     public void savePlayerStatistic(PlayerStatistic playerStatistic) {

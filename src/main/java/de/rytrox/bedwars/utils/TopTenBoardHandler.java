@@ -36,8 +36,7 @@ public class TopTenBoardHandler implements Listener {
         if (Objects.equals(event.getLine(0), "BW") && Objects.equals(event.getLine(1), "STATS")
                 && Objects.requireNonNull(event.getLine(2)).matches("-?\\d+")) {
             Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
-                if (Integer.parseInt(Objects.requireNonNull(event.getLine(2))) <= main.getStatistics().getStatisticSize()
-                        && Integer.parseInt(Objects.requireNonNull(event.getLine(2))) > 0) {
+                if (Integer.parseInt(Objects.requireNonNull(event.getLine(2))) > 0) {
                     TopTenSign topTenSigns = new TopTenSign();
                     topTenSigns.setLocation(new Location(event.getBlock().getLocation()));
                     topTenSigns.setPosition(Integer.parseInt(Objects.requireNonNull(event.getLine(2))));
