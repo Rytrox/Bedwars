@@ -4,6 +4,7 @@ import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.database.entity.Location;
 import de.rytrox.bedwars.database.entity.PlayerStatistic;
 import de.rytrox.bedwars.database.entity.TopTenSign;
+import de.rytrox.bedwars.database.enums.SignSortValue;
 import de.rytrox.bedwars.database.repository.TopTenSignsRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,12 +43,13 @@ public class TopTenBoardHandler implements Listener {
                     TopTenSign topTenSign = new TopTenSign();
                     topTenSign.setLocation(new Location(event.getBlock().getLocation()));
                     topTenSign.setPosition(Integer.parseInt(Objects.requireNonNull(event.getLine(2))));
-                    topTenSign.setSorted(Objects.requireNonNull(Objects.requireNonNull(event.getLine(3)).toLowerCase()));
+                    topTenSign.setSorted(SignSortValue.valueOf(Objects.requireNonNull(event.getLine(3)).toUpperCase()));
                     topTenSignsRepository.saveTopTenSign(topTenSign);
                     PlayerStatistic playerStatistic = main.getStatistics().getTopPlayer(
-                            Integer.parseInt(Objects.requireNonNull(event.getLine(2))), Objects.requireNonNull(event.getLine(3)).toLowerCase());
+                            Integer.parseInt(Objects.requireNonNull(event.getLine(2))),
+                            SignSortValue.valueOf(Objects.requireNonNull(event.getLine(3)).toUpperCase()));
                     updateSign(event.getBlock(), playerStatistic, Integer.parseInt(Objects.requireNonNull(event.getLine(2))),
-                            Objects.requireNonNull(event.getLine(3)).toLowerCase());
+                            SignSortValue.valueOf(Objects.requireNonNull(event.getLine(3)).toUpperCase()));
                 }
             });
         }
@@ -62,7 +64,7 @@ public class TopTenBoardHandler implements Listener {
         }
     }
 
-    private void updateSign(Block block, PlayerStatistic playerStatistic, int place, String sorted) {
+    private void updateSign(Block block, PlayerStatistic playerStatistic, int place, SignSortValue sorted) {
         Bukkit.getServer().getScheduler().runTask(main, () -> {
             if (!(block.getState() instanceof Sign)) return;
             Sign sign = (Sign) block.getState();
@@ -70,10 +72,10 @@ public class TopTenBoardHandler implements Listener {
             sign.setLine(1, ChatColor.translateAlternateColorCodes('&', "&7Stats"));
             sign.setLine(2, ChatColor.translateAlternateColorCodes('&', "&bPlatz " + place));
             switch (sorted) {
-                case "kills":
+                case KILLS:
                     sign.setLine(3, ChatColor.translateAlternateColorCodes('&', "&b&lKills " + playerStatistic.getKills()));
                     break;
-                case "games":
+                case GAMES:
                     sign.setLine(3, ChatColor.translateAlternateColorCodes('&', "&b&lGames " + playerStatistic.getGames()));
                     break;
                 default: sign.setLine(3, ChatColor.translateAlternateColorCodes('&', "&b&lWins " + playerStatistic.getWins()));

@@ -1,5 +1,6 @@
 package de.rytrox.bedwars.database.entity;
 
+import de.rytrox.bedwars.database.enums.SignSortValue;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
@@ -20,8 +21,9 @@ public class TopTenSign {
     @Column (name = "`position`", nullable = false)
     private Integer position;
 
+    @Enumerated (EnumType.ORDINAL)
     @Column (name = "`sorted`", nullable = false)
-    String sorted;
+    SignSortValue sorted;
 
     @NotNull
     public Integer getId() {
@@ -51,11 +53,11 @@ public class TopTenSign {
     }
 
     @NotNull
-    public String getSorted() {
+    public SignSortValue getSorted() {
         return sorted;
     }
 
-    public void setSorted(@NotNull String sorted) {
+    public void setSorted(@NotNull SignSortValue sorted) {
         this.sorted = sorted;
     }
 }

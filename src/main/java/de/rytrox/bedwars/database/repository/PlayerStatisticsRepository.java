@@ -1,6 +1,7 @@
 package de.rytrox.bedwars.database.repository;
 
 import de.rytrox.bedwars.database.entity.PlayerStatistic;
+import de.rytrox.bedwars.database.enums.SignSortValue;
 import io.ebean.Database;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -39,12 +40,11 @@ public class PlayerStatisticsRepository {
                 .findCount();
     }
 
-    public PlayerStatistic getTopPlayer(int position, String sorted) {
+    public PlayerStatistic getTopPlayer(int position, SignSortValue sorted) {
         try {
-            if (!"wins".equals(sorted) && !"games".equals(sorted) && !"kills".equals(sorted)) throw new IndexOutOfBoundsException();
             return database.find(PlayerStatistic.class)
                     .where()
-                    .orderBy(sorted)
+                    .orderBy(sorted.toString())
                     .setMaxRows(position)
                     .findList()
                     .get(position - 1);
