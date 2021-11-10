@@ -40,7 +40,6 @@ public class PlayerStatisticsRepository {
     }
 
     public PlayerStatistic getTopPlayer(int position) {
-//        if (getStatisticSize() < position) {
         try {
             return database.find(PlayerStatistic.class)
                     .where()
@@ -53,11 +52,6 @@ public class PlayerStatisticsRepository {
             playerStatistic.setUuid(Bukkit.getOfflinePlayer("Empty").getUniqueId().toString());
             return playerStatistic;
         }
-//        } else {
-//            PlayerStatistic playerStatistic = new PlayerStatistic();
-//            playerStatistic.setUuid("cfe9aa917bde46b385404f177ffbbb36");
-//            return playerStatistic;
-//        }
     }
 
     public void savePlayerStatistic(PlayerStatistic playerStatistic) {
