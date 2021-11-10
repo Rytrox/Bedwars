@@ -25,8 +25,8 @@ public class TopTenBoardHandler implements Listener {
     public TopTenBoardHandler() {
         Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
             topTenSignsRepository.findAllSigns().forEach(sign -> {
-                PlayerStatistic playerStatistic = main.getStatistics().getTopPlayer(sign.getPosition());
-                updateSign(sign.getLocation().toBukkitLocation().getBlock(), playerStatistic, sign.getPosition());
+                PlayerStatistic playerStatistic = main.getStatistics().getTopPlayer(sign.getPosition(), sign.getSorted());
+                updateSign(sign.getLocation().toBukkitLocation().getBlock(), playerStatistic, sign.getPosition(), sign.getSorted());
             });
         });
     }
@@ -35,14 +35,19 @@ public class TopTenBoardHandler implements Listener {
     public void onSignChange(SignChangeEvent event) {
         if (Objects.equals(event.getLine(0), "BW") && Objects.equals(event.getLine(1), "STATS")
                 && Objects.requireNonNull(event.getLine(2)).matches("-?\\d+")) {
+            if (!"wins".equalsIgnoreCase(event.getLine(3)) && !"games".equalsIgnoreCase(event.getLine(3))
+                    && !"kills".equalsIgnoreCase(event.getLine(3))) return;
             Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
                 if (Integer.parseInt(Objects.requireNonNull(event.getLine(2))) > 0) {
-                    TopTenSign topTenSigns = new TopTenSign();
-                    topTenSigns.setLocation(new Location(event.getBlock().getLocation()));
-                    topTenSigns.setPosition(Integer.parseInt(Objects.requireNonNull(event.getLine(2))));
-                    topTenSignsRepository.saveTopTenSign(topTenSigns);
-                    PlayerStatistic playerStatistic = main.getStatistics().getTopPlayer(Integer.parseInt(Objects.requireNonNull(event.getLine(2))));
-                    updateSign(event.getBlock(), playerStatistic, Integer.parseInt(Objects.requireNonNull(event.getLine(2))));
+                    TopTenSign topTenSign = new TopTenSign();
+                    topTenSign.setLocation(new Location(event.getBlock().getLocation()));
+                    topTenSign.setPosition(Integer.parseInt(Objects.requireNonNull(event.getLine(2))));
+                    topTenSign.setSorted(Objects.requireNonNull(Objects.requireNonNull(event.getLine(3)).toLowerCase()));
+                    topTenSignsRepository.saveTopTenSign(topTenSign);
+                    PlayerStatistic playerStatistic = main.getStatistics().getTopPlayer(
+                            Integer.parseInt(Objects.requireNonNull(event.getLine(2))), Objects.requireNonNull(event.getLine(3)).toLowerCase());
+                    updateSign(event.getBlock(), playerStatistic, Integer.parseInt(Objects.requireNonNull(event.getLine(2))),
+                            Objects.requireNonNull(event.getLine(3)).toLowerCase());
                 }
             });
         }
@@ -57,14 +62,22 @@ public class TopTenBoardHandler implements Listener {
         }
     }
 
-    private void updateSign(Block block, PlayerStatistic playerStatistic, int place) {
+    private void updateSign(Block block, PlayerStatistic playerStatistic, int place, String sorted) {
         Bukkit.getServer().getScheduler().runTask(main, () -> {
             if (!(block.getState() instanceof Sign)) return;
             Sign sign = (Sign) block.getState();
-            sign.setLine(0, ChatColor.translateAlternateColorCodes('&', "&6&l" + Bukkit.getOfflinePlayer(playerStatistic.getUniqueID()).getName()));
-            sign.setLine(1, ChatColor.translateAlternateColorCodes('&', "&d&lPlatz " + place));
-            sign.setLine(2, ChatColor.translateAlternateColorCodes('&', "&d&lWins " + playerStatistic.getWins()));
-            sign.setLine(3, ChatColor.translateAlternateColorCodes('&', "&d&lKills " + playerStatistic.getKills()));
+            sign.setLine(0, ChatColor.translateAlternateColorCodes('&', "&f&l" + Bukkit.getOfflinePlayer(playerStatistic.getUniqueID()).getName()));
+            sign.setLine(1, ChatColor.translateAlternateColorCodes('&', "&7Stats"));
+            sign.setLine(2, ChatColor.translateAlternateColorCodes('&', "&bPlatz " + place));
+            switch (sorted) {
+                case "kills":
+                    sign.setLine(3, ChatColor.translateAlternateColorCodes('&', "&b&lKills " + playerStatistic.getKills()));
+                    break;
+                case "games":
+                    sign.setLine(3, ChatColor.translateAlternateColorCodes('&', "&b&lGames " + playerStatistic.getGames()));
+                    break;
+                default: sign.setLine(3, ChatColor.translateAlternateColorCodes('&', "&b&lWins " + playerStatistic.getWins()));
+            }
             sign.update(true);
         });
     }

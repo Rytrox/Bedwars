@@ -39,11 +39,12 @@ public class PlayerStatisticsRepository {
                 .findCount();
     }
 
-    public PlayerStatistic getTopPlayer(int position) {
+    public PlayerStatistic getTopPlayer(int position, String sorted) {
         try {
+            if (!"wins".equals(sorted) && !"games".equals(sorted) && !"kills".equals(sorted)) throw new IndexOutOfBoundsException();
             return database.find(PlayerStatistic.class)
                     .where()
-                    .orderBy("wins")
+                    .orderBy(sorted)
                     .setMaxRows(position)
                     .findList()
                     .get(position - 1);

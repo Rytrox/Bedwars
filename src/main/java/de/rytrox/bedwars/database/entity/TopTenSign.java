@@ -20,6 +20,9 @@ public class TopTenSign {
     @Column (name = "`position`", nullable = false)
     private Integer position;
 
+    @Column (name = "`sorted`", nullable = false)
+    String sorted;
+
     @NotNull
     public Integer getId() {
         return id;
@@ -45,5 +48,14 @@ public class TopTenSign {
 
     public void setPosition(@NotNull Integer position) {
         this.position = position;
+    }
+
+    @NotNull
+    public String getSorted() {
+        return sorted;
+    }
+
+    public void setSorted(@NotNull String sorted) {
+        this.sorted = sorted;
     }
 }
