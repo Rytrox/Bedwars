@@ -240,7 +240,8 @@ public class Bedwars extends JavaPlugin {
                 Location.class,
                 Map.class,
                 Team.class,
-                Spawner.class
+                Spawner.class,
+                TopTenSign.class
         );
     }
 }
