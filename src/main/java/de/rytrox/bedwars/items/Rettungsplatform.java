@@ -11,6 +11,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Rettungsplatform implements Listener {
 
     private ItemStack rettungsplatform;
@@ -28,84 +31,60 @@ public class Rettungsplatform implements Listener {
         return rettungsplatform;
     }
 
+    public boolean platform(Location playerLocation) {
+        int x = -1;
+        int y = -1;
+        boolean used = false;
+        Location location = playerLocation;
+        location.add(-1,0,-1);
+            while (y < 2) {
+                if (location.getBlock().getType() == Material.AIR) {
+                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
+                    used = true;
+                }
+                x++;
+                location.add(1,0,0);
+                if (x > 1) {
+                    x = -1;
+                    location.add(-3,0,1);
+                    y++;
+                }
+            }
+            if(used) {
+                Bukkit.getServer().getScheduler().runTaskLater(main, () -> {
+                    int xA = -1;
+                    int yA = -1;
+                    Location locationA = playerLocation;
+                    locationA.add(2, 0, -1);
+                    while (yA < 2) {
+                        if (location.getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
+                            location.getBlock().setType(Material.AIR);
+                        }
+                        xA++;
+                        locationA.add(-1, 0, 0);
+                        if (xA > 1) {
+                            xA = -1;
+                            locationA.add(3, 0, -1);
+                            yA++;
+                        }
+                    }
+                }, 100);
+            }
+            return used;
+    }
+
     @EventHandler
     public void onPlayerInteraction(PlayerInteractEvent event){
         Action action = event.getAction();
         if(action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
             Player player = event.getPlayer();
             if (ItemStacks.hasNBTValue(player.getInventory().getItemInMainHand(), "Rettungsplatform")) {
-                boolean used = false;
-                Location location = player.getLocation().add( 0, -2, 0);
-                if (location.getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                if (location.add(1, 0, 1).getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                if (location.add(-1, 0, 0).getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                if (location.add(-1, 0, 0).getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                if (location.add(0, 0, -1).getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                if (location.add(2, 0, 0).getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                if (location.add(0, 0, -1).getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                if (location.add(-1, 0, 0).getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                if (location.add(-1, 0, 0).getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                location.add(1, 0, 1);
-                if(used) {
+                player.sendMessage("lol");
+
+                Location playerLocation = player.getLocation().add(0,-1,0);
+
+                if(platform(playerLocation)){
                     player.getInventory().removeItem(rettungsplatform);
-                    Bukkit.getServer().getScheduler().runTaskLater(main, () -> {
-
-                        if (location.getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                        if (location.add(1, 0, 1).getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                        if (location.add(-1, 0, 0).getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                        if (location.add(-1, 0, 0).getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                        if (location.add(0, 0, -1).getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                        if (location.add(2, 0, 0).getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                        if (location.add(0, 0, -1).getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                        if (location.add(-1, 0, 0).getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                        if (location.add(-1, 0, 0).getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                    }, 100);
-
                 }
             }
         }
