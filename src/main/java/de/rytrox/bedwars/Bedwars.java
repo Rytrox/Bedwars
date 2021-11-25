@@ -60,6 +60,8 @@ public class Bedwars extends JavaPlugin {
         super();
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
+
+
     }
 
     protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
@@ -73,10 +75,6 @@ public class Bedwars extends JavaPlugin {
         this.teamManager = new TeamManager();
         this.scoreboardManager = new ScoreboardManager(teamManager);
         Bukkit.getPluginManager().registerEvents(teamManager, this);
-        Bukkit.getPluginManager().registerEvents(new Rettungsplatform(this), this);
-
-        Bukkit.getPluginManager().registerEvents(new BedwarsTNT(), this);
-        Bukkit.getPluginManager().registerEvents(new Bridge(this), this);
         // reload config
         reloadConfig();
         // register Listeners
