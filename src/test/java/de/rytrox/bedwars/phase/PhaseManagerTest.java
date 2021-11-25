@@ -34,7 +34,13 @@ public class PhaseManagerTest {
     private Bedwars main;
 
     @Mock
-    private GamePhase mockPhase;
+    private LobbyPhase mockLobbyPhase;
+
+    @Mock
+    private IngamePhase mockIngamePhase;
+
+    @Mock
+    private EndPhase mockEndPhase;
 
     @Mock
     private PluginManager pluginManager;
@@ -46,12 +52,19 @@ public class PhaseManagerTest {
     public void setup() throws Exception {
         PowerMockito.whenNew(TeamManager.class).withNoArguments()
                 .thenReturn(teamChoosingManager);
+        PowerMockito.whenNew(LobbyPhase.class).withAnyArguments()
+                .thenReturn(mockLobbyPhase);
+        Mockito.doNothing().when(mockLobbyPhase).onEnable();
 
         this.manager = new PhaseManager(main);
     }
 
     @Test
     public void shouldStartWithLobbyPhaseAndHaveCorrectOrder() {
+        Mockito.doReturn(mockIngamePhase).when(mockLobbyPhase).next();
+        Mockito.doReturn(mockEndPhase).when(mockIngamePhase).next();
+        Mockito.doReturn(mockLobbyPhase).when(mockEndPhase).next();
+
         assertTrue(this.manager.getCurrentPhase() instanceof LobbyPhase);
         assertTrue(this.manager.getCurrentPhase().next() instanceof IngamePhase);
         assertTrue(this.manager.getCurrentPhase().next().next() instanceof EndPhase);
@@ -60,20 +73,20 @@ public class PhaseManagerTest {
 
     @Test
     public void shouldEnableNextPhase() throws IllegalAccessException {
-        FieldUtils.writeDeclaredField(manager, "currentPhase", mockPhase, true);
+        FieldUtils.writeDeclaredField(manager, "currentPhase", mockLobbyPhase, true);
 
         try(MockedStatic<Bukkit> mockedStatic = Mockito.mockStatic(Bukkit.class)) {
             mockedStatic.when(Bukkit::getPluginManager).thenReturn(pluginManager);
 
-            Mockito.doReturn(mockPhase).when(mockPhase).next();
-            Mockito.doNothing().when(mockPhase).onEnable();
+            Mockito.doReturn(mockIngamePhase).when(mockLobbyPhase).next();
+            Mockito.doNothing().when(mockIngamePhase).onEnable();
             Mockito.doNothing().when(pluginManager).callEvent(Mockito.any(Event.class));
-            Mockito.doNothing().when(mockPhase).onDisable();
+            Mockito.doNothing().when(mockLobbyPhase).onDisable();
 
             manager.next();
 
-            Mockito.verify(mockPhase, Mockito.times(1)).onDisable();
-            Mockito.verify(mockPhase, Mockito.times(1)).onEnable();
+            Mockito.verify(mockLobbyPhase, Mockito.times(1)).onDisable();
+            Mockito.verify(mockIngamePhase, Mockito.times(1)).onEnable();
         }
 
 
@@ -82,7 +95,8 @@ public class PhaseManagerTest {
     @Test
     public void shouldNotStartNewPhaseWhenEventIsCancelled() throws Exception {
         PhaseChangeEvent mock = PowerMockito.mock(PhaseChangeEvent.class);
-        FieldUtils.writeDeclaredField(manager, "currentPhase", mockPhase, true);
+        FieldUtils.writeDeclaredField(manager, "currentPhase", mockLobbyPhase, true);
+        Mockito.doReturn(mockIngamePhase).when(mockLobbyPhase).next();
 
         PowerMockito.whenNew(PhaseChangeEvent.class).withAnyArguments()
                 .thenReturn(mock);
@@ -93,8 +107,8 @@ public class PhaseManagerTest {
 
             manager.next();
 
-            Mockito.verify(mockPhase, Mockito.times(0)).onDisable();
-            Mockito.verify(mockPhase, Mockito.times(0)).onEnable();
+            Mockito.verify(mockLobbyPhase, Mockito.times(0)).onDisable();
+            Mockito.verify(mockIngamePhase, Mockito.times(0)).onEnable();
         }
     }
 }

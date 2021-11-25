@@ -1,6 +1,3 @@
-# Shop
-villagerName: '&9&lShop'
-
 # Database
 mysql:
   enabled: false
@@ -10,6 +7,10 @@ mysql:
   username: 'username'
   password: 'password'
 
+# Language File
+language: 'de-de'
+
+# Game Information
 countdown:
   minPlayers: 2
   startValue: 10
