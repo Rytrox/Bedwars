@@ -3,6 +3,8 @@ package de.rytrox.bedwars;
 import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
+import de.rytrox.bedwars.items.Rettungsplatform;
+import de.rytrox.bedwars.items.Bridge;
 import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
@@ -58,6 +60,8 @@ public class Bedwars extends JavaPlugin {
         super();
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
+
+
     }
 
     protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
@@ -71,7 +75,6 @@ public class Bedwars extends JavaPlugin {
         this.teamManager = new TeamManager();
         this.scoreboardManager = new ScoreboardManager(teamManager);
         Bukkit.getPluginManager().registerEvents(teamManager, this);
-        Bukkit.getPluginManager().registerEvents(new BedwarsTNT(), this);
         // reload config
         reloadConfig();
         // register Listeners
