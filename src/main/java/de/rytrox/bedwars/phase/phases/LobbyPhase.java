@@ -2,7 +2,9 @@ package de.rytrox.bedwars.phase.phases;
 
 import de.rytrox.bedwars.Bedwars;
 
+import de.rytrox.bedwars.database.repository.TopTenSignsRepository;
 import de.rytrox.bedwars.utils.Countdown;
+import de.rytrox.bedwars.utils.TopTenBoardHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -10,12 +12,13 @@ import org.jetbrains.annotations.NotNull;
 public class LobbyPhase extends GamePhase {
 
     private final Countdown countdown;
+    private final TopTenBoardHandler topTenBoardHandler;
 
     public LobbyPhase(Bedwars main) {
         super(main);
 
-        System.out.println("Wird getriggert!");
         this.countdown = new Countdown(main);
+        this.topTenBoardHandler = new TopTenBoardHandler();
     }
 
     /**
@@ -25,6 +28,7 @@ public class LobbyPhase extends GamePhase {
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this.countdown, main);
+        Bukkit.getPluginManager().registerEvents(this.topTenBoardHandler, main);
     }
 
     /**
@@ -34,6 +38,7 @@ public class LobbyPhase extends GamePhase {
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(countdown);
+        HandlerList.unregisterAll(topTenBoardHandler);
     }
 
     /**

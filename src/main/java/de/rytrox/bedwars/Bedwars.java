@@ -4,6 +4,7 @@ import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
 import de.rytrox.bedwars.items.Bridge;
+import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.team.TeamManager;
@@ -71,6 +72,7 @@ public class Bedwars extends JavaPlugin {
         this.teamManager = new TeamManager();
         this.scoreboardManager = new ScoreboardManager(teamManager);
         Bukkit.getPluginManager().registerEvents(teamManager, this);
+        Bukkit.getPluginManager().registerEvents(new BedwarsTNT(), this);
         Bukkit.getPluginManager().registerEvents(new Bridge(this), this);
         // reload config
         reloadConfig();
@@ -240,7 +242,8 @@ public class Bedwars extends JavaPlugin {
                 Location.class,
                 Map.class,
                 Team.class,
-                Spawner.class
+                Spawner.class,
+                TopTenSign.class
         );
     }
 }
