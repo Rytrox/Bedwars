@@ -32,45 +32,24 @@ public class Rettungsplatform implements Listener {
     }
 
     public boolean platform(Location playerLocation) {
-        int x = -1;
-        int y = -1;
-        boolean used = false;
-        Location location = playerLocation;
-        location.add(-1,0,-1);
-            while (y < 2) {
-                if (location.getBlock().getType() == Material.AIR) {
-                    location.getBlock().setType(Material.PURPLE_STAINED_GLASS);
-                    used = true;
-                }
-                x++;
-                location.add(1,0,0);
-                if (x > 1) {
-                    x = -1;
-                    location.add(-3,0,1);
-                    y++;
-                }
-            }
-            if(used) {
-                Bukkit.getServer().getScheduler().runTaskLater(main, () -> {
-                    int xA = -1;
-                    int yA = -1;
-                    Location locationA = playerLocation;
-                    locationA.add(2, 0, -1);
-                    while (yA < 2) {
-                        if (location.getBlock().getType() == Material.PURPLE_STAINED_GLASS) {
-                            location.getBlock().setType(Material.AIR);
-                        }
-                        xA++;
-                        locationA.add(-1, 0, 0);
-                        if (xA > 1) {
-                            xA = -1;
-                            locationA.add(3, 0, -1);
-                            yA++;
-                        }
+
+        List<Location> platformBlocks = new ArrayList<>();
+        if(playerLocation.getBlockY() > playerLocation.getWorld().getMinHeight() &&
+                playerLocation.getBlockY() < playerLocation.getWorld().getMaxHeight()) {
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -1; z <= 1; z++) {
+                    Location currentBlock = playerLocation.clone().add(x, 0, z);
+                    if (currentBlock.getBlock().getType() == Material.AIR) {
+                        currentBlock.getBlock().setType(Material.PURPLE_STAINED_GLASS);
+                        platformBlocks.add(currentBlock);
                     }
-                }, 100);
+                }
             }
-            return used;
+        }
+        Bukkit.getServer().getScheduler().runTaskLater(main, () ->
+                    platformBlocks.forEach(block -> block.getBlock().setType(Material.AIR)),
+                100);
+        return !platformBlocks.isEmpty();
     }
 
     @EventHandler
@@ -79,7 +58,6 @@ public class Rettungsplatform implements Listener {
         if(action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
             Player player = event.getPlayer();
             if (ItemStacks.hasNBTValue(player.getInventory().getItemInMainHand(), "Rettungsplatform")) {
-                player.sendMessage("lol");
 
                 Location playerLocation = player.getLocation().add(0,-1,0);
 
