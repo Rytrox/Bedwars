@@ -1,7 +1,9 @@
 package de.rytrox.bedwars.database.repository;
 
 import de.rytrox.bedwars.database.entity.PlayerStatistic;
+import de.rytrox.bedwars.database.enums.SignSortValue;
 import io.ebean.Database;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -30,5 +32,31 @@ public class PlayerStatisticsRepository {
                 .where()
                 .idEq(uuid.toString())
                 .findOneOrEmpty();
+    }
+
+    public int getStatisticSize() {
+        return database.find(PlayerStatistic.class)
+                .where()
+                .findCount();
+    }
+
+    public PlayerStatistic getTopPlayer(int position, SignSortValue sorted) {
+        try {
+            return database.find(PlayerStatistic.class)
+                    .where()
+                    .orderBy(sorted.toString())
+                    .setMaxRows(position)
+                    .findList()
+                    .get(position - 1);
+        } catch (IndexOutOfBoundsException exception) {
+            PlayerStatistic playerStatistic = new PlayerStatistic();
+            playerStatistic.setUuid(Bukkit.getOfflinePlayer("Empty").getUniqueId().toString());
+            return playerStatistic;
+        }
+    }
+
+    public void savePlayerStatistic(PlayerStatistic playerStatistic) {
+        if (this.findByUUID(playerStatistic.getUniqueID()).isEmpty()) database.save(playerStatistic);
+        else database.update(playerStatistic);
     }
 }

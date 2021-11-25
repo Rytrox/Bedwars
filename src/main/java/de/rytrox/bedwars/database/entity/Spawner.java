@@ -72,6 +72,6 @@ public class Spawner implements Completable {
 
     @Override
     public boolean checkComplete() {
-        return material != null && location != null;
+        return material != null && location != null && location.checkComplete();
     }
 }

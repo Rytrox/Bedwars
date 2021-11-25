@@ -1,0 +1,49 @@
+# Shop
+villagerName: '&9&lShop'
+notEnoughMoney: '&dDir fehlen &5%amount% %currency%&d!' # (amount: %amount%, currency: %currency%)
+
+# Scoreboards
+scoreboardTitle: '&1&lBedwars'
+scoreboardMap: '&fMap: &b%mapname%' # (mapname: %mapname%)
+scoreboardTeam: '%teamcolor%&l%teamname% &f:' # (teamcolor: %teamcolor%, teamname: %teamname%)
+scoreboardKills: '&fKills: &b%kills%' # (kills: %kills%)
+scoreboardTode: '&fTode: &b%tode%' # (tode: %tode%)
+
+# Timer messages
+timerRunningTitle: '&b%seconds%' # (time left: %seconds%)
+timerRunningSubtitle: '&9Sekunden verbleiben' # (time left: %seconds%)
+timerEndTitle: '&bBedwars'
+timerEndSubtitle: '&9Match startet'
+
+# Team Selector
+teamSelected: '&9Du bist nun in Team: &b%teamname%' # (teamname: %teamname%)
+
+# MapCommand
+mapCommandConsoleOutput: '&dDieser Command kann nur von einem Spieler ausgeführt werden!'
+mapCommandCommandError: '&dBitte benutze &5/help&d!'
+mapCommandMapList: '&9Alle Maps &1(%listsize%): &b' # (listsize: %listsize%)
+mapCommandMapCreated: '&9Du hast die Map &b%mapname% &9erfolgreich erstellt!' # (mapname: %mapname%)
+mapCommandMapAllreadyExists: '&9Die Map &b%mapname% &9existiert bereits!' # (mapname: %mapname%)
+mapCommandMapIsNowImEditMode: '&9Die Map &b%mapname% &9ist nun im EditMode!' # (mapname: %mapname%)
+mapCommandMapIsAllreadyImEditMode: '&9Die Map &b%mapname% &9ist bereits im EditMode!' # (mapname: %mapname%)
+mapCommandMapDosentExists: '&9Die Map &b%mapname% &9existiert nicht!' # (mapname: %mapname%)
+mapCommandMapSaved: '&9Die Map &b%mapname% &9wurde gespeichert!' # (mapname: %mapname%)
+mapCommandMapDosentComplete: '&dDer Map &5%mapname% &dfehlen noch wichte Objekte!' # (mapname: %mapname%)
+mapCommandMapIsComplete: '&9Die Map &b%mapname% &9ist vollständig!' # (mapname: %mapname%)
+mapCommandMapIsNotInEditMode: '&9Die Map &b%mapname% &9ist nicht im EditMode!' # (mapname: %mapname%)
+mapCommandMapRemoved: '&9Du hast die Map &b%mapname% &9entfernt!' # (mapname: %mapname%)
+mapCommandChangedPos1: '&9Pos1 für die Map &b%mapname% &9erfolgreich geändert!' # (mapname: %mapname%)
+mapCommandChangedPos2: '&9Pos2 für die Map &b%mapname% &9erfolgreich geändert!' # (mapname: %mapname%)
+mapCommandTeamSizeChanged: '&9Die Teamgröße für &b%mapname% &9ist nun &b%teamsize%&9!' # (mapname: %mapname%, teamsize: %teamsize%)
+mapCommandNotANumber: '&dDie Zahl &5%input% &dist keine Zahl!' # (wrong input: %input%)
+mapCommandSpawnerAdded: '&9Du hast einen Spawner zu &b%mapname% &9hinzugefügt!' # (mapname: %mapname%)
+mapCommandNotAMaterial: '&dDas Material &5%material% &dexistiert nicht!' # (material: %material%)
+mapCommandAllSpawnersDeletes: '&9Du hast alle Spawner im Umkreis von &b%distance% &9gelöscht!' # (radius to delete: %distance%)
+mapCommandTeamAdded: '&9Du hast das Team &b%teamname% &9zur Map &b%mapname% &9hinzugefügt!' # (mapname: %mapname%, teamname: %teamname%)
+mapCommandTeamAllreadyExists: '&9Das Team &b%teamname% &9existiert bereits!' # (teamname: %teamname%)
+mapCommandTeamRemoved: '&9Das Team &b%teamname% &9wurde gelöscht!' # (teamname: %teamname%)
+mapCommandTeamDosentExists: '&dDas Team &5%teamname% &dexistiert nicht!' # (teamname: %teamname%)
+mapCommandTeamVillagerSet: '&9Die Villager Position für &b%teamname% &9wurde gesetzt!' # (teamname: %teamname%)
+mapCommandTeamBedSet: '&9Die Bett Position für &b%teamname% &9wurde gesetzt!' # (teamname: %teamname%)
+mapCommandTeamSpawnSet: '&9Die Spawn Position für &b%teamname% &9wurde gesetzt!' # (teamname: %teamname%)
+mapCommandTeamColorSet: '&9Die Teamfarbe Position für &b%teamname% &9wurde gesetzt!' # (teamname: %teamname%)
