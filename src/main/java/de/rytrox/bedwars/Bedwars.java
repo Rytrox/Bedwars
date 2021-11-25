@@ -4,6 +4,7 @@ import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
 import de.rytrox.bedwars.items.Rettungsplatform;
+import de.rytrox.bedwars.items.Bridge;
 import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
@@ -75,6 +76,7 @@ public class Bedwars extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new Rettungsplatform(this), this);
 
         Bukkit.getPluginManager().registerEvents(new BedwarsTNT(), this);
+        Bukkit.getPluginManager().registerEvents(new Bridge(this), this);
         // reload config
         reloadConfig();
         // register Listeners
