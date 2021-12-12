@@ -6,16 +6,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BuildBreakListener implements Listener {
 
-    private List<Block> placedBlocks = new LinkedList<>();
+    private final Set<Block> placedBlocks = new HashSet<>();
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!placedBlocks.contains(event.getBlockPlaced())) placedBlocks.add(event.getBlockPlaced());
+        placedBlocks.add(event.getBlockPlaced());
     }
 
     @EventHandler
