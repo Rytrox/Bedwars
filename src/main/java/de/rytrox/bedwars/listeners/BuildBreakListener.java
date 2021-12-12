@@ -1,4 +1,4 @@
-package de.rytrox.bedwars.map;
+package de.rytrox.bedwars.listeners;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;

@@ -5,7 +5,7 @@ import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.items.Bridge;
 import de.rytrox.bedwars.items.Rettungsplatform;
 import de.rytrox.bedwars.listeners.ShopListener;
-import de.rytrox.bedwars.map.BuildBreakListener;
+import de.rytrox.bedwars.listeners.BuildBreakListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
