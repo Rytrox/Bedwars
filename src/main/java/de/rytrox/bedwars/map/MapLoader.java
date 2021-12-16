@@ -25,5 +25,7 @@ public class MapLoader {
         });
     }
 
-    public Map getMap(){return map;};
+    public Map getMap() {
+        return map;
+    }
 }
