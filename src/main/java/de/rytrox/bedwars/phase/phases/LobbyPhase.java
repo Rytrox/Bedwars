@@ -3,6 +3,7 @@ package de.rytrox.bedwars.phase.phases;
 import de.rytrox.bedwars.Bedwars;
 
 import de.rytrox.bedwars.listeners.LobbyBreakPlaceListener;
+import de.rytrox.bedwars.map.MapLoader;
 import de.rytrox.bedwars.utils.Countdown;
 import de.rytrox.bedwars.utils.TopTenBoardHandler;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LobbyPhase extends GamePhase {
 
+    private final MapLoader mapLoader;
     private final Countdown countdown;
     private final TopTenBoardHandler topTenBoardHandler;
     private final LobbyBreakPlaceListener lobbyBreakPlaceListener;
@@ -18,6 +20,7 @@ public class LobbyPhase extends GamePhase {
     public LobbyPhase(Bedwars main) {
         super(main);
 
+        this.mapLoader = new MapLoader(main);
         this.countdown = new Countdown(main);
         this.topTenBoardHandler = new TopTenBoardHandler();
         this.lobbyBreakPlaceListener = new LobbyBreakPlaceListener();
