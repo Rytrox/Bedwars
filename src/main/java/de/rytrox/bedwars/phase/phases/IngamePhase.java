@@ -1,6 +1,7 @@
 package de.rytrox.bedwars.phase.phases;
 
 import de.rytrox.bedwars.Bedwars;
+import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.items.Bridge;
 import de.rytrox.bedwars.items.Rettungsplatform;
@@ -18,7 +19,9 @@ public class IngamePhase extends GamePhase {
     private final BedwarsTNT bedwarsTNT;
     private final Bridge bridge;
 
-    public IngamePhase(Bedwars main) {
+    private final Map map;
+
+    public IngamePhase(Bedwars main, Map map) {
         super(main);
 
         this.buildBreakListener = new BuildBreakListener();
@@ -26,6 +29,8 @@ public class IngamePhase extends GamePhase {
         this.rettungsplatform = new Rettungsplatform(main);
         this.bedwarsTNT = new BedwarsTNT();
         this.bridge = new Bridge(main);
+
+        this.map = map;
     }
 
     /**
@@ -63,5 +68,9 @@ public class IngamePhase extends GamePhase {
     @Override
     public @NotNull GamePhase next() {
         return new EndPhase(main);
+    }
+
+    public Map getMap() {
+        return map;
     }
 }

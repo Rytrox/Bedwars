@@ -55,6 +55,6 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public @NotNull GamePhase next() {
-        return new IngamePhase(main);
+        return new IngamePhase(main, mapLoader.getMap());
     }
 }
