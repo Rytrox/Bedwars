@@ -19,8 +19,6 @@ public class IngamePhase extends GamePhase {
     private final BedwarsTNT bedwarsTNT;
     private final Bridge bridge;
 
-    private final Map map;
-
     public IngamePhase(Bedwars main, Map map) {
         super(main);
 
@@ -29,8 +27,6 @@ public class IngamePhase extends GamePhase {
         this.rettungsplatform = new Rettungsplatform(main);
         this.bedwarsTNT = new BedwarsTNT();
         this.bridge = new Bridge(main);
-
-        this.map = map;
     }
 
     /**
