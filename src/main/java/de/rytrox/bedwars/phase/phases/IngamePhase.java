@@ -24,7 +24,7 @@ public class IngamePhase extends GamePhase {
     public IngamePhase(Bedwars main, Map map) {
         super(main);
 
-        this.buildBreakListener = new BuildBreakListener();
+        this.buildBreakListener = new BuildBreakListener(map);
         this.shopListener = new ShopListener(main);
         this.rettungsplatform = new Rettungsplatform(main);
         this.bedwarsTNT = new BedwarsTNT();
@@ -68,9 +68,5 @@ public class IngamePhase extends GamePhase {
     @Override
     public @NotNull GamePhase next() {
         return new EndPhase(main);
-    }
-
-    public Map getMap() {
-        return map;
     }
 }
