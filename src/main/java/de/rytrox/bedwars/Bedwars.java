@@ -175,6 +175,11 @@ public class Bedwars extends JavaPlugin {
         return mapUtils;
     }
 
+    @NotNull
+    public TeamManager getTeamManager() {
+        return teamManager;
+    }
+
     /**
      * Loads the database from the information of the config.yml
      */

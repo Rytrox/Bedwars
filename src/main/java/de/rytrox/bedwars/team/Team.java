@@ -14,12 +14,14 @@ public class Team {
     private String teamName;
     private Material teamItem;
     private ChatColor color;
+    private boolean bed;
 
     public Team(String teamName, Material teamItem, int maxTeamSize, ChatColor color) {
         this.teamName = teamName;
         this.teamItem = teamItem;
         this.members = new HashSet<>(maxTeamSize);
         this.color = color;
+        this.bed = true;
     }
 
     /**
@@ -100,4 +102,22 @@ public class Team {
      * @param color die zu setzende Farbe
      */
     public void setColor(ChatColor color) { this.color = color; }
+
+    /**
+     * Gibt zurück, ob das Team noch ein Bett hat
+     *
+     * @return hat das Team noch ein Bett
+     */
+    public boolean hasBed() {
+        return bed;
+    }
+
+    /**
+     * setzt, ob das Team noch ein Bett hat
+     *
+     * @param bed hat das Team noch ein Bett
+     */
+    public void setBed(boolean bed) {
+        this.bed = bed;
+    }
 }

@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TeamManager implements Listener {
 
@@ -125,6 +126,13 @@ public class TeamManager implements Listener {
      */
     private void removeFromAllTeams(@NotNull Player player) {
         teams.forEach(team -> team.removeMember(player));
+    }
+
+    public void destroyBed(@NotNull String teamName) {
+        teams.stream()
+                .filter(team -> teamName.equals(team.getTeamName()))
+                .collect(Collectors.toList())
+                .forEach(team -> team.setBed(false));
     }
 
     /**
