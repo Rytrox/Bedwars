@@ -1,24 +1,28 @@
 package de.rytrox.bedwars.phase.phases;
 
 import de.rytrox.bedwars.Bedwars;
+import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.items.Bridge;
 import de.rytrox.bedwars.items.Rettungsplatform;
 import de.rytrox.bedwars.listeners.ShopListener;
+import de.rytrox.bedwars.listeners.BuildBreakListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class IngamePhase extends GamePhase {
 
+    private final BuildBreakListener buildBreakListener;
     private final ShopListener shopListener;
     private final Rettungsplatform rettungsplatform;
     private final BedwarsTNT bedwarsTNT;
     private final Bridge bridge;
 
-    public IngamePhase(Bedwars main) {
+    public IngamePhase(Bedwars main, Map map) {
         super(main);
 
+        this.buildBreakListener = new BuildBreakListener(map);
         this.shopListener = new ShopListener(main);
         this.rettungsplatform = new Rettungsplatform(main);
         this.bedwarsTNT = new BedwarsTNT();
@@ -32,6 +36,7 @@ public class IngamePhase extends GamePhase {
     @Override
     public void onEnable() {
         // register Listeners
+        Bukkit.getPluginManager().registerEvents(buildBreakListener, main);
         Bukkit.getPluginManager().registerEvents(shopListener, main);
         Bukkit.getPluginManager().registerEvents(rettungsplatform, main);
         Bukkit.getPluginManager().registerEvents(bedwarsTNT, main);
@@ -44,6 +49,7 @@ public class IngamePhase extends GamePhase {
      */
     @Override
     public void onDisable() {
+        HandlerList.unregisterAll(buildBreakListener);
         HandlerList.unregisterAll(shopListener);
         HandlerList.unregisterAll(rettungsplatform);
         HandlerList.unregisterAll(bedwarsTNT);
