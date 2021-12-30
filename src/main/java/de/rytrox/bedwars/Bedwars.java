@@ -1,5 +1,6 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.commands.SetupCommand;
 import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
@@ -46,10 +47,8 @@ public class Bedwars extends JavaPlugin {
     private UTFConfig config;
     private UTFConfig language;
     private Messages messages;
-    private ScoreboardManager scoreboardManager;
     private Database database;
     private PhaseManager phaseManager;
-    private TeamManager teamManager;
     private MapUtils mapUtils;
 
     private PlayerStatisticsRepository statisticsRepository;
@@ -72,15 +71,13 @@ public class Bedwars extends JavaPlugin {
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
-        this.teamManager = new TeamManager();
-        this.scoreboardManager = new ScoreboardManager(teamManager);
-        Bukkit.getPluginManager().registerEvents(teamManager, this);
         // reload config
         reloadConfig();
         // register Listeners
         Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
         // register Commands
         Objects.requireNonNull(getCommand("bedwarsmap")).setExecutor(new BedwarsMapCommand());
+        Objects.requireNonNull(getCommand("setup")).setExecutor(new SetupCommand());
         // loads the database type and the database from the configs
         loadDatabase();
 
@@ -143,11 +140,6 @@ public class Bedwars extends JavaPlugin {
     @NotNull
     public Messages getMessages() {
         return messages;
-    }
-
-    @NotNull
-    public ScoreboardManager getScoreboardManager() {
-        return scoreboardManager;
     }
 
     @NotNull
