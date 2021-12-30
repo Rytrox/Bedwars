@@ -222,12 +222,8 @@ public class BedwarsMapCommand implements TabExecutor {
                         .stream()
                         .map(Team::getName)
                         .collect(Collectors.toList())
-                        .contains(args[4]) && "color".equals(args[5])) {
-                    Arrays.stream(ChatColor.values())
-                            .map(ChatColor::getChar)
-                            .map(String::valueOf)
-                            .forEach(list::add);
-                }
+                        .contains(args[4]) && "color".equals(args[5]))
+                    list.addAll(Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "a", "b", "c", "d", "e", "f"));
                 break;
         }
         return list;

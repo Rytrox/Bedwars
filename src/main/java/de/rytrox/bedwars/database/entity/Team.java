@@ -129,6 +129,7 @@ public class Team implements Completable {
      *
      * @return ein Set mit allen Mitgliedern des Teams
      */
+    @NotNull
     public Set<Player> getMembers() {
         return new HashSet<>(members);
     }
@@ -139,7 +140,7 @@ public class Team implements Completable {
      * @param member der hinzuzufügende Spieler
      * @return gibt zurück, ob der Spieler schon zum Team gehörte
      */
-    public boolean addMember(Player member) {
+    public boolean addMember(@NotNull Player member) {
         return members.add(member);
     }
 
@@ -149,7 +150,7 @@ public class Team implements Completable {
      * @param member der zu entfernende Spieler
      * @return gibt zurück, ob der Spieler in dem Team war
      */
-    public boolean removeMember(Player member) {
+    public boolean removeMember(@NotNull Player member) {
         return members.remove(member);
     }
 

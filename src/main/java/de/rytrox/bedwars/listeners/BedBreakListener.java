@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -20,7 +20,7 @@ public class BedBreakListener implements Listener {
     private final Map map;
     private final TeamManager teamManager;
 
-    public BedBreakListener(Map map, TeamManager teamManager) {
+    public BedBreakListener(@NotNull Map map, @NotNull TeamManager teamManager) {
         this.map = map;
         this.teamManager = teamManager;
     }
