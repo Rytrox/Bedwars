@@ -1,5 +1,6 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.commands.SetupCommand;
 import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
@@ -76,6 +77,7 @@ public class Bedwars extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
         // register Commands
         Objects.requireNonNull(getCommand("bedwarsmap")).setExecutor(new BedwarsMapCommand());
+        Objects.requireNonNull(getCommand("setup")).setExecutor(new SetupCommand());
         // loads the database type and the database from the configs
         loadDatabase();
 

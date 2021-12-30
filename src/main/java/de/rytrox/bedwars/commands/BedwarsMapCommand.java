@@ -6,6 +6,7 @@ import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.database.entity.Spawner;
 import de.rytrox.bedwars.database.entity.Team;
 import de.rytrox.bedwars.database.enums.SpawnerMaterial;
+import de.rytrox.bedwars.phase.phases.SetupPhase;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
@@ -52,6 +53,10 @@ public class BedwarsMapCommand implements TabExecutor {
             return true;
         }
         Player player = (Player) sender;
+        if (!(main.getPhaseManager().getCurrentPhase() instanceof SetupPhase)) {
+            player.sendMessage("Du bist nicht in der Setup Phase!");
+            return true;
+        }
         switch (args.length) {
             case 1:
                 switch (args[0]) {
