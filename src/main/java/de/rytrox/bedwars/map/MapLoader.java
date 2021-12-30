@@ -15,8 +15,13 @@ public class MapLoader {
     private Map map;
 
     public MapLoader(Bedwars main, TeamManager teamManager){
-        Bukkit.getScheduler().runTaskAsynchronously(main,()->{
-            List<Map> allMaps = main.getMapRepository().findMaps(Bukkit.getServer().getWorlds().stream().map(World::getName).collect(Collectors.toList()));
+        Bukkit.getScheduler().runTaskAsynchronously(main,() -> {
+            List<String> worlds = Bukkit.getServer().getWorlds()
+                    .stream()
+                    .map(World::getName)
+                    .collect(Collectors.toList());
+
+            List<Map> allMaps = main.getMapRepository().findMaps(worlds);
             Collections.shuffle(allMaps);
             allMaps.stream()
                     .findAny()

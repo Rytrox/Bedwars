@@ -69,6 +69,7 @@ public class Countdown implements Listener {
                 Bukkit.getOnlinePlayers().forEach(player ->
                     player.sendTitle(main.getMessages().getTimerEnd()[0], main.getMessages().getTimerEnd()[1],20,20,20)
                 );
+                this.main.getPhaseManager().next();
                 task.cancel();
             }
 

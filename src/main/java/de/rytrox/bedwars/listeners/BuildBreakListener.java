@@ -42,7 +42,8 @@ public class BuildBreakListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!isInsideMap(event.getBlock()) || !placedBlocks.contains(event.getBlock()))
+        if (!isInsideMap(event.getBlock()) || !placedBlocks.contains(event.getBlock())
+                && !(event.getBlock().getBlockData() instanceof Bed))
             event.setCancelled(true);
     }
 
