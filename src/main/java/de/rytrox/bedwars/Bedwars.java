@@ -46,10 +46,8 @@ public class Bedwars extends JavaPlugin {
     private UTFConfig config;
     private UTFConfig language;
     private Messages messages;
-    private ScoreboardManager scoreboardManager;
     private Database database;
     private PhaseManager phaseManager;
-    private TeamManager teamManager;
     private MapUtils mapUtils;
 
     private PlayerStatisticsRepository statisticsRepository;
@@ -72,9 +70,6 @@ public class Bedwars extends JavaPlugin {
     public void onEnable() {
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
-        this.teamManager = new TeamManager();
-        this.scoreboardManager = new ScoreboardManager(teamManager);
-        Bukkit.getPluginManager().registerEvents(teamManager, this);
         // reload config
         reloadConfig();
         // register Listeners
@@ -146,11 +141,6 @@ public class Bedwars extends JavaPlugin {
     }
 
     @NotNull
-    public ScoreboardManager getScoreboardManager() {
-        return scoreboardManager;
-    }
-
-    @NotNull
     public Database getDatabase() {
         return database;
     }
@@ -173,11 +163,6 @@ public class Bedwars extends JavaPlugin {
     @NotNull
     public MapUtils getMapUtils() {
         return mapUtils;
-    }
-
-    @NotNull
-    public TeamManager getTeamManager() {
-        return teamManager;
     }
 
     /**

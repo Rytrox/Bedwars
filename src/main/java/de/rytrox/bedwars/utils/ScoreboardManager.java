@@ -33,7 +33,7 @@ public class ScoreboardManager {
         Scoreboard board = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();
         fillSidebar(board, kills, deaths);
         teamManager.getTeams().forEach(team ->
-                board.registerNewTeam(team.getTeamName()).setColor(team.getColor()));
+                board.registerNewTeam(team.getName()).setColor(team.getColor()));
         player.setScoreboard(board);
         activeBoards.put(player, board);
     }
@@ -77,7 +77,7 @@ public class ScoreboardManager {
         Scoreboard board = activeBoards.get(player);
         teamManager.getTeams().forEach(team ->
                 team.getMembers().forEach( member ->
-                        Objects.requireNonNull(board.getTeam(team.getTeamName())).addEntry(member.getName())));
+                        Objects.requireNonNull(board.getTeam(team.getName())).addEntry(member.getName())));
         player.setScoreboard(board);
         activeBoards.replace(player, board);
     }
@@ -100,7 +100,7 @@ public class ScoreboardManager {
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8")).setScore(score.get());
         score.set(score.get() - 1);
         teamManager.getTeams().forEach(team -> {
-            objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardTeam(team.getColor(), team.getTeamName()))).setScore(score.get());
+            objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardTeam(team.getColor(), team.getName()))).setScore(score.get());
             score.set(score.get() - 1);
         });
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8&l")).setScore(4);

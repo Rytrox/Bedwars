@@ -8,12 +8,15 @@ import de.rytrox.bedwars.items.Rettungsplatform;
 import de.rytrox.bedwars.listeners.BedBreakListener;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.listeners.BuildBreakListener;
+import de.rytrox.bedwars.team.TeamManager;
+import de.rytrox.bedwars.utils.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class IngamePhase extends GamePhase {
 
+    private final ScoreboardManager scoreboardManager;
     private final BedBreakListener bedBreakListener;
     private final BuildBreakListener buildBreakListener;
     private final ShopListener shopListener;
@@ -21,9 +24,10 @@ public class IngamePhase extends GamePhase {
     private final BedwarsTNT bedwarsTNT;
     private final Bridge bridge;
 
-    public IngamePhase(Bedwars main, Map map) {
+    public IngamePhase(Bedwars main, Map map, TeamManager teamManager) {
         super(main);
 
+        this.scoreboardManager = new ScoreboardManager(teamManager);
         this.bedBreakListener = new BedBreakListener(map);
         this.buildBreakListener = new BuildBreakListener(map);
         this.shopListener = new ShopListener(main);

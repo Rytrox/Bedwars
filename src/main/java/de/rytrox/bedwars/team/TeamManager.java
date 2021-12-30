@@ -1,7 +1,11 @@
 package de.rytrox.bedwars.team;
 
 import de.rytrox.bedwars.Bedwars;
+import de.rytrox.bedwars.database.entity.Map;
+import de.rytrox.bedwars.database.entity.Team;
+import de.rytrox.bedwars.database.enums.TeamItem;
 import de.timeout.libs.item.ItemStackBuilder;
+import de.timeout.libs.item.ItemStacks;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,21 +26,25 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class TeamManager implements Listener {
 
     private final Bedwars main = JavaPlugin.getPlugin(Bedwars.class);
 
-    private final Inventory inventory;
-    private final List<Team> teams = new ArrayList<>();
+    private Map map;
 
     private final ItemStack teamChoosingItem = new ItemStackBuilder(Material.PAPER)
             .setDisplayName(ChatColor.translateAlternateColorCodes('&', "&4Teamauswahl"))
             .toItemStack();
 
-    public TeamManager() {
-        inventory = Bukkit.createInventory(null, 3 * 9);
+    private Inventory genereateTeamChoosingInventory() {
+        Inventory inventory = Bukkit.createInventory(null, 3 * 9, ChatColor.translateAlternateColorCodes('&', "&4Teamauswahl"));
+        if (map != null) map.getTeams().forEach(team -> inventory.addItem(new ItemStackBuilder(TeamItem.findByChatColor(team.getColor()))
+                    .setDisplayName(team.getColor() + team.getName())
+                    .setAmount(team.getMembers().size())
+                    .writeNBTString("teamName", team.getName())
+                    .toItemStack()));
+        return inventory;
     }
 
     /**
@@ -47,14 +55,14 @@ public class TeamManager implements Listener {
      */
     @EventHandler
     public void onInventoryClick(@NotNull InventoryClickEvent event) {
-        if (event.getInventory().equals(inventory)) {
+        if (ChatColor.translateAlternateColorCodes('&', "&4Teamauswahl").equals(event.getView().getTitle())) {
 
             Player player = (Player) event.getWhoClicked();
             removeFromAllTeams(player);
             getTeamByItem(event.getCurrentItem()).ifPresent(team -> {
                 event.setCancelled(true);
 
-                player.sendMessage(main.getMessages().getTeamSelected(team.getTeamName()));
+                player.sendMessage(main.getMessages().getTeamSelected(team.getName()));
                 team.addMember(player);
                 player.closeInventory();
             });
@@ -72,7 +80,7 @@ public class TeamManager implements Listener {
         Player player = event.getPlayer();
         if (player.getInventory().getItemInMainHand().equals(teamChoosingItem)) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-                player.openInventory(this.getInventory());
+                player.openInventory(genereateTeamChoosingInventory());
         }
     }
 
@@ -97,16 +105,6 @@ public class TeamManager implements Listener {
     }
 
     /**
-     * Gibt das TeamSelector Inventar zurück
-     *
-     * @return das TeamSelector Inventar
-     */
-    @NotNull
-    public Inventory getInventory() {
-        return inventory;
-    }
-
-    /**
      * Sucht ein Team anhand dessen TeamItems zurück
      *
      * @param item das TeamItem
@@ -114,9 +112,10 @@ public class TeamManager implements Listener {
      */
     @NotNull
     private Optional<Team> getTeamByItem(@Nullable ItemStack item) {
-        return teams.stream()
-                .filter(team -> team.getTeamItem().equals(item))
-                .findAny();
+        String name = ItemStacks.getNBTStringValue(item, "teamName");
+        return map != null ? map.getTeams().stream()
+                .filter(team -> team.getName().equals(name))
+                .findAny() : Optional.empty();
     }
 
     /**
@@ -125,14 +124,7 @@ public class TeamManager implements Listener {
      * @param player den zu entfernenden Spieler
      */
     private void removeFromAllTeams(@NotNull Player player) {
-        teams.forEach(team -> team.removeMember(player));
-    }
-
-    public void destroyBed(@NotNull String teamName) {
-        teams.stream()
-                .filter(team -> teamName.equals(team.getTeamName()))
-                .collect(Collectors.toList())
-                .forEach(team -> team.setBed(false));
+        if (map != null) map.getTeams().forEach(team -> team.removeMember(player));
     }
 
     /**
@@ -142,6 +134,10 @@ public class TeamManager implements Listener {
      */
     @NotNull
     public List<Team> getTeams() {
-        return new ArrayList<>(teams);
+        return map != null ? new ArrayList<>(map.getTeams()) : new ArrayList<>();
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
     }
 }

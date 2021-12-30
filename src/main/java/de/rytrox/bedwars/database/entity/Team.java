@@ -2,10 +2,12 @@ package de.rytrox.bedwars.database.entity;
 
 import de.rytrox.bedwars.utils.Completable;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Entity
@@ -39,6 +41,12 @@ public class Team implements Completable {
     @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn (name = "`map`", nullable = false)
     private Map map;
+
+    @Transient
+    private boolean hasBed = true;
+
+    @Transient
+    private final Set<Player> members = new HashSet<>();
 
     public Team() {
     }
@@ -106,6 +114,43 @@ public class Team implements Completable {
 
     public void setMap(@NotNull Map map) {
         this.map = map;
+    }
+
+    public boolean isHasBed() {
+        return hasBed;
+    }
+
+    public void setHasBed(boolean hasBed) {
+        this.hasBed = hasBed;
+    }
+
+    /**
+     * Gibt ein Set mit allen Spielern des Teams zurück
+     *
+     * @return ein Set mit allen Mitgliedern des Teams
+     */
+    public Set<Player> getMembers() {
+        return new HashSet<>(members);
+    }
+
+    /**
+     * fügt ein Spieler dem Team hinzu
+     *
+     * @param member der hinzuzufügende Spieler
+     * @return gibt zurück, ob der Spieler schon zum Team gehörte
+     */
+    public boolean addMember(Player member) {
+        return members.add(member);
+    }
+
+    /**
+     * entfernt einem Spieler vom Team
+     *
+     * @param member der zu entfernende Spieler
+     * @return gibt zurück, ob der Spieler in dem Team war
+     */
+    public boolean removeMember(Player member) {
+        return members.remove(member);
     }
 
     @Override
