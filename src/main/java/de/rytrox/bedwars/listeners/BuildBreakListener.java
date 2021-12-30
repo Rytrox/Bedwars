@@ -2,6 +2,7 @@ package de.rytrox.bedwars.listeners;
 
 import de.rytrox.bedwars.database.entity.Map;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.Bed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -33,6 +34,7 @@ public class BuildBreakListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.getBlock().getBlockData() instanceof Bed) return;
         if (isInsideMap(event.getBlockPlaced()))
             placedBlocks.add(event.getBlockPlaced());
         else event.setCancelled(true);
