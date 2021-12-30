@@ -118,6 +118,13 @@ public class TeamManager implements Listener {
                 .findAny() : Optional.empty();
     }
 
+    @Nullable
+    public Team getTeamByPlayer(Player player) {
+        return map != null ? map.getTeams().stream()
+                .filter(team -> team.getMembers().contains(player))
+                .findAny().orElse(null) : null;
+    }
+
     /**
      * Entfernt einen Spieler aus allen Teams
      *

@@ -1,6 +1,8 @@
 package de.rytrox.bedwars.listeners;
 
+import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.database.entity.Map;
+import de.rytrox.bedwars.team.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -8,18 +10,25 @@ import org.bukkit.block.data.type.Bed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Objects;
 
 public class BedBreakListener implements Listener {
 
     private final Map map;
+    private final TeamManager teamManager;
 
-    public BedBreakListener(Map map) {
+    public BedBreakListener(Map map, TeamManager teamManager) {
         this.map = map;
+        this.teamManager = teamManager;
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.getBlock().getBlockData() instanceof Bed) {
+            event.setDropItems(false);
             // Get Bed
             Bed bed = (Bed) event.getBlock().getBlockData();
             // Calculates both locations of bed
@@ -36,6 +45,10 @@ public class BedBreakListener implements Listener {
                                     team.getBed().toBukkitLocation().getBlock().getLocation().equals(other))
                     .forEach(team -> {
                         // remove bed and send message to all players
+                        if (Objects.equals(teamManager.getTeamByPlayer(event.getPlayer()), team)) {
+                            event.setCancelled(true);
+                            return;
+                        }
                         team.setHasBed(false);
                         Bukkit.getOnlinePlayers().forEach(player ->
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -43,5 +56,10 @@ public class BedBreakListener implements Listener {
                                                 " &fwurde von &b" + event.getPlayer().getName() + " zerstört!")));
                     });
         }
+    }
+
+    @EventHandler
+    public void onPlayerBedEnter(PlayerBedEnterEvent event) {
+        event.setCancelled(true);
     }
 }

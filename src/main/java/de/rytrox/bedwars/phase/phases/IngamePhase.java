@@ -28,7 +28,7 @@ public class IngamePhase extends GamePhase {
         super(main);
 
         this.scoreboardManager = new ScoreboardManager(teamManager);
-        this.bedBreakListener = new BedBreakListener(map);
+        this.bedBreakListener = new BedBreakListener(map, teamManager);
         this.buildBreakListener = new BuildBreakListener(map);
         this.shopListener = new ShopListener(main);
         this.rettungsplatform = new Rettungsplatform(main);
