@@ -12,12 +12,12 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.Objects;
 
-public class PlayerKillDeathListener implements Listener {
+public class KillDeathListener implements Listener {
 
     private final Bedwars main;
     private final TeamManager teamManager;
 
-    public PlayerKillDeathListener(Bedwars main, TeamManager teamManager) {
+    public KillDeathListener(Bedwars main, TeamManager teamManager) {
         this.main = main;
         this.teamManager = teamManager;
     }
