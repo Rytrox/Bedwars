@@ -31,13 +31,19 @@ public class KillDeathListener implements Listener {
         EntityDamageEvent.DamageCause damageCause = Objects.requireNonNull(event.getEntity().getLastDamageCause()).getCause();
 
         Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> main.getStatistics().findByUUID(player.getUniqueId())
-                .ifPresent(playerStatistic -> playerStatistic.setDeaths(playerStatistic.getDeaths() + 1)));
+                .ifPresent(playerStatistic -> {
+                    playerStatistic.setDeaths(playerStatistic.getDeaths() + 1);
+                    main.getStatistics().savePlayerStatistic(playerStatistic);
+                }));
 
         if (damageCause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
             Player killer = player.getKiller();
             if (killer != null) Bukkit.getServer().getScheduler().runTaskAsynchronously(main,
                     () -> main.getStatistics().findByUUID(killer.getUniqueId())
-                            .ifPresent(playerStatistic -> playerStatistic.setDeaths(playerStatistic.getDeaths() + 1)));
+                            .ifPresent(playerStatistic -> {
+                                playerStatistic.setDeaths(playerStatistic.getDeaths() + 1);
+                                main.getStatistics().savePlayerStatistic(playerStatistic);
+                            }));
         }
 
         Team team = teamManager.getTeamByPlayer(player);
