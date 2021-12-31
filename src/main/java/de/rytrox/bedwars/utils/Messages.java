@@ -44,8 +44,8 @@ public class Messages {
 
     // Timer Messages
     public String[] getTimerRunning(String seconds) {
-        return new String[]{configuration.getString("timerRunningTitle", "&b" + seconds),
-                configuration.getString("timerRunningSubtitle", "&9Sekunden verbleiben").replace("%seconds%", seconds)};
+        return new String[]{configuration.getString("timerRunningTitle", "&b%seconds%").replace("%seconds%", seconds),
+                configuration.getString("timerRunningSubtitle", "&9Sekunden verbleiben")};
     }
 
     public String[] getTimerEnd() {
