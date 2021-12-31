@@ -2,6 +2,7 @@ package de.rytrox.bedwars.listeners;
 
 import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.database.entity.Map;
+import de.rytrox.bedwars.database.entity.Team;
 import de.rytrox.bedwars.team.TeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -50,10 +51,13 @@ public class BedBreakListener implements Listener {
                             return;
                         }
                         team.setHasBed(false);
-                        Bukkit.getOnlinePlayers().forEach(player ->
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                        "&fDas Bett von Team " + team.getColor() + team.getName() +
-                                                " &fwurde von &b" + event.getPlayer().getName() + " zerstört!")));
+                        Bukkit.getOnlinePlayers().forEach(player -> {
+                            Team playerTeam = teamManager.getTeamByPlayer(event.getPlayer());
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&fDas Bett von Team " + team.getColor() + team.getName() +
+                                            " &fwurde von " + (playerTeam != null ? playerTeam.getColor() : "&f")
+                                            + event.getPlayer().getName() + "&f zerstört!"));
+                        });
                     });
         }
     }
