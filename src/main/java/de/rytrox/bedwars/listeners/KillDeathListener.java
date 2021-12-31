@@ -28,7 +28,6 @@ public class KillDeathListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        EntityDamageEvent.DamageCause damageCause = Objects.requireNonNull(event.getEntity().getLastDamageCause()).getCause();
 
         Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> main.getStatistics().findByUUID(player.getUniqueId())
                 .ifPresent(playerStatistic -> {
@@ -36,15 +35,13 @@ public class KillDeathListener implements Listener {
                     main.getStatistics().savePlayerStatistic(playerStatistic);
                 }));
 
-        if (damageCause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
-            Player killer = player.getKiller();
-            if (killer != null) Bukkit.getServer().getScheduler().runTaskAsynchronously(main,
-                    () -> main.getStatistics().findByUUID(killer.getUniqueId())
-                            .ifPresent(playerStatistic -> {
-                                playerStatistic.setDeaths(playerStatistic.getDeaths() + 1);
-                                main.getStatistics().savePlayerStatistic(playerStatistic);
-                            }));
-        }
+        Player killer = player.getKiller();
+        if (killer != null) Bukkit.getServer().getScheduler().runTaskAsynchronously(main,
+                () -> main.getStatistics().findByUUID(killer.getUniqueId())
+                        .ifPresent(playerStatistic -> {
+                            playerStatistic.setDeaths(playerStatistic.getDeaths() + 1);
+                            main.getStatistics().savePlayerStatistic(playerStatistic);
+                        }));
 
         Team team = teamManager.getTeamByPlayer(player);
         if (team != null) {
@@ -87,10 +84,8 @@ public class KillDeathListener implements Listener {
         Player damager = (Player) event.getDamager();
         Team damagerTeam = teamManager.getTeamByPlayer(damager);
 
-        if (damagerTeam == null) {
+        if (damagerTeam == null || playerTeam.equals(damagerTeam)) {
             event.setCancelled(true);
         }
-
-        if (playerTeam.equals(damagerTeam)) event.setCancelled(true);
     }
 }
