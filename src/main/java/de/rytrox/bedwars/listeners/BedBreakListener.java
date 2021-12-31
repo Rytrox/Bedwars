@@ -55,7 +55,7 @@ public class BedBreakListener implements Listener {
                             Team playerTeam = teamManager.getTeamByPlayer(event.getPlayer());
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     "&fDas Bett von Team " + team.getColor() + team.getName() +
-                                            " &fwurde von " + (playerTeam != null ? playerTeam.getColor() : "&f")
+                                            " &fwurde von " + playerTeam.getColor()
                                             + event.getPlayer().getName() + "&f zerstört!"));
                         });
                     });
