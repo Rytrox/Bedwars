@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -80,12 +81,21 @@ public class KillDeathListener implements Listener {
             return;
         }
 
-        if (!(event.getDamager() instanceof Player)) return;
-        Player damager = (Player) event.getDamager();
+        Player damager = getDamager(event);
+        if (damager == null) return;
         Team damagerTeam = teamManager.getTeamByPlayer(damager);
 
         if (damagerTeam == null || playerTeam.equals(damagerTeam)) {
             event.setCancelled(true);
         }
+    }
+
+    private Player getDamager(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) return (Player) event.getDamager();
+        else if (event.getDamager() instanceof Projectile) {
+            Projectile projectile = (Projectile) event.getDamager();
+            if (projectile.getShooter() instanceof Player) return (Player) projectile.getShooter();
+        }
+        return null;
     }
 }
