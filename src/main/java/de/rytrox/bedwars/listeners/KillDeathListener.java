@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
@@ -39,5 +40,34 @@ public class KillDeathListener implements Listener {
 
         Team team = teamManager.getTeamByPlayer(player);
         if (team != null) event.setDeathMessage(team.getColor() + event.getDeathMessage());
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        if (teamManager.getTeamByPlayer(player) == null) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        Team playerTeam = teamManager.getTeamByPlayer(player);
+
+        if (playerTeam == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (!(event.getDamager() instanceof Player)) return;
+        Player damager = (Player) event.getDamager();
+        Team damagerTeam = teamManager.getTeamByPlayer(damager);
+
+        if (damagerTeam == null) {
+            event.setCancelled(true);
+        }
+
+        if (playerTeam.equals(damagerTeam)) event.setCancelled(true);
     }
 }
