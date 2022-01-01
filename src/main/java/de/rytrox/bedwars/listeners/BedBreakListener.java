@@ -1,6 +1,5 @@
 package de.rytrox.bedwars.listeners;
 
-import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.team.TeamManager;
 import org.bukkit.Bukkit;

@@ -6,6 +6,7 @@ import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.items.Bridge;
 import de.rytrox.bedwars.items.Rettungsplatform;
 import de.rytrox.bedwars.listeners.BedBreakListener;
+import de.rytrox.bedwars.listeners.KillDeathListener;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.listeners.BuildBreakListener;
 import de.rytrox.bedwars.team.TeamManager;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class IngamePhase extends GamePhase {
 
     private final ScoreboardManager scoreboardManager;
+    private final KillDeathListener killDeathListener;
     private final BedBreakListener bedBreakListener;
     private final BuildBreakListener buildBreakListener;
     private final ShopListener shopListener;
@@ -28,6 +30,7 @@ public class IngamePhase extends GamePhase {
         super(main);
 
         this.scoreboardManager = new ScoreboardManager(teamManager);
+        this.killDeathListener = new KillDeathListener(main, teamManager);
         this.bedBreakListener = new BedBreakListener(map, teamManager);
         this.buildBreakListener = new BuildBreakListener(map);
         this.shopListener = new ShopListener(main);
@@ -43,6 +46,7 @@ public class IngamePhase extends GamePhase {
     @Override
     public void onEnable() {
         // register Listeners
+        Bukkit.getPluginManager().registerEvents(killDeathListener, main);
         Bukkit.getPluginManager().registerEvents(bedBreakListener, main);
         Bukkit.getPluginManager().registerEvents(buildBreakListener, main);
         Bukkit.getPluginManager().registerEvents(shopListener, main);
@@ -57,6 +61,7 @@ public class IngamePhase extends GamePhase {
      */
     @Override
     public void onDisable() {
+        HandlerList.unregisterAll(killDeathListener);
         HandlerList.unregisterAll(bedBreakListener);
         HandlerList.unregisterAll(buildBreakListener);
         HandlerList.unregisterAll(shopListener);

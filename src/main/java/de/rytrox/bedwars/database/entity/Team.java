@@ -116,7 +116,7 @@ public class Team implements Completable {
         this.map = map;
     }
 
-    public boolean isHasBed() {
+    public boolean hasBed() {
         return hasBed;
     }
 
