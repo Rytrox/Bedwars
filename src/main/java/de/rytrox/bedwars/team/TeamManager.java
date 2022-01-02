@@ -23,11 +23,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TeamManager implements Listener {
 
@@ -113,18 +110,19 @@ public class TeamManager implements Listener {
                     team.addMember(event.getPlayer());
                     event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
                             "&fDu wurdest dem Team " + team.getColor() + team.getName() + " &fhinzugefügt!"));
-                }, () -> map.getTeams()
-                        .stream()
-                        .collect(Collectors.collectingAndThen(Collectors.toList(), collected -> {
-                            Collections.shuffle(collected);
-                            return collected.stream();
-                        }))
-                        .findAny()
-                        .ifPresentOrElse(team -> {
-                            team.addMember(event.getPlayer());
-                            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                    "&fDu wurdest dem Team " + team.getColor() + team.getName() + " &fhinzugefügt!"));
-                        }, () -> System.out.println("Kein Team gefunden")));
+                }, () -> {
+                    List<Team> teams = new LinkedList<>(map.getTeams());
+                    Collections.shuffle(teams);
+                    teams
+                            .stream()
+                            .filter(team -> team.getMembers().size() < map.getTeamsize())
+                            .findAny()
+                            .ifPresentOrElse(team -> {
+                                team.addMember(event.getPlayer());
+                                event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&fDu wurdest dem Team " + team.getColor() + team.getName() + " &fhinzugefügt!"));
+                            }, () -> event.getPlayer().kickPlayer(ChatColor.RED + "Die Runde ist schon voll!"));
+                });
     }
 
     /**
