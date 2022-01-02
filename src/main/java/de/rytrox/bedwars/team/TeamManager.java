@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TeamManager implements Listener {
 
@@ -40,7 +39,7 @@ public class TeamManager implements Listener {
         Inventory inventory = Bukkit.createInventory(null, 3 * 9, ChatColor.translateAlternateColorCodes('&', "&4Teamauswahl"));
         if (map != null) map.getTeams().forEach(team -> inventory.addItem(new ItemStackBuilder(TeamItem.findByChatColor(team.getColor()))
                     .setDisplayName(team.getColor() + team.getName())
-                    .setAmount(team.getMembers().size())
+                    .setAmount(Math.max(team.getMembers().size(), 1))
                     .writeNBTString("teamName", team.getName())
                     .toItemStack()));
         return inventory;
@@ -133,6 +132,7 @@ public class TeamManager implements Listener {
      */
     @NotNull
     private Optional<Team> getTeamByItem(@Nullable ItemStack item) {
+        if (item == null) return Optional.empty();
         String name = ItemStacks.getNBTStringValue(item, "teamName");
         return map != null ? map.getTeams().stream()
                 .filter(team -> team.getName().equals(name))
