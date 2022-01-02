@@ -40,7 +40,9 @@ public class MapRepository {
      * @return eine Liste mit allen Maps
      */
     public List<Map> findMaps(List<String> worldNames) {
-        return database.find(Map.class).where().idIn(worldNames)
+        return database.find(Map.class)
+                .where()
+                .idIn(worldNames)
                 .findList();
     }
 

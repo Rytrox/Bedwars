@@ -19,7 +19,8 @@ public class ResourceSpawner {
     private final Location pos;
     private final Material material;
     private BukkitTask task;
-    private final ArmorStand armorStand;
+    private ArmorStand armorStand;
+    private final Location armorStandPos;
 
     public ResourceSpawner(Material material, @NotNull Location pos, int time1, int time2, int time3) {
         times[0] = time1;
@@ -27,14 +28,12 @@ public class ResourceSpawner {
         times[2] = time3;
         level = 1;
 
-        this.pos = pos;
+        this.pos = pos.getBlock().getLocation();
         this.material = material;
 
-        armorStand = pos.add(0,-1,0).getWorld().spawn(pos, ArmorStand.class);
-        pos.add(0.5,1,0.5);
-        armorStand.setCustomNameVisible(true);
-        armorStand.setCustomName("Level: " + level);
-        armorStand.setVisible(false);
+        this.armorStandPos = this.pos.add(0,-1,0).clone();
+
+        this.pos.add(0.5,1,0.5);
 
         start();
     }
@@ -43,6 +42,7 @@ public class ResourceSpawner {
      * Startet den ResourceSpawner
      */
     public void start() {
+        summonArmorStand();
         task = Bukkit.getServer().getScheduler().runTaskTimer(JavaPlugin.getPlugin(Bedwars.class), () -> {
             Item dropItem = pos.getWorld().dropItem(pos, new ItemStack(material));
             dropItem.setVelocity(new Vector());
@@ -53,6 +53,8 @@ public class ResourceSpawner {
      * Beendet den ResourceSpawner
      */
     public void stop() {
+        armorStand.remove();
+        armorStand = null;
         task.cancel();
     }
 
@@ -86,5 +88,13 @@ public class ResourceSpawner {
         } else {
             System.out.println("maximal level bereits erreicht");
         }
+    }
+
+    private void summonArmorStand() {
+        armorStand = armorStandPos.getWorld().spawn(pos, ArmorStand.class);
+        armorStand.setCustomNameVisible(true);
+        armorStand.setGravity(false);
+        armorStand.setCustomName("Level: " + level);
+        armorStand.setVisible(false);
     }
 }

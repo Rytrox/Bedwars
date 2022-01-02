@@ -4,6 +4,7 @@ import de.rytrox.bedwars.Bedwars;
 
 import de.rytrox.bedwars.listeners.LobbyBreakPlaceListener;
 import de.rytrox.bedwars.map.MapLoader;
+import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.utils.Countdown;
 import de.rytrox.bedwars.utils.LobbyArea;
 import de.rytrox.bedwars.utils.TopTenBoardHandler;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LobbyPhase extends GamePhase {
 
+    private final TeamManager teamManager;
     private final MapLoader mapLoader;
     private final Countdown countdown;
     private final TopTenBoardHandler topTenBoardHandler;
@@ -24,6 +26,8 @@ public class LobbyPhase extends GamePhase {
 
         this.lobbyArea = new LobbyArea();
         this.mapLoader = new MapLoader(main);
+        this.teamManager = new TeamManager();
+        this.mapLoader = new MapLoader(main, teamManager);
         this.countdown = new Countdown(main);
         this.topTenBoardHandler = new TopTenBoardHandler();
         this.lobbyBreakPlaceListener = new LobbyBreakPlaceListener();
@@ -37,6 +41,7 @@ public class LobbyPhase extends GamePhase {
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this.lobbyArea, main);
+        Bukkit.getPluginManager().registerEvents(teamManager, main);
         Bukkit.getPluginManager().registerEvents(this.countdown, main);
         Bukkit.getPluginManager().registerEvents(this.topTenBoardHandler, main);
         Bukkit.getPluginManager().registerEvents(this.lobbyBreakPlaceListener, main);
@@ -49,6 +54,7 @@ public class LobbyPhase extends GamePhase {
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(lobbyArea);
+        HandlerList.unregisterAll(teamManager);
         HandlerList.unregisterAll(countdown);
         HandlerList.unregisterAll(topTenBoardHandler);
         HandlerList.unregisterAll(lobbyBreakPlaceListener);
@@ -61,6 +67,6 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public @NotNull GamePhase next() {
-        return new IngamePhase(main, mapLoader.getMap());
+        return new IngamePhase(main, mapLoader.getMap(), teamManager);
     }
 }

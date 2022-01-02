@@ -4,14 +4,17 @@ import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.phase.events.PhaseChangeEvent;
 import de.rytrox.bedwars.phase.phases.GamePhase;
 import de.rytrox.bedwars.phase.phases.LobbyPhase;
+import de.rytrox.bedwars.phase.phases.SetupPhase;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 public class PhaseManager {
 
+    private final Bedwars main;
     private GamePhase currentPhase;
 
     public PhaseManager(Bedwars main) {
+        this.main = main;
         this.currentPhase = new LobbyPhase(main);
         this.currentPhase.onEnable();
     }
@@ -45,5 +48,11 @@ public class PhaseManager {
             this.currentPhase = event.getNextPhase();
             this.currentPhase.onEnable();
         }
+    }
+
+    public void enableSetupMode() {
+        this.currentPhase.onDisable();
+        this.currentPhase = new SetupPhase(main);
+        this.currentPhase.onEnable();
     }
 }

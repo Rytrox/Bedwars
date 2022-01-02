@@ -3,6 +3,7 @@ package de.rytrox.bedwars.utils;
 import de.rytrox.bedwars.Bedwars;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -63,12 +64,14 @@ public class Countdown implements Listener {
             int currentTime = timer.decrementAndGet();
             if(currentTime > 0) {
                 Bukkit.getOnlinePlayers().forEach(player ->
-                    player.sendTitle(main.getMessages().getTimerRunning(String.valueOf(currentTime))[0],
-                            main.getMessages().getTimerRunning(String.valueOf(currentTime))[1], 20, 20, 20));
+                    player.sendTitle(ChatColor.translateAlternateColorCodes('&', main.getMessages().getTimerRunning(String.valueOf(currentTime))[0]),
+                            ChatColor.translateAlternateColorCodes('&', main.getMessages().getTimerRunning(String.valueOf(currentTime))[1]), 20, 20, 20));
             } else {
                 Bukkit.getOnlinePlayers().forEach(player ->
-                    player.sendTitle(main.getMessages().getTimerEnd()[0], main.getMessages().getTimerEnd()[1],20,20,20)
+                    player.sendTitle(ChatColor.translateAlternateColorCodes('&', main.getMessages().getTimerEnd()[0]),
+                            ChatColor.translateAlternateColorCodes('&', main.getMessages().getTimerEnd()[1]),20,20,20)
                 );
+                this.main.getPhaseManager().next();
                 task.cancel();
             }
 

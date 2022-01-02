@@ -11,3 +11,6 @@ commands:
     usage: /bedwarsmap [create, add, modify, remove, save, list, listinedit]
     aliases:
       - bwmap
+  setup:
+    description: setup the map
+    usage: /setup
