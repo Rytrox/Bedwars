@@ -43,10 +43,8 @@ public class MapRepository {
     public List<Map> findMapsByWorld(List<String> worldNames) {
         return database.find(Map.class)
                 .where()
-                .findList()
-                .stream()
-                .filter(map -> worldNames.contains(map.getWorld()))
-                .collect(Collectors.toList());
+                .eq("world", worldNames)
+                .findList();
     }
 
     /**
