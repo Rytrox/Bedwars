@@ -32,7 +32,7 @@ public class IngamePhase extends GamePhase {
     public IngamePhase(Bedwars main, Map map, TeamManager teamManager) {
         super(main);
 
-        this.scoreboardManager = new ScoreboardManager(map, teamManager);
+        this.scoreboardManager = new ScoreboardManager(map.getName(), teamManager);
         this.killDeathListener = new KillDeathListener(main, teamManager);
         this.bedBreakListener = new BedBreakListener(map, teamManager);
         this.buildBreakListener = new BuildBreakListener(map);
