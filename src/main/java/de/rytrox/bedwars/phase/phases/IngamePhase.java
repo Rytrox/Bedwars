@@ -32,7 +32,7 @@ public class IngamePhase extends GamePhase {
     public IngamePhase(Bedwars main, Map map, TeamManager teamManager) {
         super(main);
 
-        this.scoreboardManager = new ScoreboardManager(teamManager);
+        this.scoreboardManager = new ScoreboardManager(map, teamManager);
         this.killDeathListener = new KillDeathListener(main, teamManager);
         this.bedBreakListener = new BedBreakListener(map, teamManager);
         this.buildBreakListener = new BuildBreakListener(map);
@@ -41,7 +41,7 @@ public class IngamePhase extends GamePhase {
         this.bedwarsTNT = new BedwarsTNT();
         this.bridge = new Bridge(main);
 
-        this.mapManager = new MapManager(map);
+        this.mapManager = new MapManager(map, this.scoreboardManager);
     }
 
     /**
@@ -62,6 +62,7 @@ public class IngamePhase extends GamePhase {
         mapManager.summonShops();
         mapManager.summonSpawners();
         mapManager.teleportPlayers();
+        mapManager.showScoreboards();
     }
 
     /**
@@ -80,6 +81,7 @@ public class IngamePhase extends GamePhase {
 
         mapManager.killShops();
         mapManager.stopSpawners();
+        mapManager.removeScoreboards();
     }
 
     /**
