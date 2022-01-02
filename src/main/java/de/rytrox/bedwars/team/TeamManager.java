@@ -105,17 +105,24 @@ public class TeamManager implements Listener {
     public void onPLayerJoin(@NotNull PlayerJoinEvent event) {
         event.getPlayer().getInventory().addItem(teamChoosingItem);
         if (map == null) return;
-        map.getTeams().stream()
+        map.getTeams()
+                .stream()
                 .filter(team -> team.getMembers().isEmpty())
                 .findAny()
-                .ifPresentOrElse(team -> team.addMember(event.getPlayer()), () -> map.getTeams()
+                .ifPresentOrElse(team -> {
+                    team.addMember(event.getPlayer());
+                    event.getPlayer().sendMessage("Du wurdest dem Team " + team.getColor() + team.getName() + " hinzugefügt!");
+                }, () -> map.getTeams()
                         .stream()
                         .collect(Collectors.collectingAndThen(Collectors.toList(), collected -> {
                             Collections.shuffle(collected);
                             return collected.stream();
                         }))
                         .findAny()
-                        .ifPresentOrElse(team -> team.addMember(event.getPlayer()), () -> System.out.println("Kein Team gefunden")));
+                        .ifPresentOrElse(team -> {
+                            team.addMember(event.getPlayer());
+                            event.getPlayer().sendMessage("Du wurdest dem Team " + team.getColor() + team.getName() + " hinzugefügt!");
+                        }, () -> System.out.println("Kein Team gefunden")));
     }
 
     /**
