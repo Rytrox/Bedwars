@@ -53,7 +53,8 @@ public class ResourceSpawner {
      * Beendet den ResourceSpawner
      */
     public void stop() {
-        armorStand.setHealth(0.0);
+        armorStand.remove();
+        armorStand = null;
         task.cancel();
     }
 
