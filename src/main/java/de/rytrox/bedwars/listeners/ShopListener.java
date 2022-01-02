@@ -72,7 +72,7 @@ public class ShopListener implements Listener {
         Player player = event.getPlayer();
         if(event.getRightClicked() instanceof Villager) {
             Villager villager = (Villager) event.getRightClicked();
-            if(Objects.requireNonNull(villager.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("villagerName"))))) {
+            if(Objects.requireNonNull(villager.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', main.getMessages().getVillagerName()))) {
                 ShopUtils.openRush(player);
             }
         }
@@ -87,7 +87,7 @@ public class ShopListener implements Listener {
         if(event.getDamager() instanceof Player) {
             if(event.getEntity() instanceof Villager) {
                 Villager villager = (Villager) event.getEntity();
-                if(Objects.requireNonNull(villager.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(main.getConfig().getString("villagerName"))))) {
+                if(Objects.requireNonNull(villager.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', main.getMessages().getVillagerName()))) {
                     event.setCancelled(true);
                 }
             }
