@@ -116,7 +116,7 @@ public class TeamManager implements Listener {
                     teams
                             .stream()
                             .filter(team -> team.getMembers().size() < map.getTeamsize())
-                            .findAny()
+                            .min(Comparator.comparingInt(team -> team.getMembers().size()))
                             .ifPresentOrElse(team -> {
                                 team.addMember(event.getPlayer());
                                 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
