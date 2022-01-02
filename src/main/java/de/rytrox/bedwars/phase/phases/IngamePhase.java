@@ -59,6 +59,8 @@ public class IngamePhase extends GamePhase {
         Bukkit.getPluginManager().registerEvents(bedwarsTNT, main);
         Bukkit.getPluginManager().registerEvents(bridge, main);
 
+        mapManager.deleteAllItems();
+        mapManager.deleteAllSpawnerArmorStands();
         mapManager.summonShops();
         mapManager.summonSpawners();
         mapManager.teleportPlayers();
@@ -82,6 +84,8 @@ public class IngamePhase extends GamePhase {
         mapManager.killShops();
         mapManager.stopSpawners();
         mapManager.removeScoreboards();
+        mapManager.deleteAllItems();
+        mapManager.deleteAllSpawnerArmorStands();
     }
 
     /**

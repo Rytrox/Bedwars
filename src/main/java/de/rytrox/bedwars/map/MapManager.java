@@ -5,10 +5,14 @@ import de.rytrox.bedwars.database.entity.Team;
 import de.rytrox.bedwars.utils.ResourceSpawner;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.rytrox.bedwars.utils.ShopUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MapManager {
 
@@ -48,6 +52,18 @@ public class MapManager {
                             scoreboardManager.addBoard(member, 0, 0);
                             scoreboardManager.addPlayerToTeam(member);
                         }));
+    }
+
+    public void deleteAllItems() {
+        Objects.requireNonNull(Bukkit.getWorld(map.getPos1().getWorld())).getEntities().forEach(entity -> {
+            if (entity instanceof Item) entity.remove();
+        });
+    }
+
+    public void deleteAllSpawnerArmorStands() {
+        Objects.requireNonNull(Bukkit.getWorld(map.getPos1().getWorld())).getEntities().forEach(entity -> {
+            if (entity instanceof ArmorStand && Objects.requireNonNull(entity.getCustomName()).startsWith("Level: "))entity.remove();
+        });
     }
 
     public void stopSpawners() {
