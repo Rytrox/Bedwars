@@ -60,7 +60,8 @@ public class TeamManager implements Listener {
             getTeamByItem(event.getCurrentItem()).ifPresent(team -> {
                 event.setCancelled(true);
 
-                player.sendMessage(main.getMessages().getTeamSelected(team.getName()));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        main.getMessages().getTeamSelected(team.getName())));
                 team.addMember(player);
                 player.closeInventory();
             });
