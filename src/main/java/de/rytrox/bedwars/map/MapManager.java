@@ -9,6 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,15 +56,12 @@ public class MapManager {
                         }));
     }
 
-    public void deleteAllItems() {
+    public void deleteAllGameEntities() {
         Objects.requireNonNull(Bukkit.getWorld(map.getPos1().getWorld())).getEntities().forEach(entity -> {
-            if (entity instanceof Item) entity.remove();
-        });
-    }
-
-    public void deleteAllSpawnerArmorStands() {
-        Objects.requireNonNull(Bukkit.getWorld(map.getPos1().getWorld())).getEntities().forEach(entity -> {
-            if (entity instanceof ArmorStand && Objects.requireNonNull(entity.getCustomName()).startsWith("Level: "))entity.remove();
+            if (entity instanceof ArmorStand && !Objects.requireNonNull(entity.getCustomName()).startsWith("Level: ")) return;
+            if (entity instanceof Player) return;
+            if (entity instanceof ItemFrame) return;
+            entity.remove();
         });
     }
 
