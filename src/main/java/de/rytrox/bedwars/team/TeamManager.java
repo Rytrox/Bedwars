@@ -23,9 +23,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TeamManager implements Listener {
 
@@ -102,6 +101,28 @@ public class TeamManager implements Listener {
     @EventHandler
     public void onPLayerJoin(@NotNull PlayerJoinEvent event) {
         event.getPlayer().getInventory().addItem(teamChoosingItem);
+        if (map == null) return;
+        map.getTeams()
+                .stream()
+                .filter(team -> team.getMembers().isEmpty())
+                .findAny()
+                .ifPresentOrElse(team -> {
+                    team.addMember(event.getPlayer());
+                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            "&fDu wurdest dem Team " + team.getColor() + team.getName() + " &fhinzugefügt!"));
+                }, () -> {
+                    List<Team> teams = new LinkedList<>(map.getTeams());
+                    Collections.shuffle(teams);
+                    teams
+                            .stream()
+                            .filter(team -> team.getMembers().size() < map.getTeamsize())
+                            .min(Comparator.comparingInt(team -> team.getMembers().size()))
+                            .ifPresentOrElse(team -> {
+                                team.addMember(event.getPlayer());
+                                event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        "&fDu wurdest dem Team " + team.getColor() + team.getName() + " &fhinzugefügt!"));
+                            }, () -> event.getPlayer().kickPlayer(ChatColor.RED + "Die Runde ist schon voll!"));
+                });
     }
 
     /**
