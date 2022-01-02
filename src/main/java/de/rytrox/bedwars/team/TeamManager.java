@@ -111,7 +111,8 @@ public class TeamManager implements Listener {
                 .findAny()
                 .ifPresentOrElse(team -> {
                     team.addMember(event.getPlayer());
-                    event.getPlayer().sendMessage("Du wurdest dem Team " + team.getColor() + team.getName() + " hinzugefügt!");
+                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            "&fDu wurdest dem Team " + team.getColor() + team.getName() + " &fhinzugefügt!"));
                 }, () -> map.getTeams()
                         .stream()
                         .collect(Collectors.collectingAndThen(Collectors.toList(), collected -> {
@@ -121,7 +122,8 @@ public class TeamManager implements Listener {
                         .findAny()
                         .ifPresentOrElse(team -> {
                             team.addMember(event.getPlayer());
-                            event.getPlayer().sendMessage("Du wurdest dem Team " + team.getColor() + team.getName() + " hinzugefügt!");
+                            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    "&fDu wurdest dem Team " + team.getColor() + team.getName() + " &fhinzugefügt!"));
                         }, () -> System.out.println("Kein Team gefunden")));
     }
 
