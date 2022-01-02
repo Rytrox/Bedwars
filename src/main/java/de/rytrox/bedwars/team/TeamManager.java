@@ -24,8 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TeamManager implements Listener {
 
@@ -102,6 +104,18 @@ public class TeamManager implements Listener {
     @EventHandler
     public void onPLayerJoin(@NotNull PlayerJoinEvent event) {
         event.getPlayer().getInventory().addItem(teamChoosingItem);
+        if (map == null) return;
+        map.getTeams().stream()
+                .filter(team -> team.getMembers().isEmpty())
+                .findAny()
+                .ifPresentOrElse(team -> team.addMember(event.getPlayer()), () -> map.getTeams()
+                        .stream()
+                        .collect(Collectors.collectingAndThen(Collectors.toList(), collected -> {
+                            Collections.shuffle(collected);
+                            return collected.stream();
+                        }))
+                        .findAny()
+                        .ifPresentOrElse(team -> team.addMember(event.getPlayer()), () -> System.out.println("Kein Team gefunden")));
     }
 
     /**
