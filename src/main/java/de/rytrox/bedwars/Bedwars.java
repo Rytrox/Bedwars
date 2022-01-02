@@ -11,6 +11,8 @@ import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.commands.BedwarsMapCommand;
 import de.rytrox.bedwars.map.MapUtils;
+import de.rytrox.bedwars.utils.Area;
+import de.rytrox.bedwars.utils.LobbyArea;
 import de.rytrox.bedwars.utils.Messages;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import de.timeout.libs.config.ConfigCreator;
