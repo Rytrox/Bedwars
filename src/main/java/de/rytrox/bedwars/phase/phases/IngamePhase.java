@@ -9,6 +9,7 @@ import de.rytrox.bedwars.listeners.BedBreakListener;
 import de.rytrox.bedwars.listeners.KillDeathListener;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.listeners.BuildBreakListener;
+import de.rytrox.bedwars.map.MapManager;
 import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.utils.ScoreboardManager;
 import org.bukkit.Bukkit;
@@ -26,10 +27,12 @@ public class IngamePhase extends GamePhase {
     private final BedwarsTNT bedwarsTNT;
     private final Bridge bridge;
 
+    private final MapManager mapManager;
+
     public IngamePhase(Bedwars main, Map map, TeamManager teamManager) {
         super(main);
 
-        this.scoreboardManager = new ScoreboardManager(teamManager);
+        this.scoreboardManager = new ScoreboardManager(map.getName(), teamManager);
         this.killDeathListener = new KillDeathListener(main, teamManager);
         this.bedBreakListener = new BedBreakListener(map, teamManager);
         this.buildBreakListener = new BuildBreakListener(map);
@@ -37,6 +40,8 @@ public class IngamePhase extends GamePhase {
         this.rettungsplatform = new Rettungsplatform(main);
         this.bedwarsTNT = new BedwarsTNT();
         this.bridge = new Bridge(main);
+
+        this.mapManager = new MapManager(map, this.scoreboardManager);
     }
 
     /**
@@ -53,6 +58,11 @@ public class IngamePhase extends GamePhase {
         Bukkit.getPluginManager().registerEvents(rettungsplatform, main);
         Bukkit.getPluginManager().registerEvents(bedwarsTNT, main);
         Bukkit.getPluginManager().registerEvents(bridge, main);
+
+        mapManager.summonShops();
+        mapManager.summonSpawners();
+        mapManager.teleportPlayers();
+        mapManager.showScoreboards();
     }
 
     /**
@@ -68,6 +78,10 @@ public class IngamePhase extends GamePhase {
         HandlerList.unregisterAll(rettungsplatform);
         HandlerList.unregisterAll(bedwarsTNT);
         HandlerList.unregisterAll(bridge);
+
+        mapManager.killShops();
+        mapManager.stopSpawners();
+        mapManager.removeScoreboards();
     }
 
     /**

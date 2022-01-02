@@ -17,9 +17,11 @@ public class ScoreboardManager {
 
     private final Map<Player, Scoreboard> activeBoards = new HashMap<>();
     private final TeamManager teamManager;
+    private final String mapName;
 
-    public ScoreboardManager(TeamManager teamManager) {
+    public ScoreboardManager(String mapName, TeamManager teamManager) {
         this.teamManager = teamManager;
+        this.mapName = mapName;
     }
 
     /**
@@ -83,7 +85,7 @@ public class ScoreboardManager {
     }
 
     /**
-     * Befüllt das Scoreboard mit Werden
+     * Befüllt das Scoreboard mit Werten
      *
      * @param board das Scoreboard zum befüllen
      * @param kills die Kills des Spielers
@@ -95,7 +97,7 @@ public class ScoreboardManager {
          AtomicInteger score = new AtomicInteger(teamManager.getTeams().size() + 7);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l")).setScore(score.get());
         score.set(score.get() - 1);
-        objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardMap("Void"))).setScore(score.get());
+        objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardMap(mapName))).setScore(score.get());
         score.set(score.get() - 1);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8")).setScore(score.get());
         score.set(score.get() - 1);
