@@ -41,10 +41,13 @@ public class MapManager {
         shops.forEach(ShopUtils::summonShopVillager);
     }
 
-    public void teleportPlayers() {
+    public void teleportPlayersAndClearInventories() {
         map.getTeams()
                 .forEach(team -> team.getMembers()
-                        .forEach(member -> member.teleport(team.getSpawn().toBukkitLocation())));
+                        .forEach(member -> {
+                            member.teleport(team.getSpawn().toBukkitLocation());
+                            member.getInventory().clear();
+                        }));
     }
 
     public void showScoreboards() {

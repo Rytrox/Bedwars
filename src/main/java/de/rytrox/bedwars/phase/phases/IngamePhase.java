@@ -62,7 +62,7 @@ public class IngamePhase extends GamePhase {
         mapManager.deleteAllGameEntities();
         mapManager.summonShops();
         mapManager.summonSpawners();
-        mapManager.teleportPlayers();
+        mapManager.teleportPlayersAndClearInventories();
         mapManager.showScoreboards();
     }
 
