@@ -249,6 +249,7 @@ public class BedwarsMapCommand implements TabExecutor {
             if (!main.getMapRepository().findAllMapsWithName().contains(mapName)
                     && !main.getMapUtils().getMapNames().contains(mapName)) {
                 main.getMapUtils().getOrCreateMap(mapName);
+                main.getMapUtils().getMapsInEdit().get(mapName).setWorld(player.getWorld().getName());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         main.getMessages().getMapCommandMapCreated(mapName)));
             } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',

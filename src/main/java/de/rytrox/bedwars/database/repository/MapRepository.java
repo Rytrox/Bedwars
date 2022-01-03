@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MapRepository {
 
@@ -39,10 +40,10 @@ public class MapRepository {
      *
      * @return eine Liste mit allen Maps
      */
-    public List<Map> findMaps(List<String> worldNames) {
+    public List<Map> findMapsByWorld(List<String> worldNames) {
         return database.find(Map.class)
                 .where()
-                .idIn(worldNames)
+                .arrayContains("world", worldNames.toArray())
                 .findList();
     }
 
