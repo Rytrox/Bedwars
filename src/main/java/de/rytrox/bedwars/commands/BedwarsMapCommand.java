@@ -354,7 +354,7 @@ public class BedwarsMapCommand implements TabExecutor {
         if (main.getMapUtils().getMapNames().contains(mapName)) {
             main.getMapUtils().getMapsInEdit().get(mapName).setPos2(new Location(player.getLocation()));
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    main.getMessages().getMapCommandChangedPos1(mapName)));
+                    main.getMessages().getMapCommandChangedPos2(mapName)));
         } else player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                 main.getMessages().getMapCommandMapIsNotInEditMode(mapName)));
     }
