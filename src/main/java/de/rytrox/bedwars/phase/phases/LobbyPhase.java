@@ -16,7 +16,6 @@ public class LobbyPhase extends GamePhase {
     private final TeamManager teamManager;
     private final MapLoader mapLoader;
     private final Countdown countdown;
-    private final TopTenBoardHandler topTenBoardHandler;
     private final LobbyBreakPlaceListener lobbyBreakPlaceListener;
 
     public LobbyPhase(Bedwars main) {
@@ -25,7 +24,6 @@ public class LobbyPhase extends GamePhase {
         this.teamManager = new TeamManager();
         this.mapLoader = new MapLoader(main, teamManager);
         this.countdown = new Countdown(main);
-        this.topTenBoardHandler = new TopTenBoardHandler();
         this.lobbyBreakPlaceListener = new LobbyBreakPlaceListener();
     }
 
@@ -37,7 +35,6 @@ public class LobbyPhase extends GamePhase {
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(teamManager, main);
         Bukkit.getPluginManager().registerEvents(this.countdown, main);
-        Bukkit.getPluginManager().registerEvents(this.topTenBoardHandler, main);
         Bukkit.getPluginManager().registerEvents(this.lobbyBreakPlaceListener, main);
     }
 
@@ -49,7 +46,6 @@ public class LobbyPhase extends GamePhase {
     public void onDisable() {
         HandlerList.unregisterAll(teamManager);
         HandlerList.unregisterAll(countdown);
-        HandlerList.unregisterAll(topTenBoardHandler);
         HandlerList.unregisterAll(lobbyBreakPlaceListener);
     }
 
