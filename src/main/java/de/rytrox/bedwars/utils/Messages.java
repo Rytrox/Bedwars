@@ -29,8 +29,8 @@ public class Messages {
         return configuration.getString("scoreboardMap", "&fMap: &b" + mapname).replace("%mapname%", mapname);
     }
 
-    public String getScoreboardTeam(ChatColor teamcolor, String teamname, boolean isAlive, int players) {
-        return isAlive ?
+    public String getScoreboardTeam(ChatColor teamcolor, String teamname, boolean hasBed, int players) {
+        return hasBed ?
                 configuration.getString("scoreboardTeam", teamcolor + "&l" + teamname + " &f: &b%alive%")
                         .replace("%teamcolor%", "" + teamcolor)
                         .replace("%teamname%", teamname)
