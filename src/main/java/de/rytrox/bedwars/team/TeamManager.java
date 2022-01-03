@@ -100,7 +100,8 @@ public class TeamManager implements Listener {
      */
     @EventHandler
     public void onPLayerJoin(@NotNull PlayerJoinEvent event) {
-        event.getPlayer().getInventory().addItem(teamChoosingItem);
+        event.getPlayer().getInventory().clear();
+        event.getPlayer().getInventory().setItem(4, teamChoosingItem);
         if (map == null) return;
         map.getTeams()
                 .stream()
