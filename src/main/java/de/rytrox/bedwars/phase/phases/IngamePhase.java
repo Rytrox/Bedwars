@@ -12,6 +12,7 @@ import de.rytrox.bedwars.listeners.BuildBreakListener;
 import de.rytrox.bedwars.map.MapManager;
 import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.utils.ScoreboardManager;
+import de.rytrox.bedwars.utils.TopTenBoardHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -84,6 +85,8 @@ public class IngamePhase extends GamePhase {
         mapManager.stopSpawners();
         mapManager.removeScoreboards();
         mapManager.deleteAllGameEntities();
+
+        new TopTenBoardHandler();
     }
 
     /**

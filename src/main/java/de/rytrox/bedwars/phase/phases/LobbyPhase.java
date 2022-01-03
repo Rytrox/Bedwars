@@ -33,6 +33,8 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onEnable() {
+        new TopTenBoardHandler();
+
         Bukkit.getPluginManager().registerEvents(teamManager, main);
         Bukkit.getPluginManager().registerEvents(this.countdown, main);
         Bukkit.getPluginManager().registerEvents(this.lobbyBreakPlaceListener, main);
