@@ -85,8 +85,6 @@ public class IngamePhase extends GamePhase {
         mapManager.stopSpawners();
         mapManager.removeScoreboards();
         mapManager.deleteAllGameEntities();
-
-        new TopTenBoardHandler();
     }
 
     /**
