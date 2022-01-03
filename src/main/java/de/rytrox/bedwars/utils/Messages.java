@@ -39,7 +39,7 @@ public class Messages {
     }
 
     public String getScoreboardTode(int tode) {
-        return configuration.getString("scoreboardTode", "&fTode: &b" + tode).replace("tode", "" + tode);
+        return configuration.getString("scoreboardTode", "&fTode: &b" + tode).replace("%tode%", "" + tode);
     }
 
     // Timer Messages
