@@ -33,7 +33,7 @@ public class IngamePhase extends GamePhase {
         super(main);
 
         this.scoreboardManager = new ScoreboardManager(map.getName(), teamManager);
-        this.killDeathListener = new KillDeathListener(main, teamManager);
+        this.killDeathListener = new KillDeathListener(main, teamManager, scoreboardManager);
         this.bedBreakListener = new BedBreakListener(map, teamManager);
         this.buildBreakListener = new BuildBreakListener(map);
         this.shopListener = new ShopListener(main);
