@@ -6,7 +6,6 @@ import de.rytrox.bedwars.listeners.LobbyBreakPlaceListener;
 import de.rytrox.bedwars.map.MapLoader;
 import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.utils.Countdown;
-import de.rytrox.bedwars.utils.TopTenBoardHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;

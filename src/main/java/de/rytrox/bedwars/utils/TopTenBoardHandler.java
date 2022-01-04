@@ -6,6 +6,7 @@ import de.rytrox.bedwars.database.entity.PlayerStatistic;
 import de.rytrox.bedwars.database.entity.TopTenSign;
 import de.rytrox.bedwars.database.enums.SignSortValue;
 import de.rytrox.bedwars.database.repository.TopTenSignsRepository;
+import de.rytrox.bedwars.phase.events.PhaseChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -23,7 +24,8 @@ public class TopTenBoardHandler implements Listener {
     private final Bedwars main = JavaPlugin.getPlugin(Bedwars.class);
     private final TopTenSignsRepository topTenSignsRepository = new TopTenSignsRepository(main.getDatabase());
 
-    public TopTenBoardHandler() {
+    @EventHandler
+    public void onPhaseChange(PhaseChangeEvent event) {
         Bukkit.getServer().getScheduler().runTaskAsynchronously(main, () -> {
             topTenSignsRepository.findAllSigns().forEach(sign -> {
                 PlayerStatistic playerStatistic = main.getStatistics().getTopPlayer(sign.getPosition(), sign.getSorted());
