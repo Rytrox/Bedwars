@@ -29,8 +29,8 @@ public class MapManager {
     }
 
     public void summonSpawners() {
-        map.getSpawner().forEach(spawner -> spawners.add(new ResourceSpawner(spawner.getMaterial().getMaterial(),
-                spawner.getLocation().toBukkitLocation(), 5, 4, 3)));
+        map.getSpawner().forEach(spawner -> spawners.add(new ResourceSpawner(spawner.getMaterial(),
+                spawner.getLocation().toBukkitLocation())));
     }
 
     public void summonShops() {
