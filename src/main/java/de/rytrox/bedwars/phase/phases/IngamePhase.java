@@ -34,7 +34,7 @@ public class IngamePhase extends GamePhase {
 
         this.scoreboardManager = new ScoreboardManager(map.getName(), teamManager);
         this.killDeathListener = new KillDeathListener(main, teamManager, scoreboardManager);
-        this.bedBreakListener = new BedBreakListener(map, teamManager);
+        this.bedBreakListener = new BedBreakListener(map, teamManager, scoreboardManager);
         this.buildBreakListener = new BuildBreakListener(map);
         this.shopListener = new ShopListener(main);
         this.rettungsplatform = new Rettungsplatform(main);
@@ -62,7 +62,7 @@ public class IngamePhase extends GamePhase {
         mapManager.deleteAllGameEntities();
         mapManager.summonShops();
         mapManager.summonSpawners();
-        mapManager.teleportPlayers();
+        mapManager.teleportPlayersAndClearInventories();
         mapManager.showScoreboards();
     }
 

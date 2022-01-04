@@ -2,6 +2,7 @@ package de.rytrox.bedwars.database.repository;
 
 import de.rytrox.bedwars.database.entity.Map;
 import io.ebean.Database;
+import io.ebean.ExpressionList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,10 +42,12 @@ public class MapRepository {
      * @return eine Liste mit allen Maps
      */
     public List<Map> findMapsByWorld(List<String> worldNames) {
-        return database.find(Map.class)
-                .where()
-                .arrayContains("world", worldNames.toArray())
-                .findList();
+        ExpressionList<Map> scope = database.find(Map.class).where();
+        for (int i = 0; i < worldNames.size(); i++)
+            scope = scope
+                    .or()
+                    .eq("world", worldNames.get(i));
+        return scope.findList();
     }
 
     /**

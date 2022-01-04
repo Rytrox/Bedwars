@@ -29,9 +29,21 @@ public class Messages {
         return configuration.getString("scoreboardMap", "&fMap: &b" + mapname).replace("%mapname%", mapname);
     }
 
-    public String getScoreboardTeam(ChatColor teamcolor, String teamname) {
-        return configuration.getString("scoreboardTeam",teamcolor + "&l" + teamname + " &f:")
-                .replace("%teamcolor%", "" + teamcolor).replace("%teamname%", teamname);
+    public String getScoreboardTeam(ChatColor teamcolor, String teamname, boolean hasBed, int players) {
+        return hasBed ?
+                configuration.getString("scoreboardTeam", teamcolor + "&l" + teamname + " &f: &b%alive%")
+                        .replace("%teamcolor%", "" + teamcolor)
+                        .replace("%teamname%", teamname)
+                        .replace("%alive%", "✔") :
+                (players > 0 ?
+                        configuration.getString("scoreboardTeam", teamcolor + "&l" + teamname + " &f: &b%alive%")
+                                .replace("%teamcolor%", "" + teamcolor)
+                                .replace("%teamname%", teamname)
+                                .replace("%alive%", "" + players) :
+                        configuration.getString("scoreboardTeam", teamcolor + "&l" + teamname + " &f: &b%alive%")
+                                .replace("%teamcolor%", "" + teamcolor)
+                                .replace("%teamname%", teamname)
+                                .replace("%alive%", "✘"));
     }
 
     public String getScoreboardKills(int kills) {

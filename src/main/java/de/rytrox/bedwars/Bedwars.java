@@ -71,7 +71,6 @@ public class Bedwars extends JavaPlugin {
         reloadConfig();
         // register Listeners
         Bukkit.getPluginManager().registerEvents(new TopTenBoardHandler(), this);
-        Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
         // register Commands
         Objects.requireNonNull(getCommand("bedwarsmap")).setExecutor(new BedwarsMapCommand());
         Objects.requireNonNull(getCommand("setup")).setExecutor(new SetupCommand());
