@@ -4,12 +4,14 @@ import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.team.TeamManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class ScoreboardManager {
 
@@ -107,7 +109,11 @@ public class ScoreboardManager {
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8")).setScore(score.get());
         score.set(score.get() - 1);
         teamManager.getTeams().forEach(team -> {
-            objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardTeam(team.getColor(), team.getName()))).setScore(score.get());
+            objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardTeam(
+                    team.getColor(), team.getName(), team.hasBed(), (int) team.getMembers()
+                            .stream()
+                            .filter(member -> member.getGameMode() == GameMode.SURVIVAL)
+                            .count()))).setScore(score.get());
             score.set(score.get() - 1);
         });
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8&l")).setScore(4);

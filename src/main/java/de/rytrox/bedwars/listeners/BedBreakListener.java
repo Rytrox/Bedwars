@@ -3,6 +3,7 @@ package de.rytrox.bedwars.listeners;
 import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.database.entity.Team;
 import de.rytrox.bedwars.team.TeamManager;
+import de.rytrox.bedwars.utils.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,10 +20,12 @@ public class BedBreakListener implements Listener {
 
     private final Map map;
     private final TeamManager teamManager;
+    private final ScoreboardManager scoreboardManager;
 
-    public BedBreakListener(@NotNull Map map, @NotNull TeamManager teamManager) {
+    public BedBreakListener(@NotNull Map map, @NotNull TeamManager teamManager, ScoreboardManager scoreboardManager) {
         this.map = map;
         this.teamManager = teamManager;
+        this.scoreboardManager = scoreboardManager;
     }
 
     @EventHandler
@@ -51,6 +54,7 @@ public class BedBreakListener implements Listener {
                         }
                         team.setHasBed(false);
                         Bukkit.getOnlinePlayers().forEach(player -> {
+                            scoreboardManager.updateBoard(player, 0, 0);
                             Team playerTeam = teamManager.getTeamByPlayer(event.getPlayer());
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     "&fDas Bett von Team " + team.getColor() + team.getName() +
