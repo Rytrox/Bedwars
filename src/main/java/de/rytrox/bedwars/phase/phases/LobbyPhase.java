@@ -22,10 +22,9 @@ public class LobbyPhase extends GamePhase {
     private final LobbyArea lobbyArea;
 
     public LobbyPhase(Bedwars main) {
-        super(main);
 
+        super(main);
         this.lobbyArea = new LobbyArea();
-        this.mapLoader = new MapLoader(main);
         this.teamManager = new TeamManager();
         this.mapLoader = new MapLoader(main, teamManager);
         this.countdown = new Countdown(main);

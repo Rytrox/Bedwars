@@ -23,8 +23,8 @@ public class BuildBreakListener implements Listener {
     private final Location pos2;
 
     public BuildBreakListener(@NotNull Map map) {
-        pos1 = new Location(Bukkit.getWorld("world1"),map.getPos1().getX(),map.getPos1().getY(),map.getPos1().getZ());
-        pos2 = new Location(Bukkit.getWorld("world1"),map.getPos2().getX(),map.getPos2().getY(),map.getPos2().getZ());
+        pos1 = map.getPos1().toBukkitLocation();
+        pos2 = map.getPos2().toBukkitLocation();
     }
 
     @EventHandler

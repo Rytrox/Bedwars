@@ -1,14 +1,16 @@
 package de.rytrox.bedwars.utils;
 
 import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 
 public class Area{
 
-    public boolean inArea(Location von, Location bis, Location current){
+    public static boolean inArea(@NotNull Location from, @NotNull Location to, @NotNull Location current){
 
         return
-                current.getX() <= Math.max(von.getX(), bis.getX()) && current.getX() >= Math.min(von.getX(), bis.getX()) &&
-                current.getY() <= Math.max(von.getY(), bis.getY()) && current.getY() >= Math.min(von.getY(), bis.getY()) &&
-                current.getZ() <= Math.max(von.getZ(), bis.getZ()) && current.getZ() >= Math.min(von.getZ(), bis.getZ());
+                current.getWorld().equals(from.getWorld()) && from.getWorld().equals(to.getWorld()) &&
+                current.getX() <= Math.max(from.getX(), to.getX()) && current.getX() >= Math.min(from.getX(), to.getX()) &&
+                current.getY() <= Math.max(from.getY(), to.getY()) && current.getY() >= Math.min(from.getY(), to.getY()) &&
+                current.getZ() <= Math.max(from.getZ(), to.getZ()) && current.getZ() >= Math.min(from.getZ(), to.getZ());
     }
 }
