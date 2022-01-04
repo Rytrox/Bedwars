@@ -61,6 +61,7 @@ public class BedBreakListener implements Listener {
                                             " &fwurde von " + playerTeam.getColor()
                                             + event.getPlayer().getName() + "&f zerstört!"));
                         });
+                        teamManager.checkForWin();
                     });
         }
     }

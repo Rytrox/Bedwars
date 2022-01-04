@@ -41,7 +41,7 @@ public class IngamePhase extends GamePhase {
         this.bedwarsTNT = new BedwarsTNT();
         this.bridge = new Bridge(main);
 
-        this.mapManager = new MapManager(map, this.scoreboardManager);
+        this.mapManager = new MapManager(map, this.scoreboardManager, teamManager);
     }
 
     /**
@@ -64,6 +64,7 @@ public class IngamePhase extends GamePhase {
         mapManager.summonSpawners();
         mapManager.teleportPlayersAndClearInventories();
         mapManager.showScoreboards();
+        mapManager.checkForEmptyTeams();
     }
 
     /**
