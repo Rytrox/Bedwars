@@ -3,6 +3,7 @@ package de.rytrox.bedwars.map;
 import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.team.TeamManager;
+import de.rytrox.bedwars.utils.LobbyArea;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -14,7 +15,7 @@ public class MapLoader {
 
     private Map map;
 
-    public MapLoader(Bedwars main, TeamManager teamManager){
+    public MapLoader(Bedwars main, TeamManager teamManager, LobbyArea lobbyArea){
         Bukkit.getScheduler().runTaskAsynchronously(main,() -> {
             List<String> worlds = Bukkit.getServer().getWorlds()
                     .stream()
@@ -27,6 +28,7 @@ public class MapLoader {
                     .findAny()
                     .ifPresentOrElse(mapList -> map = mapList, () -> System.out.println("No Map Found"));
             teamManager.setMap(map);
+            lobbyArea.setmap(map);
         });
     }
 
