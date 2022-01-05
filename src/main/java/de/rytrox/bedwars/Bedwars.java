@@ -7,6 +7,7 @@ import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
 import de.rytrox.bedwars.items.Rettungsplatform;
 import de.rytrox.bedwars.items.Bridge;
 import de.rytrox.bedwars.items.BedwarsTNT;
+import de.rytrox.bedwars.listeners.PlayerLeftListener;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.team.TeamManager;
@@ -50,6 +51,7 @@ public class Bedwars extends JavaPlugin {
     private Database database;
     private PhaseManager phaseManager;
     private MapUtils mapUtils;
+    private PlayerLeftListener playerLeftListener;
 
     private PlayerStatisticsRepository statisticsRepository;
     private MapRepository mapRepository;
@@ -88,7 +90,10 @@ public class Bedwars extends JavaPlugin {
         this.statisticsRepository = new PlayerStatisticsRepository(database);
         this.phaseManager = new PhaseManager(this);
 
+        this.playerLeftListener = new PlayerLeftListener();
+
         Bukkit.getPluginManager().registerEvents(mapUtils, this);
+        Bukkit.getPluginManager().registerEvents(playerLeftListener, this);
     }
 
     @Override
