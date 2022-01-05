@@ -51,7 +51,7 @@ public class BuildBreakListener implements Listener {
         return block.getX() < maxX && block.getX() > minX && block.getY() < maxY &&
                 block.getY() > minY && block.getZ() < maxZ && block.getZ() > minZ;
     }
-
+    @NotNull
     public Set<Block> getPlacedBlocks() {
         return new HashSet<>(placedBlocks);
     }
