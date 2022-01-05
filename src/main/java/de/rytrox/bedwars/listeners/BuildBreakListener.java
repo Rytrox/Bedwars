@@ -53,6 +53,6 @@ public class BuildBreakListener implements Listener {
     }
 
     public Set<Block> getPlacedBlocks() {
-        return placedBlocks;
+        return new HashSet<>(placedBlocks);
     }
 }
