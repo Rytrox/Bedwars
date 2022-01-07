@@ -14,3 +14,6 @@ commands:
   setup:
     description: setup the map
     usage: /setup
+  lobbysetup:
+    description: setup the lobby
+    usage: /lose

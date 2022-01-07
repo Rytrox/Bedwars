@@ -26,7 +26,7 @@ public class LobbyPhase extends GamePhase {
         super(main);
         this.teamManager = new TeamManager();
         this.mapLoader = new MapLoader(main, teamManager);
-        this.lobbyArea = new LobbyArea(mapLoader.getMap());
+        this.lobbyArea = new LobbyArea();
         this.countdown = new Countdown(main);
         this.topTenBoardHandler = new TopTenBoardHandler();
         this.lobbyBreakPlaceListener = new LobbyBreakPlaceListener();
@@ -57,6 +57,10 @@ public class LobbyPhase extends GamePhase {
         HandlerList.unregisterAll(countdown);
         HandlerList.unregisterAll(topTenBoardHandler);
         HandlerList.unregisterAll(lobbyBreakPlaceListener);
+    }
+
+    public LobbyArea getLobbyArea(){
+        return lobbyArea;
     }
 
     /**

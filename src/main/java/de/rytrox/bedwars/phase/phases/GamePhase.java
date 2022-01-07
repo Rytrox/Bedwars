@@ -1,6 +1,7 @@
 package de.rytrox.bedwars.phase.phases;
 
 import de.rytrox.bedwars.Bedwars;
+import de.rytrox.bedwars.utils.LobbyArea;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -11,16 +11,25 @@ import java.security.PublicKey;
 public class LobbyArea implements Listener {
 
     private Map map;
+    private Location spawn;
+    private Location start;
+    private Location end;
+
 
     @EventHandler
     public void onPlayerInteracts(PlayerMoveEvent event){
-
-        if(!new Area().inArea(map.getPos1().toBukkitLocation(),map.getPos2().toBukkitLocation(),event.getPlayer().getLocation())){
-            event.getPlayer().teleport(new Location(event.getPlayer().getWorld(),0,50,0));
+        if(!new Area().inArea(start,end,event.getPlayer().getLocation())){
+            event.getPlayer().teleport(spawn);
         }
     }
 
     public void setmap(Map map){
         this.map = map;
+    }
+
+    public void setLobbyLocations(Location spawn, Location start, Location end){
+        this.spawn = spawn;
+        this.start = start;
+        this.end = end;
     }
 }

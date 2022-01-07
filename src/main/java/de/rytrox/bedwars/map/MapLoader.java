@@ -15,7 +15,7 @@ public class MapLoader {
 
     private Map map;
 
-    public MapLoader(Bedwars main, TeamManager teamManager, LobbyArea lobbyArea){
+    public MapLoader(Bedwars main, TeamManager teamManager){
         Bukkit.getScheduler().runTaskAsynchronously(main,() -> {
             List<String> worlds = Bukkit.getServer().getWorlds()
                     .stream()
@@ -28,7 +28,6 @@ public class MapLoader {
                     .findAny()
                     .ifPresentOrElse(mapList -> map = mapList, () -> System.out.println("No Map Found"));
             teamManager.setMap(map);
-            lobbyArea.setmap(map);
         });
     }
 
