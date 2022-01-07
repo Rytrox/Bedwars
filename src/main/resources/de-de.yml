@@ -5,7 +5,7 @@ notEnoughMoney: '&dDir fehlen &5%amount% %currency%&d!' # (amount: %amount%, cur
 # Scoreboards
 scoreboardTitle: '&1&lBedwars'
 scoreboardMap: '&fMap: &b%mapname%' # (mapname: %mapname%)
-scoreboardTeam: '%teamcolor%&l%teamname% &f:' # (teamcolor: %teamcolor%, teamname: %teamname%)
+scoreboardTeam: '%teamcolor%&l%teamname% &f: &b%alive%' # (teamcolor: %teamcolor%, teamname: %teamname%, players alive: %alive%)
 scoreboardKills: '&fKills: &b%kills%' # (kills: %kills%)
 scoreboardTode: '&fTode: &b%tode%' # (tode: %tode%)
 

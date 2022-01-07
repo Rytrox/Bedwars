@@ -5,18 +5,14 @@ import de.rytrox.bedwars.commands.SetupCommand;
 import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
-import de.rytrox.bedwars.items.Rettungsplatform;
-import de.rytrox.bedwars.items.Bridge;
-import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
-import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.commands.BedwarsMapCommand;
 import de.rytrox.bedwars.map.MapUtils;
 import de.rytrox.bedwars.utils.Area;
 import de.rytrox.bedwars.utils.LobbyArea;
 import de.rytrox.bedwars.utils.Messages;
-import de.rytrox.bedwars.utils.ScoreboardManager;
+import de.rytrox.bedwars.utils.TopTenBoardHandler;
 import de.timeout.libs.config.ConfigCreator;
 import de.timeout.libs.config.UTFConfig;
 import de.timeout.libs.log.ColoredLogger;
@@ -77,7 +73,7 @@ public class Bedwars extends JavaPlugin {
         // reload config
         reloadConfig();
         // register Listeners
-        Bukkit.getPluginManager().registerEvents(new ShopListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new TopTenBoardHandler(), this);
         // register Commands
         Objects.requireNonNull(getCommand("lobbysetup")).setExecutor(new LobbyCommand());
         Objects.requireNonNull(getCommand("bedwarsmap")).setExecutor(new BedwarsMapCommand());

@@ -22,7 +22,7 @@ public class MapLoader {
                     .map(World::getName)
                     .collect(Collectors.toList());
 
-            List<Map> allMaps = main.getMapRepository().findMaps(worlds);
+            List<Map> allMaps = main.getMapRepository().findMapsByWorld(worlds);
             Collections.shuffle(allMaps);
             allMaps.stream()
                     .findAny()

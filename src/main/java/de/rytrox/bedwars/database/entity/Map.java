@@ -16,6 +16,9 @@ public class Map implements Completable {
     @Column (name = "`name`", unique = true, nullable = false)
     private String name;
 
+    @Column (name = "`world`", nullable = false)
+    private String world;
+
     @Column (name = "`teamsize`", nullable = false)
     private Integer teamsize;
 
@@ -77,8 +80,16 @@ public class Map implements Completable {
         return teams;
     }
 
-    public void setTeams(List<Team> teams) {
+    public void setTeams(@NotNull List<Team> teams) {
         this.teams = teams;
+    }
+
+    public String getWorld() {
+        return world;
+    }
+
+    public void setWorld(@NotNull String world) {
+        this.world = world;
     }
 
     public void addTeam(Team team) {

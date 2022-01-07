@@ -4,18 +4,21 @@ import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.team.TeamManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class ScoreboardManager {
 
     private final Bedwars main = JavaPlugin.getPlugin(Bedwars.class);
 
     private final Map<Player, Scoreboard> activeBoards = new HashMap<>();
+    private final Map<Player, int[]> stats = new HashMap<>();
     private final TeamManager teamManager;
     private final String mapName;
 
@@ -38,6 +41,7 @@ public class ScoreboardManager {
                 board.registerNewTeam(team.getName()).setColor(team.getColor()));
         player.setScoreboard(board);
         activeBoards.put(player, board);
+        stats.put(player, new int[]{kills, deaths});
     }
 
     /**
@@ -51,7 +55,10 @@ public class ScoreboardManager {
         if(!activeBoards.containsKey(player)) return;
         Scoreboard board = activeBoards.get(player);
         Objects.requireNonNull(board.getObjective("Bedwars")).unregister();
-        fillSidebar(board, kills, deaths);
+
+        stats.replace(player, new int[]{stats.get(player)[0] + kills, stats.get(player)[1] + deaths});
+
+        fillSidebar(board, stats.get(player)[0], stats.get(player)[1]);
 
         player.setScoreboard(board);
         activeBoards.replace(player, board);
@@ -102,7 +109,11 @@ public class ScoreboardManager {
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8")).setScore(score.get());
         score.set(score.get() - 1);
         teamManager.getTeams().forEach(team -> {
-            objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardTeam(team.getColor(), team.getName()))).setScore(score.get());
+            objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardTeam(
+                    team.getColor(), team.getName(), team.hasBed(), (int) team.getMembers()
+                            .stream()
+                            .filter(member -> member.getGameMode() == GameMode.SURVIVAL)
+                            .count()))).setScore(score.get());
             score.set(score.get() - 1);
         });
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8&l")).setScore(4);
