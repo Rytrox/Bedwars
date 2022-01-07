@@ -6,7 +6,6 @@ import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
 import de.rytrox.bedwars.listeners.PlayerLeftListener;
-import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.commands.BedwarsMapCommand;
 import de.rytrox.bedwars.map.MapUtils;
