@@ -12,6 +12,7 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class LobbyCommand implements TabExecutor {
     private final Bedwars main = (Bedwars)JavaPlugin.getPlugin(Bedwars.class);
@@ -19,6 +20,7 @@ public class LobbyCommand implements TabExecutor {
     public LobbyCommand() {
     }
 
+    @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (commandSender instanceof Player && this.main.getPhaseManager().getCurrentPhase() instanceof LobbyPhase && ((LobbyPhase)this.main.getPhaseManager().getCurrentPhase()).getLobbyArea() != null && strings.length == 9) {
             Location start;
@@ -41,6 +43,8 @@ public class LobbyCommand implements TabExecutor {
         return false;
     }
 
+    @Nullable
+    @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         List<String> list = new ArrayList();
         if ((args.length == 1 || args.length == 4 || args.length == 7) && sender instanceof Player && (((Player)sender).getLocation().getBlockX() + "").toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
