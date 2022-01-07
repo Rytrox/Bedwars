@@ -4,6 +4,7 @@ import de.rytrox.bedwars.commands.SetupCommand;
 import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
+import de.rytrox.bedwars.listeners.PlayerLeftListener;
 import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.commands.BedwarsMapCommand;
@@ -87,6 +88,7 @@ public class Bedwars extends JavaPlugin {
         this.phaseManager = new PhaseManager(this);
 
         Bukkit.getPluginManager().registerEvents(mapUtils, this);
+        Bukkit.getPluginManager().registerEvents(new PlayerLeftListener(), this);
     }
 
     @Override
