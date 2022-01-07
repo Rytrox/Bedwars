@@ -70,14 +70,14 @@ public class Bedwars extends JavaPlugin {
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         // reload config
         reloadConfig();
+        // loads the database type and the database from the configs
+        loadDatabase();
         // register Listeners
         Bukkit.getPluginManager().registerEvents(new TopTenBoardHandler(), this);
         // register Commands
         Objects.requireNonNull(getCommand("lobbysetup")).setExecutor(new LobbyCommand());
         Objects.requireNonNull(getCommand("bedwarsmap")).setExecutor(new BedwarsMapCommand());
         Objects.requireNonNull(getCommand("setup")).setExecutor(new SetupCommand());
-        // loads the database type and the database from the configs
-        loadDatabase();
 
         this.messages = new Messages();
 

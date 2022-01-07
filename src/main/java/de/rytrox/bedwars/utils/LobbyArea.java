@@ -14,6 +14,9 @@ public class LobbyArea {
     private BukkitTask moveTask;
 
     public LobbyArea(Bedwars main) {
+        start = new Location(Bukkit.getWorld(main.getConfig().getString("lobby.world","world")),main.getConfig().getInt("lobby.pos1.x", 10), main.getConfig().getInt("lobby.pos1.y", 10) ,main.getConfig().getInt("lobby.pos1.z", 10));
+        end = new Location(Bukkit.getWorld(main.getConfig().getString("lobby.world","world")),main.getConfig().getInt("lobby.pos2.x", -10), main.getConfig().getInt("lobby.pos2.y", 100) ,main.getConfig().getInt("lobby.pos2.z", -10));
+        spawn = new Location(Bukkit.getWorld(main.getConfig().getString("lobby.world","world")),main.getConfig().getInt("lobby.spawn.x", 0), main.getConfig().getInt("lobby.spawn.y", 65) ,main.getConfig().getInt("lobby.spawn.z", 0));
         moveTask = Bukkit.getScheduler().runTaskTimer(main, () -> {
             Bukkit.getOnlinePlayers().forEach(player -> {
                 if (!Area.inArea(start, end, player.getLocation())) {
@@ -28,11 +31,5 @@ public class LobbyArea {
             moveTask.cancel();
             moveTask = null;
         }
-    }
-
-    public void setLobbyLocations(Location spawn, Location start, Location end) {
-        this.spawn = spawn;
-        this.start = start;
-        this.end = end;
     }
 }
