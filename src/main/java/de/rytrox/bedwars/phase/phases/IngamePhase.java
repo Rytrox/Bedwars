@@ -93,6 +93,6 @@ public class IngamePhase extends GamePhase {
      */
     @Override
     public @NotNull GamePhase next() {
-        return new EndPhase(main);
+        return new EndPhase(main, buildBreakListener.getPlacedBlocks());
     }
 }

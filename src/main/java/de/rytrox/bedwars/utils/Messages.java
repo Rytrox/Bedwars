@@ -34,16 +34,16 @@ public class Messages {
                 configuration.getString("scoreboardTeam", teamcolor + "&l" + teamname + " &f: &b%alive%")
                         .replace("%teamcolor%", "" + teamcolor)
                         .replace("%teamname%", teamname)
-                        .replace("%alive%", "✔") :
+                        .replace("%alive%", "&a✔") :
                 (players > 0 ?
                         configuration.getString("scoreboardTeam", teamcolor + "&l" + teamname + " &f: &b%alive%")
                                 .replace("%teamcolor%", "" + teamcolor)
                                 .replace("%teamname%", teamname)
-                                .replace("%alive%", "" + players) :
+                                .replace("%alive%", "&e" + players) :
                         configuration.getString("scoreboardTeam", teamcolor + "&l" + teamname + " &f: &b%alive%")
                                 .replace("%teamcolor%", "" + teamcolor)
                                 .replace("%teamname%", teamname)
-                                .replace("%alive%", "✘"));
+                                .replace("%alive%", "&c✘"));
     }
 
     public String getScoreboardKills(int kills) {
