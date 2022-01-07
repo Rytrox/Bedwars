@@ -25,7 +25,7 @@ public class LobbyPhase extends GamePhase {
         super(main);
         this.teamManager = new TeamManager();
         this.mapLoader = new MapLoader(main, teamManager);
-        this.lobbyArea = new LobbyArea();
+        this.lobbyArea = new LobbyArea(main);
         this.countdown = new Countdown(main);
         this.lobbyBreakPlaceListener = new LobbyBreakPlaceListener();
 
@@ -37,7 +37,6 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(this.lobbyArea, main);
         Bukkit.getPluginManager().registerEvents(teamManager, main);
         Bukkit.getPluginManager().registerEvents(this.countdown, main);
         Bukkit.getPluginManager().registerEvents(this.lobbyBreakPlaceListener, main);
@@ -49,7 +48,7 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onDisable() {
-        HandlerList.unregisterAll(lobbyArea);
+        lobbyArea.stopMoveTask();
         HandlerList.unregisterAll(teamManager);
         HandlerList.unregisterAll(countdown);
         HandlerList.unregisterAll(lobbyBreakPlaceListener);

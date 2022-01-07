@@ -1,33 +1,36 @@
 package de.rytrox.bedwars.utils;
 
-import de.rytrox.bedwars.database.entity.Map;
+import de.rytrox.bedwars.Bedwars;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.security.PublicKey;
+public class LobbyArea {
 
-public class LobbyArea implements Listener {
-
-    private Map map;
     private Location spawn;
     private Location start;
     private Location end;
+    private BukkitTask moveTask;
 
+    public LobbyArea(Bedwars main) {
+        moveTask = Bukkit.getScheduler().runTaskTimer(main, () -> {
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                if (!Area.inArea(start, end, player.getLocation())) {
+                    player.teleport(spawn);
+                }
+            });
+        }, 0, 30);
+    }
 
-    @EventHandler
-    public void onPlayerInteracts(PlayerMoveEvent event){
-        if(!new Area().inArea(start,end,event.getPlayer().getLocation())){
-            event.getPlayer().teleport(spawn);
+    public void stopMoveTask() {
+        if (moveTask != null) {
+            moveTask.cancel();
+            moveTask = null;
         }
     }
 
-    public void setmap(Map map){
-        this.map = map;
-    }
-
-    public void setLobbyLocations(Location spawn, Location start, Location end){
+    public void setLobbyLocations(Location spawn, Location start, Location end) {
         this.spawn = spawn;
         this.start = start;
         this.end = end;

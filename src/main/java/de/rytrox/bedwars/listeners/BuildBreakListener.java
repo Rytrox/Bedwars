@@ -29,21 +29,17 @@ public class BuildBreakListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (new Area().inArea(pos1, pos2,event.getBlock().getLocation()))
+        if (Area.inArea(pos1, pos2,event.getBlock().getLocation()))
             placedBlocks.add(event.getBlockPlaced());
         else event.setCancelled(true);
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!new Area().inArea(pos1, pos2,event.getBlock().getLocation()))
+        if (!Area.inArea(pos1, pos2,event.getBlock().getLocation()))
             event.setCancelled(true);
     }
 
-    private boolean isInsideMap(Block block) {
-        return block.getX() < maxX && block.getX() > minX && block.getY() < maxY &&
-                block.getY() > minY && block.getZ() < maxZ && block.getZ() > minZ;
-    }
     @NotNull
     public Set<Block> getPlacedBlocks() {
         return new HashSet<>(placedBlocks);

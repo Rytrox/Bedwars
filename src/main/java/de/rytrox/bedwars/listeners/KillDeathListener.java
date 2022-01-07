@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -23,7 +24,9 @@ public class KillDeathListener implements Listener {
     private final TeamManager teamManager;
     private final ScoreboardManager scoreboardManager;
 
-    public KillDeathListener(Bedwars main, TeamManager teamManager, ScoreboardManager scoreboardManager) {
+    public KillDeathListener(@NotNull Bedwars main,
+                             @NotNull TeamManager teamManager,
+                             @NotNull ScoreboardManager scoreboardManager) {
         this.main = main;
         this.teamManager = teamManager;
         this.scoreboardManager = scoreboardManager;

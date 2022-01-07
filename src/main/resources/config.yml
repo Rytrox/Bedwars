@@ -14,3 +14,20 @@ language: 'de-de'
 countdown:
   minPlayers: 2
   startValue: 10
+
+lobby:
+  world: world
+  pos1:
+    x: 10
+    y: 10
+    z: 10
+  pos2:
+    x: -10
+    y: 80
+    z: -10
+  spawn:
+    x: 0
+    y: 52
+    z: 0
+    yaw: 0
+    pitch: 0
