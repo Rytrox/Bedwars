@@ -47,7 +47,6 @@ public class Bedwars extends JavaPlugin {
     private Database database;
     private PhaseManager phaseManager;
     private MapUtils mapUtils;
-    private PlayerLeftListener playerLeftListener;
 
     private PlayerStatisticsRepository statisticsRepository;
     private MapRepository mapRepository;
