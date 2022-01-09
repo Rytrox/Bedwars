@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class IngamePhase extends GamePhase {
 
+    private final Map map;
+    private final TeamManager teamManager;
     private final ScoreboardManager scoreboardManager;
     private final KillDeathListener killDeathListener;
     private final BedBreakListener bedBreakListener;
@@ -32,6 +34,8 @@ public class IngamePhase extends GamePhase {
     public IngamePhase(Bedwars main, Map map, TeamManager teamManager) {
         super(main);
 
+        this.map = map;
+        this.teamManager = teamManager;
         this.scoreboardManager = new ScoreboardManager(map.getName(), teamManager);
         this.killDeathListener = new KillDeathListener(main, teamManager, scoreboardManager);
         this.bedBreakListener = new BedBreakListener(map, teamManager, scoreboardManager);
@@ -59,12 +63,14 @@ public class IngamePhase extends GamePhase {
         Bukkit.getPluginManager().registerEvents(bedwarsTNT, main);
         Bukkit.getPluginManager().registerEvents(bridge, main);
 
+        map.fillAliveTeams();
         mapManager.deleteAllGameEntities();
         mapManager.summonShops();
         mapManager.summonSpawners();
         mapManager.teleportPlayersAndClearInventories();
         mapManager.showScoreboards();
-        mapManager.checkForEmptyTeams();
+
+        teamManager.checkForWin();
     }
 
     /**

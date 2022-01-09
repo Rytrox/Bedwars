@@ -160,22 +160,17 @@ public class TeamManager implements Listener {
     }
 
     public void checkForWin() {
-        List<Team> livingTeams = map.getTeams()
+        List<Team> livingTeams = map.getAliveTeams()
                 .stream()
-                .filter(team -> team.hasBed() || (int) team.getMembers()
-                        .stream()
-                        .filter(member -> member.getGameMode() == GameMode.SURVIVAL)
-                        .count() > 0)
+                .filter(team -> team.hasBed() || !team.getMembers().isEmpty())
                 .collect(Collectors.toList());
         if (livingTeams.size() == 1) {
             Team winnerTeam = livingTeams.get(0);
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&f&lDas Team " + winnerTeam.getColor() + winnerTeam.getName() + " &f&lhat gewonnen!"));
-                winnerTeam.getMembers().forEach(teamPlayer -> teamPlayer.sendTitle("Du hast gewonnen", "", 5, 20, 5));
-                Bukkit.getServer().getScheduler().runTaskLater(main, () ->
-                        main.getPhaseManager().next(), 20 * 10);
-            });
+            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&f&lDas Team " + winnerTeam.getColor() + winnerTeam.getName() + " &f&lhat gewonnen!"));
+            winnerTeam.getMembers().forEach(teamPlayer -> teamPlayer.sendTitle("Du hast gewonnen", "", 5, 20, 5));
+            Bukkit.getServer().getScheduler().runTaskLater(main, () ->
+                    main.getPhaseManager().next(), 20 * 10);
         }
     }
 
@@ -185,8 +180,8 @@ public class TeamManager implements Listener {
      * @return die Liste aller Teams
      */
     @NotNull
-    public List<Team> getTeams() {
-        return map != null ? new ArrayList<>(map.getTeams()) : new ArrayList<>();
+    public List<Team> getAliveTeams() {
+        return map != null ? new ArrayList<>(map.getAliveTeams()) : new ArrayList<>();
     }
 
     public void setMap(Map map) {

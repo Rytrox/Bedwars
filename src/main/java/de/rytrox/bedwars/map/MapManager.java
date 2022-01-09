@@ -44,7 +44,7 @@ public class MapManager {
     }
 
     public void teleportPlayersAndClearInventories() {
-        map.getTeams()
+        map.getAliveTeams()
                 .forEach(team -> team.getMembers()
                         .forEach(member -> {
                             member.teleport(team.getSpawn().toBukkitLocation());
@@ -54,20 +54,11 @@ public class MapManager {
 
     public void showScoreboards() {
         map.getTeams()
-                .forEach(team -> team.getMembers()
-                        .forEach(member -> {
-                            scoreboardManager.addBoard(member, 0, 0);
-                            scoreboardManager.addPlayerToTeam(member);
-                        }));
-    }
-
-    public void checkForEmptyTeams() {
-        map.getTeams()
                 .stream()
-                .filter(team -> team.getMembers().isEmpty())
-                .forEach(team -> {
-                    team.setHasBed(false);
-                    teamManager.checkForWin();
+                .flatMap(team -> team.getMembers().stream())
+                .forEach(member -> {
+                    scoreboardManager.addBoard(member, 0, 0);
+                    scoreboardManager.addPlayerToTeam(member);
                 });
     }
 
@@ -89,9 +80,7 @@ public class MapManager {
     }
 
     public void removeScoreboards() {
-        map.getTeams()
-                .forEach(team -> team.getMembers()
-                        .forEach(scoreboardManager::removeBoard));
+        Bukkit.getOnlinePlayers().forEach(scoreboardManager::removeBoard);
     }
 
     public void levelUpSpawners() {

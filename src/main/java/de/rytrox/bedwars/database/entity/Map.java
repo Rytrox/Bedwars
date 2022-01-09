@@ -36,6 +36,9 @@ public class Map implements Completable {
     @OneToMany (mappedBy = "map", cascade = CascadeType.ALL)
     private List<Spawner> spawner;
 
+    @Transient
+    private List<Team> aliveTeams = new ArrayList<>();
+
     public Map() {
 
     }
@@ -92,6 +95,14 @@ public class Map implements Completable {
         this.world = world;
     }
 
+    public List<Team> getAliveTeams() {
+        return new ArrayList<>(this.aliveTeams);
+    }
+
+    public void setAliveTeams(@NotNull List<Team> aliveTeams) {
+        this.aliveTeams = aliveTeams;
+    }
+
     public void addTeam(Team team) {
         if (team == null) return;
         team.setMap(this);
@@ -118,17 +129,17 @@ public class Map implements Completable {
         this.spawner.add(spawner);
     }
 
-    private double distance(org.bukkit.Location loc1, org.bukkit.Location loc2) {
-        return Math.sqrt( (loc1.getX() - loc2.getX()) * (loc1.getX() - loc2.getX())
-                + (loc1.getY() - loc2.getY()) * (loc1.getY() - loc2.getY())
-                + (loc1.getZ() - loc2.getZ()) * (loc1.getZ() - loc2.getZ()) );
-    }
-
     public void removeSpawner(org.bukkit.Location location, double radius) {
         new ArrayList<>(spawner).forEach(streamSpawner -> {
             if (streamSpawner.getLocation().toBukkitLocation().distanceSquared(location) <= radius * radius)
                 this.spawner.remove(streamSpawner);
         });
+    }
+
+    public void fillAliveTeams() {
+        teams.stream()
+                .filter(team -> !team.getMembers().isEmpty())
+                .forEach(team -> aliveTeams.add(team));
     }
 
     @Override
