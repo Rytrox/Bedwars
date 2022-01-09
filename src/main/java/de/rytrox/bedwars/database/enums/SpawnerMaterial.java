@@ -28,15 +28,15 @@ public enum SpawnerMaterial {
         return material;
     }
 
-    public Double getLevel1() {
+    public double getLevel1() {
         return level1;
     }
 
-    public Double getLevel2() {
+    public double getLevel2() {
         return level2;
     }
 
-    public Double getLevel3() {
+    public double getLevel3() {
         return level3;
     }
 }
