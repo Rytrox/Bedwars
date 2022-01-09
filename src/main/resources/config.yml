@@ -14,3 +14,18 @@ language: 'de-de'
 countdown:
   minPlayers: 2
   startValue: 10
+
+# Spawner speeds
+spawner:
+  bronze:
+    level1: 2
+    level2: 1.5
+    level3: 1
+  iron:
+    level1: 5
+    level2: 4
+    level3: 3
+  gold:
+    level1: 30
+    level2: 25
+    level3: 20
