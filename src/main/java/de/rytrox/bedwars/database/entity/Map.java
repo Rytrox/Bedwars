@@ -95,6 +95,7 @@ public class Map implements Completable {
         this.world = world;
     }
 
+    @NotNull
     public List<Team> getAliveTeams() {
         return new ArrayList<>(this.aliveTeams);
     }
