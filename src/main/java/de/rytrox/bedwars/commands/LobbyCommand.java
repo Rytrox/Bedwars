@@ -24,7 +24,7 @@ public class LobbyCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (commandSender instanceof Player && this.main.getPhaseManager().getCurrentPhase() instanceof SetupPhase) {
+        if (commandSender instanceof Player && this.main.getPhaseManager().getCurrentPhase() instanceof SetupPhase && args != null) {
             Location playerLocation = ((Player) commandSender).getLocation();
             switch (args[0].toLowerCase(Locale.ROOT)) {
                 case "pos1":
