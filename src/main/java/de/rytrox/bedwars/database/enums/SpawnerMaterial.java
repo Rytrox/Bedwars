@@ -19,9 +19,9 @@ public enum SpawnerMaterial {
 
     SpawnerMaterial(Material material, String materialName) {
         this.material = material;
-        this.level1 = (double) main.getConfig().get("spawner." + materialName + ".level1", 5.0);
-        this.level2 = (double) main.getConfig().get("spawner." + materialName + ".level2", 4.0);
-        this.level3 = (double) main.getConfig().get("spawner." + materialName + ".level3", 3.0);
+        this.level1 = main.getConfig().getDouble("spawner." + materialName + ".level1", 5.0);
+        this.level2 = main.getConfig().getDouble("spawner." + materialName + ".level2", 4.0);
+        this.level3 = main.getConfig().getDouble("spawner." + materialName + ".level3", 3.0);
     }
 
     public Material getMaterial() {

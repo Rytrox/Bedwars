@@ -355,7 +355,7 @@ public class ShopUtils {
      * opens the "Swords" inventory
      * @param player The player who opens the inventory
      */
-    public static void openPotions(Player player) {
+    public static void openGadgets(Player player) {
         Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Schwerter"), 6);
         ItemStack tnt = new ItemStackBuilder(BedwarsTNT.getBedwarsTNT())
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
@@ -367,13 +367,13 @@ public class ShopUtils {
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &64 Gold"))
                 .writeNBTString("material", "gold")
-                .writeNBTInt("price", 20)
+                .writeNBTInt("price", 4)
                 .toItemStack();
         ItemStack rettungsplatform = new ItemStackBuilder(Rettungsplatform.getRettungsplatform())
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &64 Gold"))
                 .writeNBTString("material", "gold")
-                .writeNBTInt("price", 30)
+                .writeNBTInt("price", 4)
                 .toItemStack();
         inventory.setItem(19, tnt);
         inventory.setItem(20, bridge);
