@@ -108,6 +108,10 @@ public class ShopListener implements Listener {
             ShopUtils.openArmor(player);
         if(ChatColor.translateAlternateColorCodes('&', "&b&lSchwerter").equalsIgnoreCase(displayName))
             ShopUtils.openSwords(player);
+        if(ChatColor.translateAlternateColorCodes('&', "&b&lWerkzeuge").equalsIgnoreCase(displayName))
+            ShopUtils.openSwords(player);
+        if(ChatColor.translateAlternateColorCodes('&', "&b&lGadgets").equalsIgnoreCase(displayName))
+            ShopUtils.openSwords(player);
     }
 
     /**

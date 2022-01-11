@@ -16,19 +16,17 @@ import java.util.List;
 
 public class Rettungsplatform implements Listener {
 
-    private ItemStack rettungsplatform;
     private  final Bedwars main;
 
     public Rettungsplatform(Bedwars main) {
         this.main = main;
-        rettungsplatform = new ItemStackBuilder(Material.BLAZE_ROD)
+    }
+
+    public static ItemStack getRettungsplatform() {
+        return new ItemStackBuilder(Material.BLAZE_ROD)
                 .writeNBTBoolean("Rettungsplatform", true)
                 .setDisplayName("Rettungsplatform")
                 .toItemStack();
-    }
-
-    public ItemStack getRettungsplatform() {
-        return rettungsplatform;
     }
 
     public boolean platform(Location playerLocation) {
@@ -62,7 +60,7 @@ public class Rettungsplatform implements Listener {
                 Location playerLocation = player.getLocation().add(0,-1,0);
 
                 if(platform(playerLocation)){
-                    player.getInventory().removeItem(rettungsplatform);
+                    player.getInventory().removeItem(getRettungsplatform());
                 }
             }
         }

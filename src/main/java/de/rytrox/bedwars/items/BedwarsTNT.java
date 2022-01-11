@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BedwarsTNT implements Listener {
 
-    public ItemStack getBedwarsTNT() {
+    public static ItemStack getBedwarsTNT() {
         return new ItemStackBuilder(Material.TNT)
                 .setDisplayName("TSSS...BUMM")
                 .toItemStack();

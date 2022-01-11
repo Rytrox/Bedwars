@@ -1,6 +1,9 @@
 package de.rytrox.bedwars.utils;
 
 import de.rytrox.bedwars.Bedwars;
+import de.rytrox.bedwars.items.BedwarsTNT;
+import de.rytrox.bedwars.items.Bridge;
+import de.rytrox.bedwars.items.Rettungsplatform;
 import de.timeout.libs.item.ItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -284,6 +287,101 @@ public class ShopUtils {
     }
 
     /**
+     * opens the "Tools" inventory
+     * @param player The player who opens the inventory
+     */
+    public static void openTools(Player player) {
+        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Schwerter"), 5);
+        ItemStack stonePickaxe = new ItemStackBuilder(Material.STONE_PICKAXE)
+                .addEnchantment(Enchantment.DIG_SPEED, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &38 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 8)
+                .toItemStack();
+        ItemStack ironPickaxe = new ItemStackBuilder(Material.IRON_PICKAXE)
+                .addEnchantment(Enchantment.DIG_SPEED, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &f6 Eisen"))
+                .writeNBTString("material", "iron")
+                .writeNBTInt("price", 6)
+                .toItemStack();
+        ItemStack diamondPickaxe = new ItemStackBuilder(Material.DIAMOND_PICKAXE)
+                .addEnchantment(Enchantment.DIG_SPEED, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &65 Gold"))
+                .writeNBTString("material", "gold")
+                .writeNBTInt("price", 5)
+                .toItemStack();
+        ItemStack stoneAxe = new ItemStackBuilder(Material.STONE_AXE)
+                .addEnchantment(Enchantment.DIG_SPEED, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &38 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 8)
+                .toItemStack();
+        ItemStack ironAxe = new ItemStackBuilder(Material.IRON_AXE)
+                .addEnchantment(Enchantment.DIG_SPEED, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &f6 Eisen"))
+                .writeNBTString("material", "iron")
+                .writeNBTInt("price", 6)
+                .toItemStack();
+        ItemStack diamondAxe = new ItemStackBuilder(Material.DIAMOND_AXE)
+                .addEnchantment(Enchantment.DIG_SPEED, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &65 Gold"))
+                .writeNBTString("material", "gold")
+                .writeNBTInt("price", 5)
+                .toItemStack();
+        ItemStack shears = new ItemStackBuilder(Material.SHEARS)
+                .addEnchantment(Enchantment.DIG_SPEED, 1)
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &38 Bronze"))
+                .writeNBTString("material", "bronze")
+                .writeNBTInt("price", 8)
+                .toItemStack();
+        inventory.setItem(19, stonePickaxe);
+        inventory.setItem(20, ironPickaxe);
+        inventory.setItem(21, diamondPickaxe);
+        inventory.setItem(22, stoneAxe);
+        inventory.setItem(23, ironAxe);
+        inventory.setItem(24, diamondAxe);
+        inventory.setItem(25, shears);
+        player.openInventory(inventory);
+    }
+
+    /**
+     * opens the "Swords" inventory
+     * @param player The player who opens the inventory
+     */
+    public static void openPotions(Player player) {
+        Inventory inventory = createBaseInventory(ChatColor.translateAlternateColorCodes('&', "&9Shop | Schwerter"), 6);
+        ItemStack tnt = new ItemStackBuilder(BedwarsTNT.getBedwarsTNT())
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &f5 Eisen"))
+                .writeNBTString("material", "iron")
+                .writeNBTInt("price", 5)
+                .toItemStack();
+        ItemStack bridge = new ItemStackBuilder(Bridge.getBridge())
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &64 Gold"))
+                .writeNBTString("material", "gold")
+                .writeNBTInt("price", 20)
+                .toItemStack();
+        ItemStack rettungsplatform = new ItemStackBuilder(Rettungsplatform.getRettungsplatform())
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
+                .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &64 Gold"))
+                .writeNBTString("material", "gold")
+                .writeNBTInt("price", 30)
+                .toItemStack();
+        inventory.setItem(19, tnt);
+        inventory.setItem(20, bridge);
+        inventory.setItem(21, rettungsplatform);
+        player.openInventory(inventory);
+    }
+
+    /**
      * Basic structure of the inventory
      * @param name Name of the inventory
      * @param tab Tab number of the inventory
@@ -326,8 +424,8 @@ public class ShopUtils {
         inventory.setItem(3, armor);
         inventory.setItem(4, swords);
         inventory.setItem(5, tools);
-        inventory.setItem(6, potions);
-        inventory.setItem(7, gadgets);
+        //inventory.setItem(6, potions);
+        inventory.setItem(6, gadgets);
         inventory.setItem(9 + tab, sellected);
         return inventory;
     }

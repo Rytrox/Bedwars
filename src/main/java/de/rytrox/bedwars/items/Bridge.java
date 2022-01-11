@@ -23,7 +23,7 @@ public class Bridge implements Listener {
     }
 
 
-    public ItemStack getBridge(){
+    public static ItemStack getBridge(){
         return new ItemStackBuilder(Material.STICK)
                 .writeNBTBoolean("BedwarsBridge", true)
                 .setDisplayName("Bridge LOOOL")
