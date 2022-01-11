@@ -4,6 +4,7 @@ import de.rytrox.bedwars.Bedwars;
 import de.timeout.libs.item.ItemStackBuilder;
 import de.timeout.libs.item.ItemStacks;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,10 +24,10 @@ public class Bridge implements Listener {
     }
 
 
-    public ItemStack getBridge(){
+    public static ItemStack getBridge(){
         return new ItemStackBuilder(Material.STICK)
                 .writeNBTBoolean("BedwarsBridge", true)
-                .setDisplayName("Bridge LOOOL")
+                .setDisplayName(ChatColor.AQUA + "Bridge")
                 .toItemStack();
     }
 

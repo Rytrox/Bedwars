@@ -1,6 +1,7 @@
 package de.rytrox.bedwars.items;
 
 import de.timeout.libs.item.ItemStackBuilder;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -12,9 +13,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class BedwarsTNT implements Listener {
 
-    public ItemStack getBedwarsTNT() {
+    public static ItemStack getBedwarsTNT() {
         return new ItemStackBuilder(Material.TNT)
-                .setDisplayName("TSSS...BUMM")
+                .setDisplayName(ChatColor.RED +  "TSSS...BUMM (TNT)")
                 .toItemStack();
     }
 

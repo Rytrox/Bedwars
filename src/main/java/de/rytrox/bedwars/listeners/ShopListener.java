@@ -12,6 +12,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -83,13 +84,11 @@ public class ShopListener implements Listener {
      * @param event The EntityDamageByEntityEvent, that is used
      */
     @EventHandler
-    public void onVillagerDamage(EntityDamageByEntityEvent event) {
-        if(event.getDamager() instanceof Player) {
-            if(event.getEntity() instanceof Villager) {
-                Villager villager = (Villager) event.getEntity();
-                if(Objects.requireNonNull(villager.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', main.getMessages().getVillagerName()))) {
-                    event.setCancelled(true);
-                }
+    public void onVillagerDamage(EntityDamageEvent event) {
+        if(event.getEntity() instanceof Villager) {
+            Villager villager = (Villager) event.getEntity();
+            if(Objects.requireNonNull(villager.getCustomName()).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', main.getMessages().getVillagerName()))) {
+                event.setCancelled(true);
             }
         }
     }
@@ -108,6 +107,10 @@ public class ShopListener implements Listener {
             ShopUtils.openArmor(player);
         if(ChatColor.translateAlternateColorCodes('&', "&b&lSchwerter").equalsIgnoreCase(displayName))
             ShopUtils.openSwords(player);
+        if(ChatColor.translateAlternateColorCodes('&', "&b&lWerkzeuge").equalsIgnoreCase(displayName))
+            ShopUtils.openTools(player);
+        if(ChatColor.translateAlternateColorCodes('&', "&b&lGadgets").equalsIgnoreCase(displayName))
+            ShopUtils.openGadgets(player);
     }
 
     /**

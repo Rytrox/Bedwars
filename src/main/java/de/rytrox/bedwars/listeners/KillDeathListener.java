@@ -7,6 +7,8 @@ import de.rytrox.bedwars.utils.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -15,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class KillDeathListener implements Listener {
@@ -55,6 +58,7 @@ public class KillDeathListener implements Listener {
 
         Team team = teamManager.getTeamByPlayer(player);
         if (team != null) {
+            event.getDrops().clear();
             player.spigot().respawn();
             player.teleport(team.getSpawn().toBukkitLocation());
             player.setGameMode(GameMode.SPECTATOR);

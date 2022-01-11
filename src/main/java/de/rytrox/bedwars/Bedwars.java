@@ -56,8 +56,6 @@ public class Bedwars extends JavaPlugin {
         super();
         // Nutze im Logger ColorCodes mit '&'
         ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
-
-
     }
 
     protected Bedwars(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
@@ -66,17 +64,15 @@ public class Bedwars extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Nutze im Logger ColorCodes mit '&'
-        ColoredLogger.enableColoredLogging('&', getLogger(), "&8[&6Bedwars&8]");
         // reload config
         reloadConfig();
+        // loads the database type and the database from the configs
+        loadDatabase();
         // register Listeners
         Bukkit.getPluginManager().registerEvents(new TopTenBoardHandler(), this);
         // register Commands
         Objects.requireNonNull(getCommand("bedwarsmap")).setExecutor(new BedwarsMapCommand());
         Objects.requireNonNull(getCommand("setup")).setExecutor(new SetupCommand());
-        // loads the database type and the database from the configs
-        loadDatabase();
 
         this.messages = new Messages();
 
@@ -93,7 +89,6 @@ public class Bedwars extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.saveConfig();
         DatabaseFactory.shutdown();
     }
 
