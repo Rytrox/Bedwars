@@ -4,7 +4,7 @@ import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.items.Bridge;
-import de.rytrox.bedwars.items.Rettungsplatform;
+import de.rytrox.bedwars.items.RescuePlatform;
 import de.rytrox.bedwars.listeners.BedBreakListener;
 import de.rytrox.bedwars.listeners.KillDeathListener;
 import de.rytrox.bedwars.listeners.ShopListener;
@@ -23,7 +23,7 @@ public class IngamePhase extends GamePhase {
     private final BedBreakListener bedBreakListener;
     private final BuildBreakListener buildBreakListener;
     private final ShopListener shopListener;
-    private final Rettungsplatform rettungsplatform;
+    private final RescuePlatform rescuePlatform;
     private final BedwarsTNT bedwarsTNT;
     private final Bridge bridge;
 
@@ -37,7 +37,7 @@ public class IngamePhase extends GamePhase {
         this.bedBreakListener = new BedBreakListener(map, teamManager, scoreboardManager);
         this.buildBreakListener = new BuildBreakListener(map);
         this.shopListener = new ShopListener(main);
-        this.rettungsplatform = new Rettungsplatform(main);
+        this.rescuePlatform = new RescuePlatform(main);
         this.bedwarsTNT = new BedwarsTNT();
         this.bridge = new Bridge(main);
 
@@ -55,7 +55,7 @@ public class IngamePhase extends GamePhase {
         Bukkit.getPluginManager().registerEvents(bedBreakListener, main);
         Bukkit.getPluginManager().registerEvents(buildBreakListener, main);
         Bukkit.getPluginManager().registerEvents(shopListener, main);
-        Bukkit.getPluginManager().registerEvents(rettungsplatform, main);
+        Bukkit.getPluginManager().registerEvents(rescuePlatform, main);
         Bukkit.getPluginManager().registerEvents(bedwarsTNT, main);
         Bukkit.getPluginManager().registerEvents(bridge, main);
 
@@ -76,7 +76,7 @@ public class IngamePhase extends GamePhase {
         HandlerList.unregisterAll(bedBreakListener);
         HandlerList.unregisterAll(buildBreakListener);
         HandlerList.unregisterAll(shopListener);
-        HandlerList.unregisterAll(rettungsplatform);
+        HandlerList.unregisterAll(rescuePlatform);
         HandlerList.unregisterAll(bedwarsTNT);
         HandlerList.unregisterAll(bridge);
 

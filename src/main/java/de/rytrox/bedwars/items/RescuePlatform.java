@@ -14,18 +14,18 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rettungsplatform implements Listener {
+public class RescuePlatform implements Listener {
 
     private  final Bedwars main;
 
-    public Rettungsplatform(Bedwars main) {
+    public RescuePlatform(Bedwars main) {
         this.main = main;
     }
 
     public static ItemStack getRettungsplatform() {
         return new ItemStackBuilder(Material.BLAZE_ROD)
-                .writeNBTBoolean("Rettungsplatform", true)
-                .setDisplayName("Rettungsplatform")
+                .writeNBTBoolean("rescuePlatform", true)
+                .setDisplayName(ChatColor.YELLOW + "Rettungsplattform")
                 .toItemStack();
     }
 
@@ -55,7 +55,7 @@ public class Rettungsplatform implements Listener {
         Action action = event.getAction();
         if(action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) {
             Player player = event.getPlayer();
-            if (ItemStacks.hasNBTValue(player.getInventory().getItemInMainHand(), "Rettungsplatform")) {
+            if (ItemStacks.hasNBTValue(player.getInventory().getItemInMainHand(), "rescuePlatform")) {
 
                 Location playerLocation = player.getLocation().add(0,-1,0);
 

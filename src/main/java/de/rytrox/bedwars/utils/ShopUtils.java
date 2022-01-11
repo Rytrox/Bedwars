@@ -3,7 +3,7 @@ package de.rytrox.bedwars.utils;
 import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.items.BedwarsTNT;
 import de.rytrox.bedwars.items.Bridge;
-import de.rytrox.bedwars.items.Rettungsplatform;
+import de.rytrox.bedwars.items.RescuePlatform;
 import de.timeout.libs.item.ItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -369,7 +369,7 @@ public class ShopUtils {
                 .writeNBTString("material", "gold")
                 .writeNBTInt("price", 4)
                 .toItemStack();
-        ItemStack rettungsplatform = new ItemStackBuilder(Rettungsplatform.getRettungsplatform())
+        ItemStack rettungsplatform = new ItemStackBuilder(RescuePlatform.getRettungsplatform())
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&f"))
                 .addLore(ChatColor.translateAlternateColorCodes('&', "&7Preis: &64 Gold"))
                 .writeNBTString("material", "gold")
@@ -412,9 +412,6 @@ public class ShopUtils {
         ItemStack tools = new ItemStackBuilder(Material.IRON_PICKAXE)
                 .setDisplayName(ChatColor.translateAlternateColorCodes('&', "&b&lWerkzeuge"))
                 .toItemStack();
-        ItemStack potions = new ItemStackBuilder(Material.POTION)
-                .setDisplayName(ChatColor.translateAlternateColorCodes('&', "&b&lTränke"))
-                .toItemStack();
         ItemStack gadgets = new ItemStackBuilder(Material.TNT)
                 .setDisplayName(ChatColor.translateAlternateColorCodes('&', "&b&lGadgets"))
                 .toItemStack();
@@ -424,7 +421,6 @@ public class ShopUtils {
         inventory.setItem(3, armor);
         inventory.setItem(4, swords);
         inventory.setItem(5, tools);
-        //inventory.setItem(6, potions);
         inventory.setItem(6, gadgets);
         inventory.setItem(9 + tab, sellected);
         return inventory;
