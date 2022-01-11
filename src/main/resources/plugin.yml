@@ -16,6 +16,6 @@ commands:
     usage: /setup
   lobbysetup:
     description: setup the lobby
-    usage: /lobbysetup [spwawn, pos1, pos2]
+    usage: /lobbysetup [spawn, pos1, pos2]
     aliases:
       - lose
