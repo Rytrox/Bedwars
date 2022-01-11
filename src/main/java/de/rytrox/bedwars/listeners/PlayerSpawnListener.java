@@ -20,7 +20,7 @@ public class PlayerSpawnListener implements Listener {
         event.getPlayer().teleport(new Location(
                 Bukkit.getWorld(main.getConfig().getString("lobby.world")),
                 main.getConfig().getDouble("lobby.spawn.x"),
-                main.getConfig().getDouble("lobby.spawn.Y"),
+                main.getConfig().getDouble("lobby.spawn.y"),
                 main.getConfig().getDouble("lobby.spawn.z")
         ));
     }
