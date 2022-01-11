@@ -51,6 +51,7 @@ public class LobbyCommand implements TabExecutor {
                     return false;
             }
             main.saveConfig();
+            return true;
         }
         return false;
     }
