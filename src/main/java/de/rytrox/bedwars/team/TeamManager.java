@@ -8,6 +8,7 @@ import de.timeout.libs.item.ItemStackBuilder;
 import de.timeout.libs.item.ItemStacks;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TeamManager implements Listener {
 
@@ -157,14 +159,29 @@ public class TeamManager implements Listener {
         if (map != null) map.getTeams().forEach(team -> team.removeMember(player));
     }
 
+    public void checkForWin() {
+        List<Team> livingTeams = map.getAliveTeams()
+                .stream()
+                .filter(team -> team.hasBed() || !team.getMembers().isEmpty())
+                .collect(Collectors.toList());
+        if (livingTeams.size() == 1) {
+            Team winnerTeam = livingTeams.get(0);
+            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&f&lDas Team " + winnerTeam.getColor() + winnerTeam.getName() + " &f&lhat gewonnen!"));
+            winnerTeam.getMembers().forEach(teamPlayer -> teamPlayer.sendTitle("Du hast gewonnen", "", 5, 20, 5));
+            Bukkit.getServer().getScheduler().runTaskLater(main, () ->
+                    main.getPhaseManager().next(), 20 * 10);
+        }
+    }
+
     /**
      * Gibt eine Liste aller Teams zurück
      *
      * @return die Liste aller Teams
      */
     @NotNull
-    public List<Team> getTeams() {
-        return map != null ? new ArrayList<>(map.getTeams()) : new ArrayList<>();
+    public List<Team> getAliveTeams() {
+        return map != null ? new ArrayList<>(map.getAliveTeams()) : new ArrayList<>();
     }
 
     public void setMap(Map map) {

@@ -71,6 +71,8 @@ public class KillDeathListener implements Listener {
             } else {
                 event.setDeathMessage(team.getColor() + event.getDeathMessage() + ChatColor.BOLD + " (FINAL KILL)");
                 player.sendTitle(ChatColor.DARK_RED + "Du bist tot!", ChatColor.GOLD + "Du bist nun ein Zuschauer", 20, 20, 20);
+                team.getMembers().remove(player);
+                teamManager.checkForWin();
             }
         }
     }

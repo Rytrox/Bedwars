@@ -1,6 +1,7 @@
 package de.rytrox.bedwars.utils;
 
 import de.rytrox.bedwars.Bedwars;
+import de.rytrox.bedwars.database.enums.SpawnerMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,21 +16,21 @@ import org.jetbrains.annotations.NotNull;
 public class ResourceSpawner {
 
     private int level;
-    private final int[] times = new int[3];
+    private final double[] times = new double[3];
     private final Location pos;
     private final Material material;
     private BukkitTask task;
     private ArmorStand armorStand;
     private final Location armorStandPos;
 
-    public ResourceSpawner(Material material, @NotNull Location pos, int time1, int time2, int time3) {
-        times[0] = time1;
-        times[1] = time2;
-        times[2] = time3;
+    public ResourceSpawner(SpawnerMaterial spawnerMaterial, @NotNull Location pos) {
+        times[0] = spawnerMaterial.getLevel1();
+        times[1] = spawnerMaterial.getLevel2();
+        times[2] = spawnerMaterial.getLevel3();
         level = 1;
 
         this.pos = pos.getBlock().getLocation();
-        this.material = material;
+        this.material = spawnerMaterial.getMaterial();
 
         this.armorStandPos = this.pos.add(0,-1,0).clone();
 
@@ -46,7 +47,7 @@ public class ResourceSpawner {
         task = Bukkit.getServer().getScheduler().runTaskTimer(JavaPlugin.getPlugin(Bedwars.class), () -> {
             Item dropItem = pos.getWorld().dropItem(pos, new ItemStack(material));
             dropItem.setVelocity(new Vector());
-        }, 100, 20L * times[level - 1]);
+        }, 100, (long) (20L * times[level - 1]));
     }
 
     /**
