@@ -40,13 +40,15 @@ public class LobbyCommand implements TabExecutor {
                     main.getConfig().set("lobby.pos2.z", playerLocation.getBlockZ());
                     commandSender.sendMessage("position 2 set");
                     break;
-                default:
+                case "spawn":
                     main.getConfig().set("lobby.spawn.x", playerLocation.getBlockX() + 0.5);
                     main.getConfig().set("lobby.spawn.y", playerLocation.getBlockY());
                     main.getConfig().set("lobby.spawn.z", playerLocation.getBlockZ() + 0.5);
                     main.getConfig().set("lobby.spawn.yaw", playerLocation.getYaw());
                     main.getConfig().set("lobby.spawn.pitch", playerLocation.getPitch());
                     commandSender.sendMessage("spawn set");
+                default:
+                    return false;
             }
             main.saveConfig();
         }
