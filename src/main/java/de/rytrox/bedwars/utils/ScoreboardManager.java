@@ -11,7 +11,6 @@ import org.bukkit.scoreboard.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class ScoreboardManager {
 
@@ -37,7 +36,7 @@ public class ScoreboardManager {
     public void addBoard(Player player, int kills, int deaths) {
         Scoreboard board = Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard();
         fillSidebar(board, kills, deaths);
-        teamManager.getTeams().forEach(team ->
+        teamManager.getAliveTeams().forEach(team ->
                 board.registerNewTeam(team.getName()).setColor(team.getColor()));
         player.setScoreboard(board);
         activeBoards.put(player, board);
@@ -48,15 +47,15 @@ public class ScoreboardManager {
      * Erneuert die Werte auf dem SpielScoreboard eines Spielers
      *
      * @param player Der Spieler, dem die neuen Werte angezeigt werden sollen
-     * @param kills Die Kills des Spielers
-     * @param deaths Die Tode des Spielers
+     * @param deltaKills Die Kills des Spielers
+     * @param deltaDeaths Die Tode des Spielers
      */
-    public void updateBoard(Player player, int kills, int deaths) {
+    public void updateBoard(Player player, int deltaKills, int deltaDeaths) {
         if(!activeBoards.containsKey(player)) return;
         Scoreboard board = activeBoards.get(player);
         Objects.requireNonNull(board.getObjective("Bedwars")).unregister();
 
-        stats.replace(player, new int[]{stats.get(player)[0] + kills, stats.get(player)[1] + deaths});
+        stats.replace(player, new int[]{stats.get(player)[0] + deltaKills, stats.get(player)[1] + deltaDeaths});
 
         fillSidebar(board, stats.get(player)[0], stats.get(player)[1]);
 
@@ -84,7 +83,7 @@ public class ScoreboardManager {
     public void addPlayerToTeam(Player player) {
         if(!activeBoards.containsKey(player)) return;
         Scoreboard board = activeBoards.get(player);
-        teamManager.getTeams().forEach(team ->
+        teamManager.getAliveTeams().forEach(team ->
                 team.getMembers().forEach( member ->
                         Objects.requireNonNull(board.getTeam(team.getName())).addEntry(member.getName())));
         player.setScoreboard(board);
@@ -101,14 +100,14 @@ public class ScoreboardManager {
     private void fillSidebar(Scoreboard board, int kills, int deaths) {
         Objective objective = board.registerNewObjective("Bedwars", "dummy", ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardTitle()));
 
-         AtomicInteger score = new AtomicInteger(teamManager.getTeams().size() + 7);
+         AtomicInteger score = new AtomicInteger(teamManager.getAliveTeams().size() + 7);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l")).setScore(score.get());
         score.set(score.get() - 1);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardMap(mapName))).setScore(score.get());
         score.set(score.get() - 1);
         objective.getScore(ChatColor.translateAlternateColorCodes('&', "&8&l&8")).setScore(score.get());
         score.set(score.get() - 1);
-        teamManager.getTeams().forEach(team -> {
+        teamManager.getAliveTeams().forEach(team -> {
             objective.getScore(ChatColor.translateAlternateColorCodes('&', main.getMessages().getScoreboardTeam(
                     team.getColor(), team.getName(), team.hasBed(), (int) team.getMembers()
                             .stream()
