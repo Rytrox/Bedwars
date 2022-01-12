@@ -6,6 +6,8 @@ import de.rytrox.bedwars.listeners.LobbyBreakPlaceListener;
 import de.rytrox.bedwars.map.MapLoader;
 import de.rytrox.bedwars.team.TeamManager;
 import de.rytrox.bedwars.utils.Countdown;
+import de.rytrox.bedwars.utils.LobbyArea;
+import de.rytrox.bedwars.utils.TopTenBoardHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -16,14 +18,17 @@ public class LobbyPhase extends GamePhase {
     private final MapLoader mapLoader;
     private final Countdown countdown;
     private final LobbyBreakPlaceListener lobbyBreakPlaceListener;
+    private final LobbyArea lobbyArea;
 
     public LobbyPhase(Bedwars main) {
-        super(main);
 
+        super(main);
         this.teamManager = new TeamManager();
         this.mapLoader = new MapLoader(main, teamManager);
+        this.lobbyArea = new LobbyArea(main);
         this.countdown = new Countdown(main);
         this.lobbyBreakPlaceListener = new LobbyBreakPlaceListener();
+
     }
 
     /**
@@ -43,9 +48,14 @@ public class LobbyPhase extends GamePhase {
      */
     @Override
     public void onDisable() {
+        lobbyArea.stopMoveTask();
         HandlerList.unregisterAll(teamManager);
         HandlerList.unregisterAll(countdown);
         HandlerList.unregisterAll(lobbyBreakPlaceListener);
+    }
+
+    public LobbyArea getLobbyArea(){
+        return lobbyArea;
     }
 
     /**

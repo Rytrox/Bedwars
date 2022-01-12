@@ -3,6 +3,7 @@ package de.rytrox.bedwars.map;
 import de.rytrox.bedwars.Bedwars;
 import de.rytrox.bedwars.database.entity.Map;
 import de.rytrox.bedwars.team.TeamManager;
+import de.rytrox.bedwars.utils.LobbyArea;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 

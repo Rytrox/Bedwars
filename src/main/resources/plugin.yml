@@ -14,3 +14,8 @@ commands:
   setup:
     description: setup the map
     usage: /setup
+  lobbysetup:
+    description: setup the lobby
+    usage: /lobbysetup [spawn, pos1, pos2]
+    aliases:
+      - lose

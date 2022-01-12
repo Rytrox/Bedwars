@@ -1,11 +1,11 @@
 package de.rytrox.bedwars;
 
+import de.rytrox.bedwars.commands.LobbyCommand;
 import de.rytrox.bedwars.commands.SetupCommand;
 import de.rytrox.bedwars.database.entity.*;
 import de.rytrox.bedwars.database.repository.MapRepository;
 import de.rytrox.bedwars.database.repository.PlayerStatisticsRepository;
 import de.rytrox.bedwars.listeners.PlayerLeftListener;
-import de.rytrox.bedwars.listeners.ShopListener;
 import de.rytrox.bedwars.phase.PhaseManager;
 import de.rytrox.bedwars.commands.BedwarsMapCommand;
 import de.rytrox.bedwars.map.MapUtils;
@@ -71,6 +71,7 @@ public class Bedwars extends JavaPlugin {
         // register Listeners
         Bukkit.getPluginManager().registerEvents(new TopTenBoardHandler(), this);
         // register Commands
+        Objects.requireNonNull(getCommand("lobbysetup")).setExecutor(new LobbyCommand());
         Objects.requireNonNull(getCommand("bedwarsmap")).setExecutor(new BedwarsMapCommand());
         Objects.requireNonNull(getCommand("setup")).setExecutor(new SetupCommand());
 

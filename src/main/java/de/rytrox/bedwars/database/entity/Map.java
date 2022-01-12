@@ -87,6 +87,7 @@ public class Map implements Completable {
         this.teams = teams;
     }
 
+    @NotNull
     public String getWorld() {
         return world;
     }

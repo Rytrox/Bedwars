@@ -1,6 +1,9 @@
 package de.rytrox.bedwars.listeners;
 
 import de.rytrox.bedwars.database.entity.Map;
+import de.rytrox.bedwars.utils.Area;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.event.EventHandler;
@@ -16,41 +19,27 @@ public class BuildBreakListener implements Listener {
 
     private final Set<Block> placedBlocks = new HashSet<>();
 
-    private final double minX;
-    private final double maxX;
-    private final double minY;
-    private final double maxY;
-    private final double minZ;
-    private final double maxZ;
+    private final Location pos1;
+    private final Location pos2;
 
     public BuildBreakListener(@NotNull Map map) {
-        minX = Math.min(map.getPos1().getX(), map.getPos2().getX());
-        maxX = Math.max(map.getPos1().getX(), map.getPos2().getX());
-        minY = Math.min(map.getPos1().getY(), map.getPos2().getY());
-        maxY = Math.max(map.getPos1().getY(), map.getPos2().getY());
-        minZ = Math.min(map.getPos1().getZ(), map.getPos2().getZ());
-        maxZ = Math.max(map.getPos1().getZ(), map.getPos2().getZ());
+        pos1 = map.getPos1().toBukkitLocation();
+        pos2 = map.getPos2().toBukkitLocation();
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.getBlock().getBlockData() instanceof Bed) return;
-        if (isInsideMap(event.getBlockPlaced()))
+        if (Area.inArea(pos1, pos2,event.getBlock().getLocation()))
             placedBlocks.add(event.getBlockPlaced());
         else event.setCancelled(true);
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!isInsideMap(event.getBlock()) || !placedBlocks.contains(event.getBlock())
-                && !(event.getBlock().getBlockData() instanceof Bed))
+        if (!Area.inArea(pos1, pos2,event.getBlock().getLocation()))
             event.setCancelled(true);
     }
 
-    private boolean isInsideMap(Block block) {
-        return block.getX() < maxX && block.getX() > minX && block.getY() < maxY &&
-                block.getY() > minY && block.getZ() < maxZ && block.getZ() > minZ;
-    }
     @NotNull
     public Set<Block> getPlacedBlocks() {
         return new HashSet<>(placedBlocks);

@@ -22,7 +22,9 @@ public class BedBreakListener implements Listener {
     private final TeamManager teamManager;
     private final ScoreboardManager scoreboardManager;
 
-    public BedBreakListener(@NotNull Map map, @NotNull TeamManager teamManager, ScoreboardManager scoreboardManager) {
+    public BedBreakListener(@NotNull Map map,
+                            @NotNull TeamManager teamManager,
+                            @NotNull ScoreboardManager scoreboardManager) {
         this.map = map;
         this.teamManager = teamManager;
         this.scoreboardManager = scoreboardManager;
