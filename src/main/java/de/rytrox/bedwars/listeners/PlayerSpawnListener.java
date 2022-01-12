@@ -17,11 +17,14 @@ public class PlayerSpawnListener implements Listener {
 
     @EventHandler
     public void onPlayerSpawn(PlayerSpawnLocationEvent event){
-        event.getPlayer().teleport(new Location(
+        Location spawn = new Location(
                 Bukkit.getWorld(main.getConfig().getString("lobby.world")),
-                main.getConfig().getDouble("lobby.spawn.x"),
-                main.getConfig().getDouble("lobby.spawn.y"),
-                main.getConfig().getDouble("lobby.spawn.z")
-        ));
+                main.getConfig().getDouble("lobby.spawn.x", 0),
+                main.getConfig().getDouble("lobby.spawn.y", 65),
+                main.getConfig().getDouble("lobby.spawn.z", 0)
+        );
+        spawn.setPitch(main.getConfig().getInt("lobby.spawn.pitch", 0));
+        spawn.setYaw(main.getConfig().getInt("lobby.spawn.yaw", 0));
+        event.getPlayer().teleport(spawn);
     }
 }

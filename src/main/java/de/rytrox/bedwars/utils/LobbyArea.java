@@ -31,7 +31,8 @@ public class LobbyArea {
         start = new Location(world, main.getConfig().getInt("lobby.pos1.x", 10), main.getConfig().getInt("lobby.pos1.y", 10) ,main.getConfig().getInt("lobby.pos1.z", 10));
         end = new Location(world, main.getConfig().getInt("lobby.pos2.x", -10), main.getConfig().getInt("lobby.pos2.y", 100) ,main.getConfig().getInt("lobby.pos2.z", -10));
         spawn = new Location(world, main.getConfig().getInt("lobby.spawn.x", 0), main.getConfig().getInt("lobby.spawn.y", 65) ,main.getConfig().getInt("lobby.spawn.z", 0));
-
+        spawn.setPitch(main.getConfig().getInt("lobby.spawn.pitch", 0));
+        spawn.setYaw(main.getConfig().getInt("lobby.spawn.yaw", 0));
     }
 
     public void stopMoveTask() {
